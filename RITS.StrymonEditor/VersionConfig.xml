@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VersionConfig>
+  <Version>0.2.0.3</Version>
+  <UpdateCheckTarget>https://dl.dropboxusercontent.com/s/tqup10aa4zvjkeh/EditorLatestVersion.xml?dl=1</UpdateCheckTarget>
+  <UpdateZipTarget>https://dl.dropboxusercontent.com/s/zmak8c8w58d1ql8/StrymonEditors_0201.zip?dl=1</UpdateZipTarget>
+</VersionConfig>

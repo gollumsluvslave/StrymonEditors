@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Pattern-->
+<StrymonMachine Name="Pattern" Value="11">
+  <MachineParameters>
+    <ParameterDef Name="Pattern" ControlChangeNo="39">
+      <OptionList>
+        <Option Name="1" Value="0" />
+        <Option Name="2" Value="1" />
+        <Option Name="3" Value="2" />
+        <Option Name="4" Value="3" />
+        <Option Name="5" Value="4" />
+        <Option Name="6" Value="5" />
+        <Option Name="7" Value="6" />
+        <Option Name="8" Value="7" />
+        <Option Name="9" Value="8" />
+        <Option Name="10" Value="9" />
+        <Option Name="11" Value="10" />
+        <Option Name="12" Value="11" />
+        <Option Name="13" Value="12" />
+        <Option Name="14" Value="13" />
+        <Option Name="15" Value="14" />
+        <Option Name="16" Value="15" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Smear"/>
+    <ParameterDef Name="HiPass"/>
+  </MachineParameters>
+</StrymonMachine>

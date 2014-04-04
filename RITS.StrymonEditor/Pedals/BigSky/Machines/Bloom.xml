@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StrymonMachine Name="Bloom" Value="0">
+  <MachineParameters>
+    <ParameterDef Name="Lo End" ControlChangeNo="31">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+    <ParameterDef Name="Length" ControlChangeNo="32">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+    <ParameterDef Name="Feedback" ControlChangeNo="30">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

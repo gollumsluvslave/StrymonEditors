@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Reverse-->
+<StrymonMachine Name="Swell" Value="3">
+  <MachineParameters>
+    <ParameterDef Name="Rise" ControlChangeNo="44">
+      <OptionList>
+        <Option Name="0.10" Value="0" />
+        <Option Name="0.15" Value="1" />
+        <Option Name="0.20" Value="2" />
+        <Option Name="0.25" Value="3" />
+        <Option Name="0.30" Value="4" />
+        <Option Name="0.40" Value="5" />
+        <Option Name="0.50" Value="6" />
+        <Option Name="0.60" Value="7" />
+        <Option Name="0.70" Value="8" />
+        <Option Name="0.80" Value="9" />
+        <Option Name="0.90" Value="10" />
+        <Option Name="1.00" Value="11" />
+        <Option Name="1.10" Value="12" />
+        <Option Name="1.20" Value="13" />
+        <Option Name="1.30" Value="14" />
+        <Option Name="1.40" Value="15" />
+        <Option Name="1.50" Value="16" />
+        <Option Name="1.60" Value="17" />
+        <Option Name="1.70" Value="18" />
+        <Option Name="1.80" Value="19" />
+        <Option Name="1.90" Value="20" />
+        <Option Name="2.00" Value="21" />
+        <Option Name="2.20" Value="22" />
+        <Option Name="2.40" Value="23" />
+        <Option Name="2.60" Value="24" />
+        <Option Name="2.80" Value="25" />
+        <Option Name="3.00" Value="26" />
+        <Option Name="4.00" Value="27" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Smear"/>
+    <ParameterDef Name="HiPass"/>
+  </MachineParameters>
+</StrymonMachine>

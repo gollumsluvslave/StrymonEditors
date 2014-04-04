@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StrymonPedal Name="Mobius" Colour="#FF0068A0">
+  <Pots>
+    <Pot Id="0" DefaultLabel="Speed" Left="269" Top="16"/>
+    <Pot Id="1" DefaultLabel="Speed" Left="379" Top="16"/>
+    <Pot Id="2" DefaultLabel="Depth" Left="475" Top="16"/>
+    <Pot Id="3" DefaultLabel="Level" Left="567" Top="16"/>
+    <Pot Id="4" DefaultLabel="Filter" Left="333" Top="134" Hide="true"/>
+    <Pot Id="5" DefaultLabel="Param1" Left="426" Top="134" IsDynamic="true"/>
+    <Pot Id="6" DefaultLabel="Param2" Left="520" Top="134" IsDynamic="true"/>
+    <Pot Id="7" DefaultLabel="Depth" Left="616" Top="134" Hide="true"/>
+  </Pots>
+  <ControlParameters>
+    <ParameterDef Name="Speed" PotId="1" ControlChangeNo="17">
+      <Range MinValue="0" MaxValue="127"/>
+      <FineRange MinValue="100" MaxValue="10000"/>
+    </ParameterDef>
+    <ParameterDef Name="Depth" PotId="2" ControlChangeNo="18">
+      <Range MinValue="0" MaxValue="127"/>
+    </ParameterDef>
+    <ParameterDef Name="Level" PotId="3" ControlChangeNo="15">
+      <Range MinValue="0" MaxValue="127"/>
+    </ParameterDef>
+  </ControlParameters>
+  <CommonParameters>
+    <ParameterDef Name="TapDivision" ControlChangeNo="21">
+      <OptionList>
+        <Option Name="Whole" Value="0" />
+        <Option Name="Half" Value="1" />
+        <Option Name="Quarter" Value="2" />
+        <Option Name="Dotted 8" Value="3" />
+        <Option Name="Eigths" Value="4" />
+        <Option Name="Triplet" Value="5" />
+        <Option Name="Sixteenths" Value="6" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="EP" PostOffset="1" ControlChangeNo="60">
+      <OptionList>
+        <Option Name="Off" Value="0" />
+        <Option Name="On" Value="1" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="PrePost" PostOffset="1" ControlChangeNo="22">
+      <OptionList>
+        <Option Name="Pre" Value="0" />
+        <Option Name="Post" Value="1" />
+      </OptionList>
+    </ParameterDef>
+  </CommonParameters>
+  <SharedParameters>
+    <!-- EP Set ??-->
+  </SharedParameters>
+  <IncrementMap>
+    <Increment Value="20,10" End="190"/>
+    <Increment Value="20" End="210"/>
+    <Increment Value="20,10" End="270"/>
+    <Increment Value="20" End="350"/>
+    <Increment Value="30,20" End="450"/>
+    <Increment Value="20,30" End="500"/>
+    <Increment Value="2(20),30" End="640"/>
+    <Increment Value="20,30" End="690"/>
+    <Increment Value="2(20),30" End="970"/>
+    <Increment Value="3(20),30" End="1060"/>
+    <Increment Value="20,30" End="1110"/>
+    <Increment Value="2(20),30" End="1320"/>
+    <Increment Value="20,30" End="1370"/>
+    <Increment Value="2(20),30" End="1440"/>
+    <Increment Value="2(20),40" End="1520"/>
+    <Increment Value="30,40" End="1590"/>
+    <Increment Value="40" End="1990"/>
+    <Increment Value="70" End="2060"/>
+    <Increment Value="80" End="2220"/>
+    <Increment Value="70,2(80)" End="2450"/>
+    <Increment Value="80" End="2850"/>
+    <Increment Value="70" End="2920"/>
+    <Increment Value="90" End="3010"/>
+    <Increment Value="120,110" End="3240"/>
+    <Increment Value="120" End="3720"/>
+    <Increment Value="130" End="3830"/>
+    <Increment Value="120" End="4310"/>
+    <Increment Value="110" End="4420"/>
+    <Increment Value="150" End="4570"/>
+    <Increment Value="200" End="4970"/>
+    <Increment Value="190" End="5160"/>
+    <Increment Value="200" End="5760"/>
+    <Increment Value="190" End="5950"/>
+    <Increment Value="200" End="6350"/>
+    <Increment Value="190" End="6540"/>
+    <Increment Value="200" End="6940"/>
+    <Increment Value="220" End="7160"/>
+    <Increment Value="240" End="7400"/>
+    <Increment Value="230" End="7630"/>
+    <Increment Value="240" End="8110"/>
+    <Increment Value="230,240" End="9050"/>
+    <Increment Value="240,230" End="9760"/>
+    <Increment Value="240"/>
+  </IncrementMap>
+  <PotValueMap>
+    <PotValueItem Value="0" Angle="0" ClockPosition="Min"/>
+    <PotValueItem Value="4" Angle="10" ClockPosition="7PM"/>
+    <PotValueItem Value="8" Angle="20" ClockPosition="8PM"/>/>
+    <PotValueItem Value="16" Angle="60" ClockPosition="9PM"/>
+    <PotValueItem Value="30" Angle="90" ClockPosition="10PM"/>
+    <PotValueItem Value="50" Angle="120" ClockPosition="11PM"/>
+    <PotValueItem Value="68" Angle="150" ClockPosition="12PM"/>
+    <PotValueItem Value="86" Angle="180" ClockPosition="1PM"/>
+    <PotValueItem Value="104" Angle="210" ClockPosition="2PM"/>
+    <PotValueItem Value="116" Angle="240" ClockPosition="3PM"/>
+    <PotValueItem Value="125" Angle="285" ClockPosition="4PM"/>
+    <PotValueItem Value="127" Angle="290" ClockPosition="MAX"/>
+  </PotValueMap>
+
+</StrymonPedal>

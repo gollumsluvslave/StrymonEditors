@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Phaser-->
+<StrymonMachine Name="Phaser" Value="11">
+  <MachineParameters>
+    <ParameterDef Name="Mode" ControlChangeNo="44">
+      <OptionList>
+        <Option Name="2 Stage" Value="0" />
+        <Option Name="4 Stage" Value="1" />
+        <Option Name="6 Stage" Value="2" />
+        <Option Name="8 Stage" Value="3" />
+        <Option Name="12 Stage" Value="4" />
+        <Option Name="16 Stage" Value="5" />
+        <Option Name="Barber Pole" Value="6" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Regen" ControlChangeNo="45">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+    <ParameterDef Name="Waveshape" ControlChangeNo="46">
+      <OptionList>
+        <Option Name="Sine" Value="0" />
+        <Option Name="Square" Value="1" />
+        <Option Name="Ramp" Value="2" />
+        <Option Name="Tri" Value="3" />
+        <Option Name="Saw" Value="4" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Headroom" ControlChangeNo="68">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+    <ParameterDef Name="Spread" ControlChangeNo="47">
+      <OptionList>
+        <Option Name="Off" Value="0" />
+        <Option Name="1/4" Value="1" />
+        <Option Name="Half" Value="2" />
+        <Option Name="3/4" Value="3" />
+        <Option Name="Full" Value="4" />
+      </OptionList>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

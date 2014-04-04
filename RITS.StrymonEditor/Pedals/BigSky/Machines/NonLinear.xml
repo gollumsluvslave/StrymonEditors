@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Reverse-->
+<StrymonMachine Name="NonLinear" Value="5">
+  <Pots>
+    <Pot Id="1" Label="Delay Time">
+      <RangeOverride>
+        <Range MinValue="50" MaxValue="2000"/>
+        <IncrementMap>
+          <Increment Value="12" End="74" />
+          <Increment Value="11" End="85"  />
+          <Increment Value="12" End="133" />
+          <Increment Value="11" End="144"  />
+          <Increment Value="12" End="210"  />
+          <Increment Value="8" End="250"  />
+          <Increment Value="7" End="257"  />
+          <Increment Value="8" End="313"  />
+          <Increment Value="7" End="320"  />
+          <Increment Value="8" End="376"  />
+          <Increment Value="7" End="383"  />
+          <Increment Value="8" End="399"  />
+          <Increment Value="12" End="411"  />
+          <Increment Value="11" End="422"  />
+          <Increment Value="12" End="470"  />
+          <Increment Value="11" End="481"  />
+          <Increment Value="12" End="541"  />
+          <Increment Value="11" End="552"  />
+          <Increment Value="12" End="600"  />
+          <Increment Value="11" End="611"  />
+          <Increment Value="12" End="659"  />
+          <Increment Value="11" End="670"  />
+          <Increment Value="12" End="730"  />
+          <Increment Value="11" End="741"  />
+          <Increment Value="12" End="789"  />
+          <Increment Value="11" End="800"  />
+          <Increment Value="12" End="848"  />
+          <Increment Value="11" End="859"  />
+          <Increment Value="12" End="919"  />
+          <Increment Value="11" End="930"  />
+          <Increment Value="12" End="978"  />
+          <Increment Value="11" End="1000"  />
+          <Increment Value="20,10" End="1030"  />
+          <Increment Value="20" End="1070"  />
+          <Increment Value="10,20" End="1160"  />
+          <Increment Value="20,10" End="1250"  />
+          <Increment Value="20" End="1290"  />
+          <Increment Value="10,20" End="1380"  />
+          <Increment Value="20,30" End="1430"  />
+          <Increment Value="50" End="1580"  />
+          <Increment Value="40" End="1620"  />
+          <Increment Value="50" End="1720"  />
+          <Increment Value="40" End="1760"  />
+          <Increment Value="50" End="1910"  />
+          <Increment Value="40" End="1950"  />
+          <Increment Value="50"/>
+        </IncrementMap>
+      </RangeOverride>
+      </Pot>
+    <Pot Id="2" Label="Feedback"/>
+  </Pots>
+  <MachineParameters>
+    <ParameterDef Name="Lo End" ControlChangeNo="46">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+    <ParameterDef Name="Shape" ControlChangeNo="44">
+      <OptionList>
+        <Option Name="Swoosh" Value="0" />
+        <Option Name="Reverse" Value="1" />
+        <Option Name="Ramp" Value="2" />
+        <Option Name="Gate" Value="3" />
+        <Option Name="Gauss" Value="4" />
+        <Option Name="Bounce" Value="5" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Diffusion" ControlChangeNo="46">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+    <ParameterDef Name="Late Decay" ControlChangeNo="47">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+    <ParameterDef Name="Late Level" ControlChangeNo="48">
+      <Range MinValue="0" MaxValue="18"/>
+    </ParameterDef>
+    <ParameterDef Name="Modspeed" ControlChangeNo="43">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

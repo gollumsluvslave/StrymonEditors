@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Destroyer-->
+<StrymonMachine Name="Destroyer" Value="5">
+  <Pots>
+    <Pot Id="1">
+      <RangeOverride>
+        <Range MinValue="560" MaxValue="1300"/>
+        <IncrementMap>
+          <Increment Value="2(0),10" End="580"/>
+          <Increment Value="0,10" End="590"/>
+          <Increment Value="2(0),10" End="610"/>
+          <Increment Value="0,10" End="640"/>
+          <Increment Value="2(0),10" End="650"/>
+          <Increment Value="0,10" End="670"/>
+          <Increment Value="2(0),10" End="680"/>
+          <Increment Value="0,10" End="820"/>
+          <Increment Value="10,0" End="860"/>
+          <Increment Value="10" End="870"/>
+          <Increment Value="0,10" End="890"/>
+          <Increment Value="10" End="900"/>
+          <Increment Value="0,10" End="920"/>
+          <Increment Value="10,0" End="950"/>
+          <Increment Value="10" End="960"/>
+          <Increment Value="0,2(10)" End="1000"/>
+          <Increment Value="0,10" End="1010"/>
+          <Increment Value="0,2(10)" End="1070"/>
+          <Increment Value="10,0" End="1080"/>
+          <Increment Value="0,2(10)" End="1100"/>
+          <Increment Value="10,0" End="1120"/>
+          <Increment Value="10" End="1140"/>
+          <Increment Value="0,3(10)" End="1200"/>
+          <Increment Value="10,0" End="1220"/>
+          <Increment Value="10" End="1230"/>
+          <Increment Value="10,0" End="1240"/>
+          <Increment Value="2(10),0" End="1260"/>
+          <Increment Value="10,0" End="1280"/>
+          <Increment Value="10"/>
+        </IncrementMap>
+      </RangeOverride>
+    </Pot>
+  </Pots>
+  <MachineParameters>
+    <ParameterDef Name="Bits" ControlChangeNo="59">
+      <OptionList>
+        <Option Name="4 Bit" Value="0" />
+        <Option Name="4.5 Bit" Value="1" />
+        <Option Name="5 Bit" Value="2" />
+        <Option Name="5.5 Bit" Value="3" />
+        <Option Name="6 Bit" Value="4" />
+        <Option Name="6.5 Bit" Value="5" />
+        <Option Name="7 Bit" Value="6" />
+        <Option Name="8 Bit" Value="7" />
+        <Option Name="9 Bit" Value="8" />
+        <Option Name="10 Bit" Value="9" />
+        <Option Name="11 Bit" Value="10" />
+        <Option Name="12 Bit" Value="11" />
+        <Option Name="13 Bit" Value="12" />
+        <Option Name="14 Bit" Value="13" />
+        <Option Name="15 Bit" Value="14" />
+        <Option Name="16 Bit" Value="15" />
+        <Option Name="18 Bit" Value="16" />
+        <Option Name="24 Bit" Value="17" />
+        <Option Name="32 Bit" Value="18" />
+      </OptionList>
+    </ParameterDef>    
+    <ParameterDef Name="Sample" ControlChangeNo="61">
+      <OptionList>
+        <Option Name="750Hz" Value="0" />
+        <Option Name="1kHz" Value="1" />
+        <Option Name="1.5kHz" Value="2" />
+        <Option Name="2kHz" Value="3" />
+        <Option Name="3kHz" Value="4" />
+        <Option Name="4kHz" Value="5" />
+        <Option Name="5kHz" Value="6" />
+        <Option Name="6kHz" Value="7" />
+        <Option Name="7kHz" Value="8" />
+        <Option Name="8kHz" Value="9" />
+        <Option Name="9kHz" Value="10" />
+        <Option Name="10kHz" Value="11" />
+        <Option Name="11kHz" Value="12" />
+        <Option Name="12kHz" Value="13" />
+        <Option Name="14kHz" Value="14" />
+        <Option Name="16kHz" Value="15" />
+        <Option Name="19kHz" Value="16" />
+        <Option Name="24kHz" Value="17" />
+        <Option Name="32kHz" Value="18" />
+        <Option Name="48kHz" Value="19" />
+        <Option Name="96kHz" Value="20" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Filter" ControlChangeNo="62">
+      <OptionList>
+        <Option Name="Off" Value="0" />
+        <Option Name="1 (Portable Vintage Amp)" Value="1" />
+        <Option Name="2 (Victrola Phonograph)" Value="2" />
+        <Option Name="3 (70s Clock Radio)" Value="3" />
+        <Option Name="4 (Bullhorn Megaphone)" Value="4" />
+        <Option Name="5 (Cheerleader’s Plastic Megaphone)" Value="5" />
+        <Option Name="6 (Antique Telephone Ear Piece)" Value="6" />
+        <Option Name="7 (Cell Phone)" Value="7" />
+        <Option Name="8 (Apartment Intercom)" Value="8" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Vinyl" ControlChangeNo="63">
+      <Range MinValue="0" MaxValue="18"/>
+    </ParameterDef>
+    <ParameterDef Name="Mix" ControlChangeNo="64">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

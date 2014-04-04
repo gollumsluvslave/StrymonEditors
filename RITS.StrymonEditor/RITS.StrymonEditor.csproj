@@ -1,0 +1,400 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{406CBEED-017D-4692-BCE5-C273F5FB136B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RITS.StrymonEditor</RootNamespace>
+    <AssemblyName>RITS.StrymonEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AutoUpdate\HttpUtils.cs" />
+    <Compile Include="AutoUpdate\UpdateChecker.cs" />
+    <Compile Include="AutoUpdate\VersionConfig.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Conversion\BoostLabelValueConverter.cs" />
+    <Compile Include="Conversion\EchoValueLabelConverter.cs" />
+    <Compile Include="Conversion\FineValueLabelConverter.cs" />
+    <Compile Include="Conversion\OptionListPotValueConverter.cs" />
+    <Compile Include="Conversion\DefaultFineCoarseValueConverter.cs" />
+    <Compile Include="Conversion\DefaultPotValueConverter.cs" />
+    <Compile Include="Conversion\Factories.cs" />
+    <Compile Include="Conversion\IFineCoarseValueConverter.cs" />
+    <Compile Include="Conversion\ILabelValueConverter.cs" />
+    <Compile Include="Conversion\IPotValueConverter.cs" />
+    <Compile Include="Conversion\OptionLabelValueConverter.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Logging\DefaultLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LoggingConfigurationException.cs" />
+    <Compile Include="Logging\RITSLogger.cs" />
+    <Compile Include="Logging\RollingTextListener.cs" />
+    <Compile Include="Logging\StaticLogger.cs" />
+    <Compile Include="Messaging\IColleague.cs" />
+    <Compile Include="Messaging\Mediator.cs" />
+    <Compile Include="Messaging\MultiDictionary.cs" />
+    <Compile Include="Models\ControlChangeMsg.cs" />
+    <Compile Include="Models\FineCoarseSynchroniser.cs" />
+    <Compile Include="Models\HeelToeSetting.cs" />
+    <Compile Include="Models\Increment.cs" />
+    <Compile Include="Models\MidiDevices.cs" />
+    <Compile Include="Models\ParameterDef.cs" />
+    <Compile Include="Models\PotValueMap.cs" />
+    <Compile Include="Models\Range.cs" />
+    <Compile Include="Models\RangeOverride.cs" />
+    <Compile Include="Models\StrymonMidiManager.cs" />
+    <Compile Include="Models\StrymonPreset.cs" />
+    <Compile Include="Models\Option.cs" />
+    <Compile Include="Models\NameBase.cs" />
+    <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\Pot.cs" />
+    <Compile Include="Models\StrymonXmlPreset.cs" />
+    <Compile Include="Models\StrymonPedal.cs" />
+    <Compile Include="Models\StrymonSysExUtils.cs" />
+    <Compile Include="IOUtils.cs" />
+    <Compile Include="Models\PotValueItem.cs" />
+    <Compile Include="Models\XmlParameter.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="ViewModels\DialogViewModel.cs" />
+    <Compile Include="ViewModels\DirectEntryViewModel.cs" />
+    <Compile Include="ViewModels\ParameterViewModel.cs" />
+    <Compile Include="ViewModels\PotViewModel.cs" />
+    <Compile Include="ViewModels\PresetControlViewModel.cs" />
+    <Compile Include="ViewModels\PresetRenameViewModel.cs" />
+    <Compile Include="ViewModels\StrymonPedalViewModel.cs" />
+    <Compile Include="ViewModels\StrymonMachineViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Views\MidiSetup.xaml.cs">
+      <DependentUpon>MidiSetup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EncoderControl.xaml.cs">
+      <DependentUpon>EncoderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialog.xaml.cs">
+      <DependentUpon>Dialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GridHelper.cs" />
+    <Compile Include="Views\ParamTemplateSelector.cs" />
+    <Compile Include="Views\PresetControl.xaml.cs">
+      <DependentUpon>PresetControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RadialPanel.cs" />
+    <Compile Include="Views\PedalEditor.xaml.cs">
+      <DependentUpon>PedalEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EditorView.xaml.cs">
+      <DependentUpon>EditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PotControl.xaml.cs">
+      <DependentUpon>PotControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StrymonSlider.xaml.cs">
+      <DependentUpon>StrymonSlider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WPFUtils.cs" />
+    <Compile Include="Serialization\XmlSerializer.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Views\MidiSetup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EncoderControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PedalEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PotControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PresetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StrymonSlider.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\StrymonMachine.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Resource Include="Fonts\digital-7-italic.ttf" />
+    <Resource Include="Fonts\digital-7.ttf" />
+    <EmbeddedResource Include="Base_Timeline.syx" />
+    <EmbeddedResource Include="Base_BigSky.syx" />
+    <EmbeddedResource Include="Base_Mobius.syx" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Views\Images\PotControl.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Views\Images\TimelineBase.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Pedals\BigSky\BigSky.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Bloom.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Chorale.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Cloud.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Hall.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Magneto.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\NonLinear.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Plate.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Reflections.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Shimmer.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Spring.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Swell.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\AutoSwell.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Destroyer.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Filter.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Flanger.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Formant.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\PatternTrem.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Phaser.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Quadrature.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Rotary.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Vibe.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\VintageTrem.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Mobius.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Pedals\BigSky\Machines\Room.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Mobius\Machines\Chorus.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Swell.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Trem.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\LoFi.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\dBucket.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Filter.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Digital.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\dTape.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Dual.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Duck.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Ice.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Pattern.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Machines\Reverse.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pedals\Timeline\Timeline.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="VersionConfig.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Views\Images\MidiConnected.ico" />
+    <Resource Include="Views\Images\NoMidi.ico" />
+    <Resource Include="Views\Images\Strymon.ico" />
+    <Resource Include="Views\Images\Strymon.gif" />
+    <Resource Include="Views\Images\EncoderControl.png" />
+    <Resource Include="Views\Images\BigSky.PNG" />
+    <Resource Include="Views\Images\Mobius.PNG" />
+    <Resource Include="Views\Images\Timeline.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\midi-dot-net\Midi\Midi.csproj">
+      <Project>{f60d8b7b-2d2e-4b94-a736-3783ffe1a25c}</Project>
+      <Name>Midi</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

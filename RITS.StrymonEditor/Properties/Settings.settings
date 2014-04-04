@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RITS.StrymonEditor.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TimelineMidiChannel" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="MobiusMidiChannel" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="MidiInDevice" Type="System.String" Scope="User">
+      <Value Profile="(Default)">UA-1000</Value>
+    </Setting>
+    <Setting Name="MidiOutDevice" Type="System.String" Scope="User">
+      <Value Profile="(Default)">UA-1000</Value>
+    </Setting>
+    <Setting Name="BulkFetchDelay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="BigSkyMidiChannel" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="SyncMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TwoWay</Value>
+    </Setting>
+    <Setting Name="BPMMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LogFileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">EditorLog.log</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
