@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RITS.StrymonEditor.Conversion;
 using RITS.StrymonEditor.Models;
 
 namespace RITS.StrymonEditor.ViewModels
@@ -268,13 +269,14 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 if (LinkedParameter.ContextPedalName == StrymonPedal.Mobius_Name)
                 {
-                    Value = Globals.ConvertBPMToMilliHz(value);
+                    Value = ConversionUtils.ConvertBPMToMilliHz(value);
                 }
                 else
                 {
-                    Value = Globals.ConvertBPMToMilliseconds(value);
+                    Value = ConversionUtils.ConvertBPMToMilliseconds(value);
                 }
             }
+            // Need to reset DirectEntry flag
             LinkedParameter.DirectEntryChange = false;
         }
     }

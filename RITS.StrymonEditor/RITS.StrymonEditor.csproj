@@ -83,6 +83,7 @@
     <Compile Include="AutoUpdate\VersionConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Conversion\BoostLabelValueConverter.cs" />
+    <Compile Include="Conversion\ConversionUtils.cs" />
     <Compile Include="Conversion\EchoValueLabelConverter.cs" />
     <Compile Include="Conversion\FineValueLabelConverter.cs" />
     <Compile Include="Conversion\OptionListPotValueConverter.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\DirectEntryViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ParameterViewModel.cs" />
     <Compile Include="ViewModels\PotViewModel.cs" />
     <Compile Include="ViewModels\PresetControlViewModel.cs" />

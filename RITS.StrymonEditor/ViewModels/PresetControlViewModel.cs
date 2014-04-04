@@ -95,7 +95,7 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
-        private string GetPresetCode(int i)
+        public string GetPresetCode(int i)
         {
             int div = (pedal.PresetCount == 300) ? 3 : 2;
             int bank = i / div;

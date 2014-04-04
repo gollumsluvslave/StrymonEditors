@@ -47,18 +47,18 @@
         </Style>
     </Window.Resources>
     <Window.InputBindings>
-        <KeyBinding Key="X" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ExitCommand}" />
-        <KeyBinding Key="L" Modifiers="Shift" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.LoadXmlCommand}" />
-        <KeyBinding Key="L" Modifiers="Alt" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.LoadSyxCommand}" />
-        <KeyBinding Key="N" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NewTimelinePresetCommand}" />
-        <KeyBinding Key="N" Modifiers="Shift" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NewMobiusPresetCommand}" />
-        <KeyBinding Key="N" Modifiers="Alt" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NewBigSkyPresetCommand}" />
+        <KeyBinding Key="X" Modifiers="Control" Command="{Binding ViewModel.ExitCommand}" />
+        <KeyBinding Key="L" Modifiers="Shift" Command="{Binding ViewModel.LoadXmlCommand}" />
+        <KeyBinding Key="L" Modifiers="Alt" Command="{Binding ViewModel.LoadSyxCommand}" />
+        <KeyBinding Key="N" Modifiers="Control" Command="{Binding ViewModel.NewTimelinePresetCommand}" />
+        <KeyBinding Key="N" Modifiers="Shift" Command="{Binding ViewModel.NewMobiusPresetCommand}" />
+        <KeyBinding Key="N" Modifiers="Alt" Command="{Binding ViewModel.NewBigSkyPresetCommand}" />
     </Window.InputBindings>
     <Window.Background>
         <ImageBrush ImageSource="pack://application:,,,/Views/Images/Strymon.gif" Stretch="None"/>
     </Window.Background>
     <DockPanel Background="Transparent">
-        <Menu IsMainMenu="True" ItemContainerStyle="{StaticResource BoundMenu}" DockPanel.Dock="Top" ItemsSource="{Binding EditorMenu}"></Menu>
+        <Menu IsMainMenu="True" ItemContainerStyle="{StaticResource BoundMenu}" DockPanel.Dock="Top" ItemsSource="{Binding ViewModel.EditorMenu}"></Menu>
 
         <StatusBar Background="BlanchedAlmond"  x:Name="EditorStatus" DockPanel.Dock="Bottom" Height="25" VerticalAlignment="Bottom">
             <StatusBar.ItemsPanel>
@@ -79,24 +79,24 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Grid.Column="0">
-                <Image Source="{Binding MidiImage}"/>
+                <Image Source="{Binding ViewModel.MidiImage}"/>
             </StatusBarItem>
             <StatusBarItem Grid.Column="1">
-                <TextBlock Text="{Binding StatusText}" />
+                <TextBlock Text="{Binding ViewModel.StatusText}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="2">
-                <TextBlock Text="{Binding ConnectedPedal1}"/>
+                <TextBlock Text="{Binding ViewModel.ConnectedPedal1}"/>
             </StatusBarItem>
             <StatusBarItem Grid.Column="3">
-                <TextBlock Text="{Binding ConnectedPedal2}"/>
+                <TextBlock Text="{Binding ViewModel.ConnectedPedal2}"/>
             </StatusBarItem>
             <StatusBarItem Grid.Column="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                <TextBlock Text="{Binding ConnectedPedal3}"/>
+                <TextBlock Text="{Binding ViewModel.ConnectedPedal3}"/>
             </StatusBarItem>
             <StatusBarItem Grid.Column="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                 <DockPanel Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{Binding PBStatus}" Padding="0,0,2,0" VerticalAlignment="Center"/>
-                    <ProgressBar Value="{Binding PBValue}" Maximum="{Binding PBMax}" Width="Auto" HorizontalContentAlignment="Stretch"  Height="18" Visibility="{Binding ShowProgressBar, Converter={StaticResource VisibilityOfBool}}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding ViewModel.PBStatus}" Padding="0,0,2,0" VerticalAlignment="Center"/>
+                    <ProgressBar Value="{Binding ViewModel.PBValue}" Maximum="{Binding ViewModel.PBMax}" Width="Auto" HorizontalContentAlignment="Stretch"  Height="18" Visibility="{Binding ViewModel.ShowProgressBar, Converter={StaticResource VisibilityOfBool}}" VerticalAlignment="Center"/>
                 </DockPanel>
             </StatusBarItem>
         </StatusBar>

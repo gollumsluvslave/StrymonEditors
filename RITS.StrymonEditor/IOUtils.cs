@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Microsoft.Win32;
+using System.Windows;
 using RITS.StrymonEditor.Serialization;
 using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.Models;
@@ -125,7 +126,6 @@ namespace RITS.StrymonEditor
                 try
                 {
                     SaveFileDialog dlg = new SaveFileDialog();
-                    dlg.FileName = preset.Name;
                     dlg.DefaultExt = ".syx";
                     dlg.Filter = "Sysex Files (.syx)|*.syx";
                     string filePath = null;
@@ -154,7 +154,7 @@ namespace RITS.StrymonEditor
         }
 
         /// <summary>
-        /// Save the supplied <see cref="StrymonPreset"/> to the .syx file format
+        /// Backup all the presets of the supplied <see cref="StrymonPedal"/> to the .syx file format
         /// </summary>
         /// <param name="preset"></param>
         public static void PedalBackupToSyx(StrymonPedal pedal)
@@ -193,6 +193,39 @@ namespace RITS.StrymonEditor
                 }
             }
         }
+
+        /// <summary>
+        /// Save the supplied <see cref="StrymonPreset"/> to the .syx file format
+        /// </summary>
+        /// <param name="preset"></param>
+        public static IEnumerable<StrymonPreset> GetPresetBackupDataFromSyx(StrymonPedal pedal)
+        {
+            using (RITSLogger logger = new RITSLogger())
+            {
+                SaveFileDialog dlg = new SaveFileDialog();
+                dlg.FileName = pedal.Name;
+                dlg.DefaultExt = ".syx";
+                dlg.Filter = "Sysex Files (.syx)|*.syx";
+                string filePath = null;
+                Nullable<bool> result = dlg.ShowDialog();
+                if (result == true)
+                {
+                    filePath = dlg.FileName;
+                    byte[] fullBackup = GetBinaryFile(filePath);
+                    var size = fullBackup.Length;
+                    if (size != pedal.PresetCount * 650)
+                    {
+                        MessageBox.Show("Selected file does not have the correct number of bytes for a pedal backup file.","Invalid Backup");
+                        yield break;
+                    }
+                    foreach (var presetData in fullBackup.Chunkify(650))
+                    {
+                        yield return StrymonSysExUtils.FromSysExData(presetData.ToArray());
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// Save the currently active preset over the file it was originally loaded from

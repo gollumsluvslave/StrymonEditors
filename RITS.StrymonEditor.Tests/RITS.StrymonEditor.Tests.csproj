@@ -54,17 +54,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BPMConversionShould.cs" />
-    <Compile Include="IncrementShould.cs" />
-    <Compile Include="FineCoarseSynchroniserShould.cs" />
-    <Compile Include="PotValueMapShould.cs" />
-    <Compile Include="PotViewModelFactoryShould.cs" />
-    <Compile Include="PotViewModelShould.cs" />
-    <Compile Include="FineCoarseValueConverterFactoryShould.cs" />
-    <Compile Include="PotValueConverterFactoryShould.cs" />
-    <Compile Include="ParameterViewModelShould.cs" />
+    <Compile Include="Conversion\BPMConversionShould.cs" />
+    <Compile Include="Models\IncrementShould.cs" />
+    <Compile Include="Conversion\FineCoarseSynchroniserShould.cs" />
+    <Compile Include="Conversion\PotValueMapShould.cs" />
+    <Compile Include="Models\StymonSysExUtilsShould.cs" />
+    <Compile Include="ViewModels\PotViewModelFactoryShould.cs" />
+    <Compile Include="ViewModels\PotViewModelShould.cs" />
+    <Compile Include="Conversion\FineCoarseValueConverterFactoryShould.cs" />
+    <Compile Include="Conversion\PotValueConverterFactoryShould.cs" />
+    <Compile Include="ViewModels\ParameterViewModelShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValueLabelConverterFactoryShould.cs" />
+    <Compile Include="Conversion\ValueLabelConverterFactoryShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RITS.StrymonEditor\RITS.StrymonEditor.csproj">

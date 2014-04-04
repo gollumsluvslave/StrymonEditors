@@ -8,6 +8,7 @@ using System.Windows.Media;
 
 using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.Models;
+using RITS.StrymonEditor.Conversion;
 
 namespace RITS.StrymonEditor.ViewModels
 {
@@ -619,6 +620,8 @@ namespace RITS.StrymonEditor.ViewModels
                     toolsMenu = new BindableCollection<MenuItemViewModel>();
                     var backup = new MenuItemViewModel { MenuText = "Pedal Backup", Command = PedalBackup };
                     toolsMenu.Add(backup);
+                    var restore = new MenuItemViewModel { MenuText = "Restore Pedal Backup", Command = RestorePedalBackup };
+                    toolsMenu.Add(restore);
 
                 }
                 return toolsMenu;
@@ -1183,20 +1186,8 @@ namespace RITS.StrymonEditor.ViewModels
         // Rename the currently active preset
         private void DirectEntry()
         {
-            Views.Dialog dlg = new Views.Dialog(new DirectEntryViewModel(GetCurrentFineValue));
+            Views.Dialog dlg = new Views.Dialog(new DirectEntryViewModel(ActivePreset.FineValue));
             dlg.ShowDialog();
-        }
-
-        private string GetCurrentFineValue
-        {
-            get
-            {
-                if (!Globals.IsBPMModeActive)
-                    return ActivePreset.ControlParameters[0].FineValue.ToString();
-                if (ActivePedal.Name == "Mobius")
-                    return Globals.ConvertMilliHzToBPM(ActivePreset.ControlParameters[0].FineValue).ToString();
-                return Globals.ConvertMillisecondsToBPM(ActivePreset.ControlParameters[0].FineValue).ToString();
-            }
         }
 
 
@@ -1301,6 +1292,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Command that requests a fetch of the current pedal edit buffer
+        /// </summary>
         public RelayCommand FetchCurrent
         {
             get
@@ -1320,6 +1314,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Command that sends the activs <see cref="StrymonPreset"/> to the context pedal edit buffer
+        /// </summary>
         public RelayCommand SendToEdit
         {
             get
@@ -1331,6 +1328,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Command to create .syx backup of all presets
+        /// </summary>
         private RelayCommand pedalBackup;
         public RelayCommand PedalBackup
         {
@@ -1353,6 +1353,34 @@ namespace RITS.StrymonEditor.ViewModels
         {
             return ActivePedal.PresetRawData.Count == ActivePedal.PresetCount;
         }
+
+        /// <summary>
+        /// Command to restore all presets on the pedal from .syx backup
+        /// </summary>
+        private RelayCommand restorePedalBackup;
+        public RelayCommand RestorePedalBackup
+        {
+            get
+            {
+                if (restorePedalBackup == null)
+                {
+                    restorePedalBackup = new RelayCommand
+                    (
+                        new Action(() =>
+                        {
+                            int index = 0;
+                            foreach (var presetData in IOUtils.GetPresetBackupDataFromSyx(ActivePedal))
+                            {
+                                midiManager.PushToIndex(presetData, index);
+                                System.Threading.Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
+                                index++;
+                            }
+                        }));
+                }
+                return restorePedalBackup;
+            }
+        }
+
 
         /// <summary>
         /// ICommand to change the BPM / Millisecond mode

@@ -61,6 +61,9 @@ namespace RITS.StrymonEditor
             set { Properties.Settings.Default.BPMMode = value; }
         }
 
+        /// <summary>
+        /// Main initilisation method - loads all definition xmls, and sets the list of SupportedPedals
+        /// </summary>
         public static void Init()
         {
             // TODO : Initialize MIDI here?? Create StrymonMidiManager as Singleton instance
@@ -98,39 +101,23 @@ namespace RITS.StrymonEditor
         }
 
 
-        public static double ConvertMillisecondsToBPM(int ms)
+        public static IEnumerable<IEnumerable<T>> Chunkify<T>(this IEnumerable<T> enumerable,
+                                                      int chunkSize)
         {
-            double bpm = 60000 / Convert.ToDouble(ms);
-            return Math.Round(bpm, 1);
+            if (chunkSize < 1) throw new ArgumentException("chunkSize must be positive");
+
+            using (var enumerator = enumerable.GetEnumerator())
+                while (enumerator.MoveNext())
+                    yield return enumerator.GetChunk(chunkSize);
         }
 
-        public static int ConvertBPMToMilliseconds(double bpm)
+        private static IEnumerable<T> GetChunk<T>(this IEnumerator<T> enumerator,
+                                                  int chunkSize)
         {
-            return Convert.ToInt32(60000/ bpm);
-        }
-        public static double ConvertMilliHzToBPM(int mhz)
-        {
-            double hz = (mhz / 1000);
-            double bpm = hz * 60;
-            return Math.Round(bpm, 1);
+            do yield return enumerator.Current;
+            while (--chunkSize > 0 && enumerator.MoveNext());
         }
 
-        public static int ConvertBPMToMilliHz(double bpm)
-        {
-            return Convert.ToInt32(bpm /60) *1000;
-        }
-
-        // Mobius gonna be funny!
-        public static int GetHeelSysExOffSetForPot(int potId)
-        {
-            int offSet = (potId-1) * 2;
-            if (potId > 5) offSet = potId * 2;
-            return 37 + offSet;
-        }
-        public static int GetToeSysExOffSetForPot(int potId)
-        {
-            return GetHeelSysExOffSetForPot(potId) + 1;
-        }
 
     }
 }

@@ -13,25 +13,7 @@ namespace RITS.StrymonEditor.Models
     /// </summary>
     public static class StrymonSysExUtils
     {
-        /// <summary>
-        /// Loads a template into a SysExMessage instance 
-        /// </summary>
-        /// <returns></returns>
-        private static StrymonSysExMessage Template(StrymonPedal pedal)
-        {
-            using (RITSLogger logger = new RITSLogger())
-            {
-                var resourceName = string.Format("RITS.StrymonEditor.Base_{0}.syx",pedal.Name);
-                using (Stream resFilestream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-                {
-                    if (resFilestream == null) return null;
-                    byte[] ba = new byte[resFilestream.Length];
-                    resFilestream.Read(ba, 0, ba.Length);
-                    return new StrymonSysExMessage(ba);
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Loads a <see cref="StrymonPreset"/> instance from a SysEx byte array
         /// </summary>
@@ -44,36 +26,36 @@ namespace RITS.StrymonEditor.Models
                 StrymonSysExMessage msg = new StrymonSysExMessage(syxData);
                 StrymonPreset preset = new StrymonPreset(msg.StrymonPedal, false);
                 // Set Machine
-                preset.Machine = preset.Pedal.Machines.FirstOrDefault(x => x.Value == msg.Data[0]);
+                preset.Machine = msg.StrymonMachine;
                 preset.Name = msg.PresetName;
-                preset.SourceIndex = GetPresetIndex(msg.AddressStart);
+                preset.SourceIndex = msg.PresetIndex;
                 // Set all single Byte params / pots
                 foreach (var p in preset.AllParameters.Where(x => x.SysExOffset != 0))
                 {
                     p.Value = msg.Data[p.SysExOffset];
+                    // Special handling for fine/coasre parameter
                     if (p.HasFineControl)
                     {
-                        p.FineValue = GetFineValue(msg.Data, msg.StrymonPedal);
+                        p.FineValue = msg.FineValue;
                     }
                 }
-                //// TODO Fine/Coarse Params
-
-                // HeelToe
+                // EP Set HeelToe
                 preset.EPSetValues = new List<HeelToeSetting>();
                 foreach (var pot in msg.StrymonPedal.Pots.Where(x=>!x.Hide && x.Id >0))
                 {
                     var ht = new HeelToeSetting
                         {
                             PotId = pot.Id,
-                            HeelValue = msg.Data[Globals.GetHeelSysExOffSetForPot(pot.Id)],
-                            ToeValue = msg.Data[Globals.GetToeSysExOffSetForPot(pot.Id)]
+                            HeelValue = msg.GetHeel(pot.Id),
+                            ToeValue = msg.GetToe(pot.Id)
                         };
                     preset.EPSetValues.Add(ht);
                 }
+                // Dynamic parameter pot references
                 if (msg.StrymonPedal.Name != StrymonPedal.Timeline_Name)
                 {
-                    preset.Param1ParameterIndex = msg.Data[62];
-                    preset.Param2ParameterIndex = msg.Data[63];
+                    preset.Param1ParameterIndex = msg.DynamicParameterPot1Index;
+                    preset.Param2ParameterIndex = msg.DynamicParameterPot2Index;
                 }
                 return preset;
             }
@@ -89,108 +71,62 @@ namespace RITS.StrymonEditor.Models
         {
             using (RITSLogger logger = new RITSLogger())
             {
-                var template = Template(preset.Pedal);
-                template.AddressStart[0] = Convert.ToByte(preset.Pedal.Id);
-                template.Data[0] = Convert.ToByte(preset.Machine.Value);
-                template.PresetName = preset.Name;
+                var sysExMessage = new StrymonSysExMessage(preset.Pedal);
+                sysExMessage.StrymonPedal = preset.Pedal;
+                sysExMessage.StrymonMachine = preset.Machine;
+                sysExMessage.PresetName = preset.Name;
                 // Single Byte Params
                 foreach (var p in preset.AllParameters.Where(x => x.SysExOffset != 0))
                 {
-                    template.Data[p.SysExOffset] = Convert.ToByte(p.Value);
+                    sysExMessage.Data[p.SysExOffset] = Convert.ToByte(p.Value);
                     if (p.HasFineControl)
                     {
-                        SetFineValue(p.FineValue, template.Data, template.StrymonPedal);
+                        sysExMessage.FineValue = p.FineValue;
                     }
                 }
                 // HeelToe                
                 foreach(var ht in preset.EPSetValues)
                 {
-                    template.Data[Globals.GetHeelSysExOffSetForPot(ht.PotId)] = Convert.ToByte(ht.HeelValue);
-                    template.Data[Globals.GetToeSysExOffSetForPot(ht.PotId)] = Convert.ToByte(ht.ToeValue);
+                    sysExMessage.SetHeel(ht.PotId, ht.HeelValue);
+                    sysExMessage.SetToe(ht.PotId, ht.ToeValue);
                 }
                 if (preset.Pedal.Name != StrymonPedal.Timeline_Name)
                 {
-                    template.Data[62] = Convert.ToByte(preset.GetDynamicAssignedParameterIndex(5));
-                    template.Data[63] = Convert.ToByte(preset.GetDynamicAssignedParameterIndex(6));
+                    sysExMessage.DynamicParameterPot1Index = preset.GetDynamicAssignedParameterIndex(5);
+                    sysExMessage.DynamicParameterPot2Index = preset.GetDynamicAssignedParameterIndex(6);
                 }
 
-                return template.FullMessageData;
+                return sysExMessage.FullMessageData;
             }
         }
-
-
-        
-        
-        
-        // Helper that extracts byte offset values and converts into the fine value for a fine/coarse parameter
-        private static int GetFineValue(byte[] msgData, StrymonPedal pedal)
-        {
-            // TODO differences by pedal
-            if (pedal.Name == StrymonPedal.Timeline_Name || pedal.Name == StrymonPedal.Mobius_Name)
-            { 
-                int multiplier = msgData[34];
-                int ms = msgData[35];
-                int total = (multiplier * 128) + ms;
-                if (pedal.Name == StrymonPedal.Timeline_Name) return total;
-                if (total ==0) return 0;
-                double tmp = Convert.ToDouble(1000) / total;
-                return Convert.ToInt32(tmp * 1000);
-            }
-            if (pedal.Name == StrymonPedal.BigSky_Name)
-            {
-                int bigmultiplier = msgData[65];
-                int smallmultiplier = msgData[66];
-                int ms = msgData[67];
-                int total = (bigmultiplier *16384) + (smallmultiplier * 128) + ms;
-                return total;
-            }
-            return 0;
-        }
-
-        private static int GetPresetIndex(byte[] data)
-        {
-            int multiplier = data[2];
-            int fine = data[3];
-            return (multiplier * 128) + fine;
-        }
-        
-        // Helper that sets the byte offset values to the supplied fine value
-        private static void SetFineValue(int fineValue, byte[] msgData, StrymonPedal pedal)
-        {
-            // TODO differences by pedal
-            if (pedal.Name == StrymonPedal.BigSky_Name)
-            {
-                int bigmultiplier = fineValue / 16384;
-                int remainder = fineValue % 16384;
-                int smallmultiplier = remainder / 128;
-                int ms = remainder % 128;
-                msgData[65] = Convert.ToByte(bigmultiplier);
-                msgData[66] = Convert.ToByte(smallmultiplier);
-                msgData[67] = Convert.ToByte(ms);
-                return;
-            }
-            int valueToUse = fineValue;
-            if (pedal.Name == StrymonPedal.Mobius_Name)
-            {
-                valueToUse = 1000000 / fineValue;
-            }
-            int multiplier = valueToUse / 128;
-            int sms = valueToUse % 128;
-            msgData[34] = Convert.ToByte(multiplier);
-            msgData[35] = Convert.ToByte(sms);
-            return;
-        }
-
-        // Helper
 
         /// <summary>
         /// Internal class that wraps a sysex byte array into a more helpful type
         /// </summary>
-        private class StrymonSysExMessage
+        public class StrymonSysExMessage
         {
             private byte[] _data;
 
+            // .ctor for byte array
             public StrymonSysExMessage(byte[] data)
+            {
+                Init(data);
+            }
+
+            // .ctor for a pedal, using embedded template
+            public StrymonSysExMessage(StrymonPedal pedal)
+            {
+                var resourceName = string.Format("RITS.StrymonEditor.Base_{0}.syx",pedal.Name);
+                using (Stream resFilestream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                {
+                    if (resFilestream == null) return;
+                    byte[] ba = new byte[resFilestream.Length];
+                    resFilestream.Read(ba, 0, ba.Length);
+                    Init(ba);
+                }            
+            }
+
+            private void Init(byte[] data)
             {
                 if (data.Length != Globals.PresetLength) throw new ArgumentOutOfRangeException("Invalid Preset - wrong length!");
                 _data = data;
@@ -198,35 +134,31 @@ namespace RITS.StrymonEditor.Models
                 Data = _data.Skip(9).Take(Globals.PresetDataLength).ToArray();
                 Checksum = _data[Globals.PresetChecksumOffset];
             }
-            // Static data
-            public static byte Start { get { return 240; } }
-            public static byte SendRequestByte { get { return 18; } }
-            public static byte End { get { return 247; } }
-            public static byte ManufacturerId { get { return 0; } }
-            public static byte DeviceId { get { return 1; } }
-            public static byte ModelId { get { return 85; } }
 
-            // Variable data
+            // Static data
+            public static byte Start { get { return 0xF0; } }
+            public static byte SendRequestByte { get { return 0x12; } }
+            public static byte End { get { return 0xF7; } }
+            public static byte[] StrymonId { get { return new byte[] { 0x00, 0x01, 0x85 }; } }
+
+            /// <summary>
+            /// Address start including pedal id and preset info
+            /// </summary>
             public byte[] AddressStart { get; set; }
+
+            /// <summary>
+            /// The main preset data
+            /// </summary>
             public byte[] Data { get; set; }
-            public string PresetName
-            {
-                get
-                {
-                    var nameData = (Data.Skip(Globals.PresetNameOffset).Take(Globals.PresetNameLen)).ToArray();
-                    return UTF8Encoding.UTF8.GetString(nameData);
-                }
-                set
-                {
-                    var nameBytes = UTF8Encoding.UTF8.GetBytes(value);
-                    for (int i = 0; i < 16; i++)
-                    {
-                        byte b =(i < nameBytes.Length) ? nameBytes[i] : Convert.ToByte(' ');
-                        Data[Globals.PresetNameOffset + i] = b;
-                    }
-                }
-            }
+            
+            /// <summary>
+            /// The sysex checksum
+            /// </summary>
             public byte Checksum { get; set; }
+
+            /// <summary>
+            /// Generator method that returns the instances as a bytearray
+            /// </summary>
             public byte[] FullMessageData
             {
                 get
@@ -234,29 +166,10 @@ namespace RITS.StrymonEditor.Models
                     return SyxGenerator.ToArray();
                 }
             }
-            
-            private IEnumerable<byte> SyxGenerator
-            {
-                get
-                {
-                    yield return Start;
-                    yield return ManufacturerId;
-                    yield return DeviceId;
-                    yield return ModelId;
-                    yield return SendRequestByte;
-                    foreach (var b in AddressStart)
-                    {
-                        yield return b;
-                    }
-                    foreach (var b in Data)
-                    {
-                        yield return b;
-                    }
-                    yield return CalculateChecksum();
-                    yield return End;
-                }
-            }
 
+            /// <summary>
+            /// Exposes the <see cref="StrymonPedal"/> Id as useful strongly typed property, encapsulating the sys ex offset details away from the caller
+            /// </summary>
             public StrymonPedal StrymonPedal
             {
                 get
@@ -274,8 +187,251 @@ namespace RITS.StrymonEditor.Models
                             return null;
                     }
                 }
+                set
+                {
+                    var pedal = value;
+                    AddressStart[0] = Convert.ToByte(pedal.Id);
+                }
             }
 
+            /// <summary>
+            /// Exposes the <see cref="StrymonMachine"/> value as useful strongly typed property, encapsulating the sys ex offset details away from the caller
+            /// </summary>
+            public StrymonMachine StrymonMachine
+            {
+                get
+                {
+                    return StrymonPedal.Machines.FirstOrDefault(x => x.Value == Data[0]);
+                }
+                set
+                {
+                    var machine = value;
+                    Data[0] = Convert.ToByte(machine.Value);
+                }
+            }
+
+            /// <summary>
+            /// Gets / sets the preset name
+            /// </summary>
+            public string PresetName
+            {
+                get
+                {
+                    var nameData = (Data.Skip(Globals.PresetNameOffset).Take(Globals.PresetNameLen)).ToArray();
+                    return UTF8Encoding.UTF8.GetString(nameData).Trim();
+                }
+                set
+                {
+                    var nameBytes = UTF8Encoding.UTF8.GetBytes(value);
+                    for (int i = 0; i < 16; i++)
+                    {
+                        byte b = (i < nameBytes.Length) ? nameBytes[i] : Convert.ToByte(' ');
+                        Data[Globals.PresetNameOffset + i] = b;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Gets / sets the preset index (pedal slot)
+            /// </summary>
+            public int PresetIndex
+            {
+                get
+                {
+                    int multiplier = AddressStart[2];
+                    int fine = AddressStart[3];
+                    return (multiplier * 128) + fine;
+                }
+            }
+
+            #region FineValue
+            /// <summary>
+            /// Gets sets the FineValue, handling pedal differences
+            /// </summary>
+            public int FineValue
+            {
+                get 
+                {
+                    if (StrymonPedal.Name == StrymonPedal.BigSky_Name) return BigSkyFineValue;
+                    if (StrymonPedal.Name == StrymonPedal.Mobius_Name) return MobiusFineValue;
+                    return TimelineFineValue;
+                }
+                set
+                {
+                    if (StrymonPedal.Name == StrymonPedal.BigSky_Name) BigSkyFineValue = value;
+                    if (StrymonPedal.Name == StrymonPedal.Mobius_Name) MobiusFineValue = value;
+                    if (StrymonPedal.Name == StrymonPedal.Timeline_Name) TimelineFineValue = value;
+                }
+            }
+
+            private int BigSkyFineValue
+            {
+                get 
+                {
+                    int bigmultiplier = Data[65];
+                    int smallmultiplier = Data[66];
+                    int ms = Data[67];
+                    int total = (bigmultiplier * 16384) + (smallmultiplier * 128) + ms;
+                    return total;
+                }
+                set 
+                {
+                    int fineValue = value;
+                    int bigmultiplier = fineValue / 16384;
+                    int remainder = fineValue % 16384;
+                    int smallmultiplier = remainder / 128;
+                    int ms = remainder % 128;
+                    Data[65] = Convert.ToByte(bigmultiplier);
+                    Data[66] = Convert.ToByte(smallmultiplier);
+                    Data[67] = Convert.ToByte(ms);
+                }
+            }
+
+            private int MobiusFineValue
+            {
+                get 
+                { 
+                    var total = TwoByteFineValue;
+                    if (total == 0) return 0;
+                    double tmp = Convert.ToDouble(1000) / total;
+                    return Convert.ToInt32(tmp * 1000);
+                }
+                set
+                {
+                    int fineValue = value;
+                    int valueToUse = fineValue;
+                    if (StrymonPedal.Name == StrymonPedal.Mobius_Name)
+                    {
+                        valueToUse = 1000000 / fineValue;
+                    }
+                    TwoByteFineValue = valueToUse;
+                }
+            }
+
+            private int TimelineFineValue
+            {
+                get 
+                {
+                    return TwoByteFineValue;
+                }
+                set
+                {
+                    TwoByteFineValue=value;
+                }
+
+            }
+
+            private int TwoByteFineValue
+            {
+                get
+                {
+                    int multiplier = Data[34];
+                    int ms = Data[35];
+                    return (multiplier * 128) + ms;
+                }
+                set
+                {
+                    int multiplier = value / 128;
+                    int sms = value % 128;
+                    Data[34] = Convert.ToByte(multiplier);
+                    Data[35] = Convert.ToByte(sms);
+                }
+            }
+            #endregion FineValue
+
+            #region EPSetHeelToe
+            /// <summary>
+            /// Sets the Heel value for a Pot
+            /// </summary>
+            /// <param name="potId"> the id of the pot</param>
+            /// <param name="value">the value of the pot in the heel position</param>
+            public void SetHeel(int potId, int value)
+            {
+                var sysExOffset = GetHeelSysExOffSetForPot(potId);
+                Data[sysExOffset] = Convert.ToByte(value);
+            }
+
+            /// <summary>
+            /// Sets the Toe value for a Pot
+            /// </summary>
+            /// <param name="potId"> the id of the pot</param>
+            /// <param name="value">the value of the pot in the heel position</param>
+            public void SetToe(int potId, int value)
+            {
+                var sysExOffset = GetHeelSysExOffSetForPot(potId) + 1;
+                Data[sysExOffset] = Convert.ToByte(value);
+            }
+
+            public int GetHeel(int potId)
+            {
+                return Data[GetHeelSysExOffSetForPot(potId)];
+            }
+
+            public int GetToe(int potId)
+            {
+                return Data[GetHeelSysExOffSetForPot(potId) + 1];
+            }
+            #endregion
+
+            #region DynamicParameters
+            /// <summary>
+            /// Gets / Sets the parameter association DynamicPot 1
+            /// </summary>
+            public int DynamicParameterPot1Index
+            {
+                get
+                {
+                    return Data[62];
+                }
+                set
+                {
+                    Data[62] = Convert.ToByte(value);
+                }
+            }
+
+            /// <summary>
+            /// Gets / Sets the parameter association DynamicPot 2
+            /// </summary>
+            public int DynamicParameterPot2Index
+            {
+                get
+                {
+                    return Data[63];
+                }
+                set
+                {
+                    Data[63] = Convert.ToByte(value);
+                }
+            }
+            #endregion
+
+            // .Syx generator
+            private IEnumerable<byte> SyxGenerator
+            {
+                get
+                {
+                    yield return Start;
+                    foreach (var b in StrymonId)
+                    {
+                        yield return b;
+                    }
+                    yield return SendRequestByte;
+                    foreach (var b in AddressStart)
+                    {
+                        yield return b;
+                    }
+                    foreach (var b in Data)
+                    {
+                        yield return b;
+                    }
+                    yield return CalculateChecksum();
+                    yield return End;
+                }
+            }
+
+            // Checksum calculator - thanks John @ Strymon
+            // Port from GitHub code
+            // https://github.com/strymon/QRtMidi/blob/master/QRtMidiData.cpp 
             private byte CalculateChecksum()
             {
                 using (RITSLogger logger = new RITSLogger())
@@ -288,6 +444,16 @@ namespace RITS.StrymonEditor.Models
                     return Convert.ToByte(0x7F & accum);
                 }
             }
+
+            // Helper method that returns the Heel SysExOffset for a specifc pot. 
+            // involves skipping a couple of bytes for pots greater than 5
+            private int GetHeelSysExOffSetForPot(int potId)
+            {
+                int offSet = (potId - 1) * 2;
+                if (potId > 5) offSet = potId * 2;
+                return 37 + offSet;
+            }
+
         }
 
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using RITS.StrymonEditor.Serialization;
-
+using RITS.StrymonEditor.Conversion;
 using RITS.StrymonEditor.Logging;
 
 namespace RITS.StrymonEditor.Models
@@ -191,6 +191,19 @@ namespace RITS.StrymonEditor.Models
         {
             var p1Pot = HiddenParameters.FirstOrDefault(x => x.DynamicPotIdAssigned == potId);
             return p1Pot.SysExOffset-17; // Touchy Feely
+        }
+
+        public string FineValue
+        {
+            get
+            {
+                int fineValue = ControlParameters[0].FineValue;
+                if (!Globals.IsBPMModeActive)
+                    return fineValue.ToString();
+                if (Pedal.Name == StrymonPedal.Mobius_Name)
+                    return ConversionUtils.ConvertMilliHzToBPM(fineValue).ToString();
+                return ConversionUtils.ConvertMillisecondsToBPM(fineValue).ToString();
+            }
         }
 
         /// <summary>
