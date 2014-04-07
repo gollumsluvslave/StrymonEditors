@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RITS.StrymonEditor.Models;
-
+using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.ViewModels
 {
     // TODO
@@ -11,16 +11,25 @@ namespace RITS.StrymonEditor.ViewModels
 
     {
         StrymonPedal pedal;
-        StrymonMidiManager midiManager;
-        public PresetControlViewModel(string mode, StrymonPedal contextPedal,StrymonMidiManager midiManager)
+        IStrymonMidiManager midiManager;
+        public PresetControlViewModel(string mode, StrymonPedal contextPedal, IStrymonMidiManager midiManager)
         {
-            Mediator.Register(ViewModelMessages.BulkLoadComplete, BulkLoadCompleteCallback);
             pedal = contextPedal;
             PresetIsEnabled = true;
             Mode = mode;
             PresetIndex = 0;
             this.midiManager = midiManager;
         }
+
+        public override void RegisterWithMediator()
+        {
+            Mediator.Register(ViewModelMessages.BulkLoadComplete, BulkLoadCompleteCallback);
+        }
+        public override void DeRegisterFromMediator()
+        {
+            Mediator.UnRegister(ViewModelMessages.BulkLoadComplete, BulkLoadCompleteCallback);
+        }
+
 
         private void BulkLoadCompleteCallback(object o)
         {
@@ -29,7 +38,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         public void Dispose()
         {
-            Mediator.UnRegister(ViewModelMessages.BulkLoadComplete, BulkLoadCompleteCallback);
+            base.Dispose();
         }
         private string mode;
         public string Mode

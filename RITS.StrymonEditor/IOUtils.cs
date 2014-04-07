@@ -202,8 +202,7 @@ namespace RITS.StrymonEditor
         {
             using (RITSLogger logger = new RITSLogger())
             {
-                SaveFileDialog dlg = new SaveFileDialog();
-                dlg.FileName = pedal.Name;
+                OpenFileDialog dlg = new OpenFileDialog();
                 dlg.DefaultExt = ".syx";
                 dlg.Filter = "Sysex Files (.syx)|*.syx";
                 string filePath = null;

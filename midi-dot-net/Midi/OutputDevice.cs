@@ -52,8 +52,9 @@ namespace Midi
     /// <threadsafety static="true" instance="true" />
     /// <seealso cref="Clock"/>
     /// <seealso cref="InputDevice"/>
-    public class OutputDevice : DeviceBase
+    public class OutputDevice : DeviceBase, IOutputDevice
     {
+
         #region Public Methods and Properties
 
         /// <summary>

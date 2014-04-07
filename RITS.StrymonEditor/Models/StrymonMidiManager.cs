@@ -5,7 +5,10 @@ using System.Threading;
 using System.Text;
 
 using Midi;
+using RITS.StrymonEditor.ViewModels;
 using RITS.StrymonEditor.Logging;
+using RITS.StrymonEditor.Messaging;
+
 namespace RITS.StrymonEditor.Models
 {
     /// <summary>
@@ -15,49 +18,27 @@ namespace RITS.StrymonEditor.Models
     /// 3. Various special CC sends with dedicated methods (e.g. Timeline Looper)
     /// 4. Fetch and Push of presets from/to the pedals
     /// </summary>
-    public class StrymonMidiManager:IDisposable
+    public class StrymonMidiManager: ViewModelBase, IDisposable, IStrymonMidiManager
     {
         #region private fields
-        private List<StrymonPedal> connectedPedals = new List<StrymonPedal>();
-        private StrymonPedal bulkPedal;
-        private OutputDevice midiOut;
-        private InputDevice midiIn;
+        private IOutputDevice midiOut;
+        private IInputDevice midiIn;
         private ControlChangeMsg lastSentCC;
-        private bool isBulkFetching;
-        private ManualResetEvent bulkGate = new ManualResetEvent(true);       
         private int pcBank = 0;
         //private WaitOrTimerCallback 
-        private SysExCommand lastSysExCommand;
         //private Queue<SysExCommand> sysExQueue;
         private readonly object lockObject = new object();
         private readonly object sysExLock = new object();
         #endregion
         
-        public StrymonMidiManager()
+        public StrymonMidiManager(IInputDevice inputDevice, IOutputDevice outputDevice)
         {
-            //sysExQueue = new Queue<SysExCommand>();
-            
+            midiIn = inputDevice;
+            midiOut = outputDevice;            
         }
 
-        private SysExCommand LastSysExCommand
-        {
-            get
-            {
-                lock (sysExLock)
-                {
-                    return lastSysExCommand;
-                }
-            }
-            set
-            {
-                lock (sysExLock)
-                {
-                    lastSysExCommand = value; ;
-                }
-            }
-        }
-
-        public bool IsBulkFetching { get {return isBulkFetching;}}
+        public bool IsBulkFetching
+        { get { return bulkPedal != null; } }
         #region MIDI Connectivity
 
         private SyncMode syncMode;
@@ -70,33 +51,46 @@ namespace RITS.StrymonEditor.Models
 
             }
         }
+        private List<StrymonPedal> connectedPedals = new List<StrymonPedal>();
         public List<StrymonPedal> ConnectedPedals
         {
             get 
             {
-                return connectedPedals;
+                lock (lockObject)
+                {
+                    return connectedPedals;
+                }
             }
         }
 
-        public StrymonPedal ContextPedal { get; set; }
+        private StrymonPedal contextPedal;
+        public StrymonPedal ContextPedal 
+        {
+            get { if (IsBulkFetching)return BulkPedal; return contextPedal; }
+            set
+            {
+                contextPedal = value;
+            }
+        }
+
+        private StrymonPedal bulkPedal;
+        public StrymonPedal BulkPedal 
+        {
+            get { return bulkPedal; }
+            set 
+            { 
+                bulkPedal = value;
+            }
+        }
 
         // Attempt to initialise midi for the context pedal
         public void InitMidi()
         {
-            
-            if (midiIn != null || midiOut != null)
-            {
-                Dispose(); // Cleane up if re-init call...
-                Thread.Sleep(100);
-            }
+            if(midiIn==null || midiOut == null) return;
             using (RITSLogger logger = new RITSLogger())
             {
-                midiOut = OutputDevice.InstalledDevices.FirstOrDefault(x => x.Name == Properties.Settings.Default.MidiOutDevice);
-                if (midiOut == null) return; // No MIDI out device, return
                 midiOut.Open();
                 logger.Debug(string.Format("MIDI Out opened on {0}", Properties.Settings.Default.MidiOutDevice));
-                midiIn = InputDevice.InstalledDevices.FirstOrDefault(x => x.Name == Properties.Settings.Default.MidiInDevice);
-                if (midiIn == null) return; // No MIDI in device, return as can't identify pedal             
                 midiIn.Open();
                 midiIn.StartReceiving(null, true); // Receive with SysEx support
                 midiIn.SysEx += new InputDevice.SysExHandler(ReceiveSysEx);
@@ -121,7 +115,7 @@ namespace RITS.StrymonEditor.Models
             get
             {
                 if (ContextPedal == null) return false;
-                return connectedPedals.Exists(x => x.Id == ContextPedal.Id); 
+                return ConnectedPedals.Exists(x => x.Id == ContextPedal.Id); 
             }
 
         }
@@ -134,38 +128,21 @@ namespace RITS.StrymonEditor.Models
         public void FetchCurrent()
         {
             if (!IsConnected) return;
-            if (isBulkFetching) return; 
+            if (IsBulkFetching) return; 
             Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
-            SendFetchPresetRequest(ContextPedal.PresetCount, false);
+            SendFetchPresetRequest(ContextPedal.PresetCount);
         }
 
         public void FetchByIndex(int index)
         {
-            if (!IsConnected) return;
-            if (isBulkFetching) return; 
-            SendProgramChange(index); // Synch pedal 1st
-            SendFetchPresetRequest(index,false);
+            if (!IsConnected && !IsBulkFetching) return;
+            if (!IsBulkFetching)
+            {
+                SendProgramChange(index);
+            }
+            SendFetchPresetRequest(index);
         }
 
-        public void BulkFetch(StrymonPedal pedal)
-        {
-            // TODO - how do we mark this to avoid the Editor getting it?
-            // if we get another request whilst fetching the first, how do we queue it?
-            if (isBulkFetching)
-            {
-                // TODO
-            }
-            isBulkFetching = true;
-            bulkPedal = pedal;
-            for (int i = 0; i < pedal.PresetCount; i++)
-            {
-                Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
-                SendFetchPresetRequest(i, true);
-            }
-            // Give it a bit of time...
-            Thread.Sleep(1000);
-            isBulkFetching = false;
-        }
         #endregion
 
         #region Preset Push Support
@@ -176,7 +153,7 @@ namespace RITS.StrymonEditor.Models
         public void PushToEdit(StrymonPreset preset)
         {
             if (!IsConnected) return;
-            if (isBulkFetching) return; // TODO make this a bit more UI responsive?
+            if (IsBulkFetching) return; // TODO make this a bit more UI responsive?
             PushPreset(preset, ContextPedal.PresetCount);
         }
 
@@ -187,7 +164,7 @@ namespace RITS.StrymonEditor.Models
         public void PushToIndex(StrymonPreset preset, int index)
         {
             if (!IsConnected) return;
-            if (isBulkFetching) return; // TODO make this a bit more UI responsive?
+            if (IsBulkFetching) return; // TODO make this a bit more UI responsive?
             PushPreset(preset, index);
         }
         #endregion
@@ -213,7 +190,7 @@ namespace RITS.StrymonEditor.Models
             {
                 SendControlChange(parameter.Definition.ControlChangeNo, parameter.Value);
                 // TODO in the vicinity, but need a number of individual changes to get the exact value
-                var converter = new DefaultFineCoarseValueConverter(parameter.Definition);
+                var converter = FineCoarseValueConverterFactory.Create(parameter.Definition);
                 var approxValue = converter.CoarseToFine(parameter.Value);
                 var diff = parameter.FineValue - approxValue;
                 int cc = (diff > 0) ? 0 : 1;
@@ -250,13 +227,6 @@ namespace RITS.StrymonEditor.Models
             SendControlChange(StrymonPedal.HoldCC, value);
         }
 
-        public void ResetDisplay()
-        {
-            var request = ResetDisplayRequest.ToArray();
-                // update with pedal id
-            request[5] = Convert.ToByte(GetPedalId);
-            SendSysEx(new SysExCommand("ResetDisplay", request, 100, null, null));
-        }
 #endregion
 
         #region Looper CC Support
@@ -337,7 +307,7 @@ namespace RITS.StrymonEditor.Models
         /// <summary>
         /// Dispose unmanaged and managed resources
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
         }
@@ -364,19 +334,6 @@ namespace RITS.StrymonEditor.Models
         }
         #endregion
 
-        private void CloseBulkGate()
-        {
-            WaitForCurrentSysExCompletion();
-            Thread.Sleep(100);
-            bulkGate.Reset();
-        }
-
-        private void OpenBulkGate()
-        {
-            WaitForCurrentSysExCompletion();
-            Thread.Sleep(100);
-            bulkGate.Set();
-        }
 
         #region Private Receive Callbacks
         private void ReceiveCC(ControlChangeMessage msg)
@@ -386,7 +343,7 @@ namespace RITS.StrymonEditor.Models
             if (ReceivedCCIsEchoOfLastSent(msg)) return;            
             // Temporarily disable control change sends to avoid infinite loop
             DisableControlChangeSends = true;
-            ViewModels.ViewModelBase.mediatorInstance.NotifyColleagues(ViewModelMessages.ReceivedCC, new ControlChangeMsg { ControlChangeNo = msg.Control, Value = msg.Value });
+            Mediator.NotifyColleagues(ViewModelMessages.ReceivedCC, new ControlChangeMsg { ControlChangeNo = msg.Control, Value = msg.Value });
             DisableControlChangeSends = false;
             lastSentCC = null; // Can no longer be an echo
         }
@@ -409,57 +366,99 @@ namespace RITS.StrymonEditor.Models
 
         private void ReceiveSendAck(byte[] data)
         {
-            if (data.Reverse().Skip(1).First() != 69)
+            using (RITSLogger logger = new RITSLogger())
             {
-                System.Windows.MessageBox.Show("Preset Write Failed...");
+                try
+                {                    
+                    if (data.Reverse().Skip(1).First() != 69)
+                    {
+                        //ThreadPool.QueueUserWorkItem(QueuePushPresetFailed, null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    ThreadPool.QueueUserWorkItem(QueuePushPresetFailed, null);
+                }
             }
         }
 
         private void ReceiveIdentifyResponse(byte[] data)
         {
-            lock (lockObject)
+            using (RITSLogger logger = new RITSLogger())
             {
-                if (lastSysExCommand.TimedOut) return; // ??
-                if (data[7] != 85) return;
-                if (data[8] != 18) return;
-                if (data[9] != 0) return;
-                var pedal = StrymonPedal.GetPedalById(data[10]);
-                if (pedal == null) return;
-                lastSysExCommand.Retrigger();
-
-                connectedPedals.Add(pedal);
-                ThreadPool.QueueUserWorkItem(QueuePedalConnected, pedal);
+                try
+                {
+                    if (LastSysExCommand.TimedOut) return; // ??
+                    var testData = data.Skip(7).Take(3);
+                    if (!testData.SequenceEqual(new byte[] { 0x55, 0x12, 0x00 })) return;
+                    var pedal = StrymonPedal.GetPedalById(data[10]);
+                    if (pedal == null) return;
+                    LastSysExCommand.Retrigger();
+                    ConnectedPedals.Add(pedal);
+                    ThreadPool.QueueUserWorkItem(QueuePedalConnected, pedal);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
             }
         }
 
         private void ReceivePresetResponse(byte[] data)
         {
-            if (!isBulkFetching && !IsConnected) return;
-            lock (lockObject)
+            using (RITSLogger logger = new RITSLogger())
             {
-                if (data.Length == 8 && data[6] == 71)
+                try
                 {
-                    //logger.Debug("Preset Fetch failed...");
-                    System.Windows.MessageBox.Show("Preset Fetch Failed...");
-                    return;
+                    if (!IsBulkFetching && !IsConnected) return;
+                    if (data.Length != 650)
+                    {
+                        //logger.Debug("Preset Fetch failed...");
+                        throw new ArgumentOutOfRangeException("Preset not recieved - invalid length.");
+                    }
+                    var preset = StrymonSysExUtils.FromSysExData(data);
+                    // Choice here? Is it a bulk fetch, or a normal fetch?
+                    if (!LastSysExCommand.IsBulkFetch)
+                    {
+                        // Queue back to editor
+                        ThreadPool.QueueUserWorkItem(QueuePresetReceipt, preset);
+                    }
+                    else
+                    {
+                        // Assumption is responses will come in order!
+                        BulkPedal.UpdatePresetInfo(preset);
+                        BulkPedal.UpdatePresetRawData(preset.SourceIndex, data);
+                        ThreadPool.QueueUserWorkItem(QueueBulkPresetUpdate, preset);
+                    }
+                    LastSysExCommand.Completed();
                 }
-                var preset = StrymonSysExUtils.FromSysExData(data);
-                // Choice here? Is it a bulk fetch, or a normal fetch?
-                if (!lastSysExCommand.IsBulkFetch)
+                catch (Exception ex)
                 {
-                    // Queue back to editor
-                    ThreadPool.QueueUserWorkItem(QueuePresetReceipt, preset);
+                    logger.Error(ex);
+                    if (LastSysExCommand.IsBulkFetch)
+                    {
+                        ThreadPool.QueueUserWorkItem(QueueBulkPresetUpdate, null);
+                    }
                 }
-                else
+            }    
+        }
+        private SysExCommand lastSysExCommand;
+        private SysExCommand LastSysExCommand
+        {
+            get
+            {
+                lock (lockObject)
                 {
-                    // Assumption is responses will come in order!
-                    bulkPedal.UpdatePresetInfo(preset);
-                    bulkPedal.UpdatePresetRawData(preset.SourceIndex, data);
-                    ThreadPool.QueueUserWorkItem(QueueBulkPresetUpdate, preset);
+                    return lastSysExCommand;
                 }
-                
-                lastSysExCommand.Completed();
-                
+            }
+            set
+            {
+                lock (lockObject)
+                {
+                    lastSysExCommand = value;
+                }
             }
         }
 
@@ -470,12 +469,9 @@ namespace RITS.StrymonEditor.Models
             byte[] data = msg.Data;
             // Echo of request? If same as request then ignore...from Strymon github code, John has encountered this as well
             // thinks it might be a midi-merge default??
-            lock (lockObject)
-            {
-                if (data.SequenceEqual(lastSysExCommand.Data)) return;
-                if (lastSysExCommand.ResponseCallback == null) return;
-                lastSysExCommand.ResponseCallback(data);                
-            }
+            if (data.SequenceEqual(LastSysExCommand.Data)) return;
+            if (LastSysExCommand.ResponseCallback == null) return;
+            LastSysExCommand.ResponseCallback(data);                
         }
         #endregion
 
@@ -503,7 +499,7 @@ namespace RITS.StrymonEditor.Models
         }
 
 
-        private void SendFetchPresetRequest(int presetIndex,bool isBulk)
+        private void SendFetchPresetRequest(int presetIndex)
         {
             using (RITSLogger logger = new RITSLogger())
             {
@@ -511,7 +507,7 @@ namespace RITS.StrymonEditor.Models
                 // update with pedal id
                 request[5] = Convert.ToByte(GetPedalId);
                 UpdatePresetReadrequestWithPresetNo(request, presetIndex);
-                var sysEx = new SysExCommand("Fetch", request, 2000, ReceivePresetResponse, null, isBulk);
+                var sysEx = new SysExCommand("Fetch", request, 2000, ReceivePresetResponse, null, IsBulkFetching);
                 logger.Debug(string.Format("FetchPreset Command: {0}", BitConverter.ToString(sysEx.Data)));
                 SendSysEx(sysEx);
             }
@@ -520,20 +516,17 @@ namespace RITS.StrymonEditor.Models
 
         private void SendSysEx(SysExCommand cmd)
         {
-            lock (lockObject)
-            {
-                WaitForCurrentSysExCompletion();
-                midiOut.SendSysEx(cmd.Data);
-                lastSysExCommand = cmd;
-                lastSysExCommand.Dispatched();
-            }
+            WaitForCurrentSysExCompletion();
+            LastSysExCommand = cmd;
+            midiOut.SendSysEx(LastSysExCommand.Data);
+            LastSysExCommand.Dispatched();
         }
 
         private void WaitForCurrentSysExCompletion()
         {
-            if (lastSysExCommand != null)
+            if (LastSysExCommand != null)
             {
-                while (lastSysExCommand.IsProcessing)
+                while (LastSysExCommand.IsProcessing)
                 {
                     // Don't send new SysEx until timedout or complete
                 }
@@ -558,9 +551,7 @@ namespace RITS.StrymonEditor.Models
         {
             using (RITSLogger logger = new RITSLogger())
             {
-                if (!IsConnected) return;
                 if (SyncMode == SyncMode.PedalMaster) return;
-                if (DisableControlChangeSends) return;
                 logger.Debug(string.Format("Sending PC{0}, Channel{1}", pcNo, ContextPedal.MidiChannel));
                 Channel chan = FromInt(ContextPedal.MidiChannel - 1);
                 // TODO for prsets above 127 - need bank change cc
@@ -589,21 +580,26 @@ namespace RITS.StrymonEditor.Models
         #region Private ThreadPool Methods
         private void QueueBulkPresetUpdate(object preset)
         {
-            ViewModels.ViewModelBase.mediatorInstance.NotifyColleagues(ViewModelMessages.BulkPresetRead, preset);
+            Mediator.NotifyColleagues(ViewModelMessages.BulkPresetRead, preset);
         }
 
         private void QueuePresetReceipt(object preset)
         {
-            ViewModels.ViewModelBase.mediatorInstance.NotifyColleagues(ViewModelMessages.ReceivedPresetFromPedal, preset);
+            Mediator.NotifyColleagues(ViewModelMessages.ReceivedPresetFromPedal, preset);
         }
 
         private void QueuePedalConnected(object pedal)
         {
-            ViewModels.ViewModelBase.mediatorInstance.NotifyColleagues(ViewModelMessages.PedalConnected, pedal);
+            Mediator.NotifyColleagues(ViewModelMessages.PedalConnected, pedal);
         }
         private void QueueMIDIConnectionComplete(object pedal)
         {
-            ViewModels.ViewModelBase.mediatorInstance.NotifyColleagues(ViewModelMessages.MIDIConnectionComplete, null);
+            Mediator.NotifyColleagues(ViewModelMessages.MIDIConnectionComplete, null);
+        }
+
+        private void QueuePushPresetFailed(object pedal)
+        {
+            Mediator.NotifyColleagues(ViewModelMessages.PushPresetFailed, null);
         }
 
         #endregion
@@ -611,16 +607,20 @@ namespace RITS.StrymonEditor.Models
         #region Misc Private
         private void IdentityProcessComplete()
         {
-            lastSysExCommand.Complete = true;
+            LastSysExCommand.Complete = true;
             QueueMIDIConnectionComplete(null);
         }
 
         // Helper to update a byte array with the correct preset number at the correct offset
         private void UpdatePresetReadrequestWithPresetNo(byte[] request, int preset)
         {
-            // TODO Constant the offset numbers
             int byte1 = preset / 128;
             int byte2 = preset % 128;
+            if (preset >= 256)
+            {
+                byte1 = preset / 256;
+                byte2 = preset % 256;
+            }
             request[7] = Convert.ToByte(byte1);
             request[8] = Convert.ToByte(byte2);
         }
@@ -630,7 +630,7 @@ namespace RITS.StrymonEditor.Models
         {
             get
             {
-                if (isBulkFetching) { return Convert.ToByte(bulkPedal.Id); }
+                if (IsBulkFetching) { return Convert.ToByte(BulkPedal.Id); }
                 else
                 {
                     return Convert.ToByte(ContextPedal.Id);
@@ -653,7 +653,7 @@ namespace RITS.StrymonEditor.Models
         #endregion
 
         /// <summary>
-        /// Internal SysEx class to assist - deals with timeouts and callbacks
+        /// SysEx class to assist - deals with timeouts and callbacks
         /// </summary>
         internal class SysExCommand
         {
@@ -742,14 +742,6 @@ namespace RITS.StrymonEditor.Models
             get
             {
                 return presetReadRequest;
-            }
-        }
-        private static byte[] resetDisplayRequest = new byte[] { 0xF0, 0x00, 0x01, 0x55, 0x12, 0x00, 0x26, 0xF7 };
-        public static byte[] ResetDisplayRequest
-        {
-            get
-            {
-                return resetDisplayRequest;
             }
         }
         #endregion

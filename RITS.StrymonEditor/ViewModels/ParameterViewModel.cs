@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using RITS.StrymonEditor.Messaging;
 using RITS.StrymonEditor.Models;
 namespace RITS.StrymonEditor.ViewModels
 {
@@ -16,8 +16,17 @@ namespace RITS.StrymonEditor.ViewModels
         public ParameterViewModel(Parameter parameter)
         {
             _parameter = parameter;
+        }
+
+        public override void RegisterWithMediator()
+        {
             Mediator.Register(ViewModelMessages.ParameterChanged, HandleParameterChanged);
         }
+        public override void DeRegisterFromMediator()
+        {
+            Mediator.UnRegister(ViewModelMessages.ParameterChanged, HandleParameterChanged);
+        }
+
 
         /// <summary>
         /// Exposes the parameter name
@@ -122,7 +131,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         public void Dispose()
         {
-            Mediator.UnRegister(ViewModelMessages.ParameterChanged, HandleParameterChanged);
+            base.Dispose();
         }
     }
 }

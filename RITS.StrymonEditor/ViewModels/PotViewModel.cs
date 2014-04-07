@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using RITS.StrymonEditor.Conversion;
 using RITS.StrymonEditor.Models;
-
+using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.ViewModels
 {
     /// <summary>

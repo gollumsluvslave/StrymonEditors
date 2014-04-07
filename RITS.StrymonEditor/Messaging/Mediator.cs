@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RITS.StrymonEditor
+namespace RITS.StrymonEditor.Messaging
 {
+    
     /// <summary>
     /// Mediator for all view models
     /// </summary>
-    public class Mediator
+    public class Mediator : IMediator
     {
         #region Data members
         MultiDictionary<ViewModelMessages, Action<object>> internalList = new MultiDictionary<ViewModelMessages, Action<object>>();
@@ -52,5 +53,7 @@ namespace RITS.StrymonEditor
                 }
             }
         }
+
+
     }
 }

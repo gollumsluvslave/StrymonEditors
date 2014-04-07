@@ -7,16 +7,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Threading;
-
+using RITS.StrymonEditor.Messaging;
 
 namespace RITS.StrymonEditor.ViewModels
 {
     /// <summary>
     /// Base class for all view models
     /// </summary>
-    public abstract class ViewModelBase : INotifyPropertyChanged, IColleague
+    public abstract class ViewModelBase : INotifyPropertyChanged, IColleague, IDisposable
     {
-        public static Mediator mediatorInstance = new Mediator();
+        protected static IMediator mediatorInstance = new Mediator();
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -24,7 +24,21 @@ namespace RITS.StrymonEditor.ViewModels
         {
             Mediator = mediatorInstance;
         }
-        public Mediator Mediator { get; private set; }
+        
+        /// <summary>
+        /// Changed mediator pattern to follow a more flexible method to aid testing, and allow resetting
+        /// </summary>
+        private IMediator mediator;
+        public IMediator Mediator 
+        {
+            get { return mediator; }
+            set 
+            {
+                if(mediator!=null) DeRegisterFromMediator();
+                mediator = value;
+                RegisterWithMediator();
+            }
+        } // Should be private set, but leave as public to allow testing with Mock
 
         #region INotifyPropertyChanged Members
 
@@ -81,8 +95,20 @@ namespace RITS.StrymonEditor.ViewModels
             Mouse.OverrideCursor = null;
         }
 
+        public virtual void RegisterWithMediator()
+        {
+            
+        }
+        public virtual void DeRegisterFromMediator()
+        {
+        }
 
-        private void Complete()
+        public virtual void Dispose()
+        {
+            DeRegisterFromMediator();
+        }
+
+        protected virtual void Complete()
         {
             Mouse.OverrideCursor = null;
         }

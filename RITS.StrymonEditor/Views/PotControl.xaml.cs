@@ -28,7 +28,12 @@ namespace RITS.StrymonEditor.Views
         public double Angle
         {
             get { return (double)GetValue(AngleProperty); }
-            set { SetValue(AngleProperty, value); }
+            set 
+            {
+                if (value < 0)value = 0;
+                if (value > 290) value = 290;
+                SetValue(AngleProperty, value); 
+            }
         }
 
         public PotControl()
@@ -58,19 +63,9 @@ namespace RITS.StrymonEditor.Views
             {
                 // Get the current mouse position relative to the volume control
                 Point currentLocation = Mouse.GetPosition(this);
-
                 // Get Y delta
                 double diffX = (currentLocation.X - captureLocation.X);
                 this.Angle = diffX;
-
-                if (this.Angle < 0)
-                {
-                    this.Angle = 0;
-                }
-                if (this.Angle > 290)
-                {
-                    this.Angle = 290;
-                }
             }
         }
 
@@ -80,15 +75,6 @@ namespace RITS.StrymonEditor.Views
             // We don't want to 
             double inc = handle ? (e.Delta / 120) : (e.Delta / 10);
             this.Angle += inc;
-            if (this.Angle < 0)
-            {
-                this.Angle = 0;
-            }
-            if (this.Angle > 290)
-            {
-                this.Angle = 290;
-            }
-
         }
 
         private void UserControl_GotFocus(object sender, RoutedEventArgs e)
@@ -100,29 +86,14 @@ namespace RITS.StrymonEditor.Views
         {
             if (handleKeyboard)
             {
-                if (e.Key == Key.PageUp && (Keyboard.Modifiers & ModifierKeys.Control) > 0)
+                int inc = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) > 0 ? 1 : 10;
+                if (e.Key == Key.PageUp)
                 {
-                    this.Angle += 1;
-                }
-                else if (e.Key == Key.PageDown && (Keyboard.Modifiers & ModifierKeys.Control) > 0)
-                {
-                    this.Angle -= 1;
-                }
-                else if (e.Key == Key.PageUp)
-                {
-                    this.Angle += 10;
+                    this.Angle += inc;
                 }
                 else if (e.Key == Key.PageDown)
                 {
-                    this.Angle -= 10;
-                }
-                if (this.Angle < 0)
-                {
-                    this.Angle = 0;
-                }
-                if (this.Angle > 290)
-                {
-                    this.Angle = 290;
+                    this.Angle -= inc;
                 }
             }
         }
@@ -131,5 +102,7 @@ namespace RITS.StrymonEditor.Views
         {
             handleKeyboard = false;
         }
+
+        
     }
 }

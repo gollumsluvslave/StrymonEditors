@@ -26,25 +26,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{1DE95545-B6E
 		Lib\ICSharpCode.SharpZipLib.dll = Lib\ICSharpCode.SharpZipLib.dll
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{245D9BB9-6FBC-4DD5-8660-D2C340155BAB}"
+	ProjectSection(SolutionItems) = preProject
+		Default.runsettings = Default.runsettings
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://ritchiewhytock.visualstudio.com/defaultcollection
-		SccProjectUniqueName0 = RITS.StrymonEditor.Updater\\RITS.StrymonEditor.Updater.csproj
-		SccProjectName0 = RITS.StrymonEditor.Updater
-		SccLocalPath0 = RITS.StrymonEditor.Updater
-		SccLocalPath1 = .
-		SccProjectUniqueName2 = midi-dot-net\\Midi\\Midi.csproj
-		SccProjectName2 = midi-dot-net/Midi
-		SccLocalPath2 = midi-dot-net\\Midi
-		SccProjectUniqueName3 = RITS.StrymonEditor.Tests\\RITS.StrymonEditor.Tests.csproj
-		SccProjectName3 = RITS.StrymonEditor.Tests
-		SccLocalPath3 = RITS.StrymonEditor.Tests
-		SccProjectUniqueName4 = RITS.StrymonEditor\\RITS.StrymonEditor.csproj
-		SccProjectName4 = RITS.StrymonEditor
-		SccLocalPath4 = RITS.StrymonEditor
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86

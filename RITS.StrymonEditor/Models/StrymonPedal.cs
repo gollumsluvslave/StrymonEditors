@@ -12,6 +12,9 @@ namespace RITS.StrymonEditor.Models
     [Serializable]
     public class StrymonPedal: NameBase
     {
+        public StrymonPedal()
+        {
+        }
         /// <summary>
         /// WPF colour information
         /// </summary>

@@ -17,6 +17,9 @@ namespace RITS.StrymonEditor.Models
         #region Constructors
         // Default 
         private Dictionary<string, int> previousParameterValues = new Dictionary<string, int>();
+        public StrymonPreset()
+        {
+        }
         public StrymonPreset(StrymonPedal pedal, bool isNew)
         {
             Param1ParameterIndex = 0;

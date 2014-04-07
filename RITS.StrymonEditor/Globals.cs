@@ -100,7 +100,7 @@ namespace RITS.StrymonEditor
             }
         }
 
-
+        #region IEnumerable<T> Extenions
         public static IEnumerable<IEnumerable<T>> Chunkify<T>(this IEnumerable<T> enumerable,
                                                       int chunkSize)
         {
@@ -117,7 +117,7 @@ namespace RITS.StrymonEditor
             do yield return enumerator.Current;
             while (--chunkSize > 0 && enumerator.MoveNext());
         }
-
+        #endregion
 
     }
 }

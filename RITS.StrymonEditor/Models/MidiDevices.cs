@@ -22,5 +22,21 @@ namespace RITS.StrymonEditor.Models
                 yield return id.Name;
             }
         }
+
+        public static InputDevice ConfiguredInputDevice
+        {
+            get
+            {
+                return InputDevice.InstalledDevices.FirstOrDefault(x => x.Name == Properties.Settings.Default.MidiInDevice);
+            }
+        }
+
+        public static OutputDevice ConfiguredOutputDevice
+        {
+            get
+            {
+                return OutputDevice.InstalledDevices.FirstOrDefault(x => x.Name == Properties.Settings.Default.MidiOutDevice);
+            }
+        }
     }
 }

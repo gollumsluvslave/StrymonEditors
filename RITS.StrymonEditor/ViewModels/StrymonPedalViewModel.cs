@@ -6,10 +6,11 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
+using RITS.StrymonEditor.Views;
 using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.Conversion;
-
+using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.ViewModels
 {
     /// <summary>
@@ -19,9 +20,10 @@ namespace RITS.StrymonEditor.ViewModels
     public class StrymonPedalViewModel : ViewModelBase, IDisposable
     {
         private int loads;
-        private StrymonMidiManager midiManager;
+        private IStrymonMidiManager midiManager;
         private bool presetFromPedal;
-        public StrymonPedalViewModel(StrymonPreset preset, StrymonMidiManager midiManager)
+        public Action CloseWindow { get; set; }
+        public StrymonPedalViewModel(StrymonPreset preset, IStrymonMidiManager midiManager)
         {
             loads = 0;
             this.midiManager = midiManager;
@@ -30,24 +32,44 @@ namespace RITS.StrymonEditor.ViewModels
             using (RITSLogger logger = new RITSLogger())
             {
                 logger.Debug(string.Format("Creating ViewModel for Preset: {0}", preset.Name));
-                Mediator.Register(ViewModelMessages.MachineSelected, MachineChanged);
-                Mediator.Register(ViewModelMessages.ParameterChanged, HandleParameterChanged);
-                Mediator.Register(ViewModelMessages.LCDUpdate, LCDUpdate);
-                Mediator.Register(ViewModelMessages.ReceivedPresetFromPedal, PresetReceived);
-                Mediator.Register(ViewModelMessages.ReceivedCC, ReceiveCCChange);
-                Mediator.Register(ViewModelMessages.FetchPresetRequested, FetchPresetRequested);
-                Mediator.Register(ViewModelMessages.PushPresetRequested, PushPresetRequested);
-                Mediator.Register(ViewModelMessages.BulkLoadComplete, BulkLoadComplete);
-                Mediator.Register(ViewModelMessages.PresetRenamed, PresetRenamed);
-                Mediator.Register(ViewModelMessages.DirectEntryValueEntered, DirectEntryValueEntered);
                 SetSyncMode();
-
                 this.ActivePreset = preset;
             }
             // Preserve original state
             originalState = preset.ToXmlPreset();
 
         }
+
+        public override void RegisterWithMediator()
+        {
+            Mediator.Register(ViewModelMessages.MachineSelected, MachineChanged);
+            Mediator.Register(ViewModelMessages.ParameterChanged, HandleParameterChanged);
+            Mediator.Register(ViewModelMessages.LCDUpdate, LCDUpdate);
+            Mediator.Register(ViewModelMessages.ReceivedPresetFromPedal, PresetReceived);
+            Mediator.Register(ViewModelMessages.ReceivedCC, ReceiveCCChange);
+            Mediator.Register(ViewModelMessages.FetchPresetRequested, FetchPresetRequested);
+            Mediator.Register(ViewModelMessages.PushPresetRequested, PushPresetRequested);
+            Mediator.Register(ViewModelMessages.BulkLoadComplete, BulkLoadComplete);
+            Mediator.Register(ViewModelMessages.PresetRenamed, PresetRenamed);
+            Mediator.Register(ViewModelMessages.DirectEntryValueEntered, DirectEntryValueEntered);
+            Mediator.Register(ViewModelMessages.PushPresetFailed, PushPresetFailed);
+        }
+        public override void DeRegisterFromMediator()
+        {
+            Mediator.UnRegister(ViewModelMessages.MachineSelected, MachineChanged);
+            Mediator.UnRegister(ViewModelMessages.ParameterChanged, HandleParameterChanged);
+            Mediator.UnRegister(ViewModelMessages.LCDUpdate, LCDUpdate);
+            Mediator.UnRegister(ViewModelMessages.ReceivedPresetFromPedal, PresetReceived);
+            Mediator.UnRegister(ViewModelMessages.ReceivedCC, ReceiveCCChange);
+            Mediator.UnRegister(ViewModelMessages.FetchPresetRequested, FetchPresetRequested);
+            Mediator.UnRegister(ViewModelMessages.PushPresetRequested, PushPresetRequested);
+            Mediator.UnRegister(ViewModelMessages.BulkLoadComplete, BulkLoadComplete);
+            Mediator.UnRegister(ViewModelMessages.PresetRenamed, PresetRenamed);
+            Mediator.UnRegister(ViewModelMessages.DirectEntryValueEntered, DirectEntryValueEntered);
+            Mediator.UnRegister(ViewModelMessages.PushPresetFailed, PushPresetFailed);
+        }
+
+
         private void SetSyncMode()
         {
             SyncMode test;
@@ -107,18 +129,12 @@ namespace RITS.StrymonEditor.ViewModels
         #endregion
 
         #region IDisposable
-        public void Dispose()
+        public override void Dispose()
         {
-            Mediator.UnRegister(ViewModelMessages.MachineSelected, MachineChanged);
-            Mediator.UnRegister(ViewModelMessages.ParameterChanged, HandleParameterChanged);
-            Mediator.UnRegister(ViewModelMessages.LCDUpdate, LCDUpdate);
-            Mediator.UnRegister(ViewModelMessages.ReceivedPresetFromPedal, PresetReceived);
-            Mediator.UnRegister(ViewModelMessages.ReceivedCC, ReceiveCCChange);
-            Mediator.UnRegister(ViewModelMessages.FetchPresetRequested, FetchPresetRequested);
-            Mediator.UnRegister(ViewModelMessages.PushPresetRequested, PushPresetRequested);
-            fetchPreset.Dispose();
-            pushPreset.Dispose();
-            foreach (var p in _hiddenParameters)
+            base.Dispose();
+            FetchPreset.Dispose();
+            PushPreset.Dispose();
+            foreach (var p in HiddenParameters)
             {
                 p.Dispose();
             }
@@ -642,7 +658,6 @@ namespace RITS.StrymonEditor.ViewModels
                     syncMode.Children.Add(new MenuItemViewModel { MenuText = "Pedal Master", IsCheckable = true, Command = SyncModeChanged, Tag = SyncMode.PedalMaster });
                     optionsMenu.Add(syncMode);
 
-
                 }
                 return optionsMenu;
             }
@@ -763,6 +778,12 @@ namespace RITS.StrymonEditor.ViewModels
             var fe = Encoder as FinePotViewModel;
             fe.HandleDirectEntry(Convert.ToDouble(fineValue));
         }
+
+        private void PushPresetFailed(object arg)
+        {
+            MessageBox.Show("Preset Push Failed");
+        }
+
 
         // Delegate to update the LCD display from messaging
         private void LCDUpdate(object s)
@@ -924,7 +945,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    Mediator.NotifyColleagues(ViewModelMessages.RequestPedalClose, null);
+                    CloseWindow();
                 }));
             }
         }
@@ -1368,17 +1389,31 @@ namespace RITS.StrymonEditor.ViewModels
                     (
                         new Action(() =>
                         {
-                            int index = 0;
-                            foreach (var presetData in IOUtils.GetPresetBackupDataFromSyx(ActivePedal))
-                            {
-                                midiManager.PushToIndex(presetData, index);
-                                System.Threading.Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
-                                index++;
-                            }
+
+                            var pbVM = new ModalProgressDialogViewModel(RestorePresets);
+                            pbVM.PBMax = ActivePedal.PresetCount;
+                            var progressDialog = new ModalProgressDialog(pbVM);
+                            progressDialog.ShowDialog();
+                            
                         }));
                 }
                 return restorePedalBackup;
             }
+        }
+
+        private void RestorePresets(object vm)
+        {
+            int index = 0;
+            var pvm = vm as ModalProgressDialogViewModel;
+            foreach (var presetData in IOUtils.GetPresetBackupDataFromSyx(ActivePedal))
+            {
+                midiManager.PushToIndex(presetData, index);
+                System.Threading.Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
+                index++;
+                pvm.PBValue = index;
+                pvm.PBStatus = string.Format("Restored : {0}", index);
+            }
+         
         }
 
 

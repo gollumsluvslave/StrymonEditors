@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RITS.StrymonEditor
+namespace RITS.StrymonEditor.Messaging
 {
     /// <summary>
     /// Message types that trigger comms between view models
@@ -30,7 +30,8 @@ namespace RITS.StrymonEditor
         BulkLoadStarted,
         BulkLoadComplete,
         PresetRenamed,
-        DirectEntryValueEntered
+        DirectEntryValueEntered,
+        PushPresetFailed
     }
 
     /// <summary>
@@ -44,28 +45,9 @@ namespace RITS.StrymonEditor
         /// <summary>
         /// Gets or sets the mediator for this controller
         /// </summary>
-        Mediator Mediator { get; }
-
+        IMediator Mediator { get; }
+        void RegisterWithMediator();
+        void DeRegisterFromMediator();
     }
-
-    public class KeyEqualityComparer<T> : IEqualityComparer<T>
-    {
-        private readonly Func<T, object> keyExtractor;
-
-        public KeyEqualityComparer(Func<T, object> keyExtractor)
-        {
-            this.keyExtractor = keyExtractor;
-        }
-
-        public bool Equals(T x, T y)
-        {
-            return this.keyExtractor(x).Equals(this.keyExtractor(y));
-        }
-
-        public int GetHashCode(T obj)
-        {
-            return this.keyExtractor(obj).GetHashCode();
-        }
-    } 
 
 }

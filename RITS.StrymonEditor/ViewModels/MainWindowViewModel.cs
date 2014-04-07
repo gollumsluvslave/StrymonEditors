@@ -6,34 +6,47 @@ using System.Windows;
 using RITS.StrymonEditor.AutoUpdate;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.Views;
+using RITS.StrymonEditor.Messaging;
 
 namespace RITS.StrymonEditor.ViewModels
 {
     public class MainWindowViewModel:ViewModelBase, IDisposable
     {
-        private StrymonMidiManager midiManager = new StrymonMidiManager();
+        private IStrymonMidiManager midiManager;
         private object lockObject = new object();
         private int connectedPedalCount = 0;
-        public MainWindowViewModel()
+        private int currentBulkFetch =0;
+        private int failedFetchCount = 0;
+        public MainWindowViewModel(IStrymonMidiManager midiManager)
         {
-            ViewModelBase.mediatorInstance.Register(ViewModelMessages.PedalConnected, PedalConnected);
-            ViewModelBase.mediatorInstance.Register(ViewModelMessages.BulkPresetRead, BulkPresetRead);
-            ViewModelBase.mediatorInstance.Register(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
+            this.midiManager = midiManager;
             if (HandleAutoUpdateUpdate())
             {
                 Globals.Init();
                 StatusText = "Initialising Midi...";
-                midiManager.InitMidi();
+                if(this.midiManager==null) this.midiManager= new StrymonMidiManager(MidiDevices.ConfiguredInputDevice, MidiDevices.ConfiguredOutputDevice);
+                this.midiManager.InitMidi();
                 StatusText = "Ready. No Pedals Connected.";
             }
 
         }
 
+        public override void RegisterWithMediator()
+        {
+            Mediator.Register(ViewModelMessages.PedalConnected, PedalConnected);
+            Mediator.Register(ViewModelMessages.BulkPresetRead, BulkPresetRead);
+            Mediator.Register(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
+        }
+        public override void DeRegisterFromMediator()
+        {
+            Mediator.UnRegister(ViewModelMessages.PedalConnected, PedalConnected);
+            Mediator.UnRegister(ViewModelMessages.BulkPresetRead, BulkPresetRead);
+            Mediator.UnRegister(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
+        }
+
         public void Dispose()
         {
-            ViewModelBase.mediatorInstance.UnRegister(ViewModelMessages.PedalConnected, PedalConnected);
-            ViewModelBase.mediatorInstance.UnRegister(ViewModelMessages.BulkPresetRead, BulkPresetRead);
-            ViewModelBase.mediatorInstance.UnRegister(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
+            base.Dispose();
         }
 
         public Action CloseWindow { get; set; }
@@ -53,26 +66,47 @@ namespace RITS.StrymonEditor.ViewModels
         private void MIDIConnectionComplete(object o)
         {
             // Kick of preset load
+            if (Properties.Settings.Default.DisableBulkFetch) return;
             ShowProgressBar = true;
-            foreach (var p in midiManager.ConnectedPedals)
+            
+            if (midiManager.ConnectedPedals.Count > 0)
             {
-                PBMax = p.PresetCount - 1;
-                midiManager.BulkFetch(p);
-                break;
+                BulkFetch(midiManager.ConnectedPedals.FirstOrDefault());
             }
 
         }
 
+        private void BulkFetch(StrymonPedal p)
+        {
+            PBMax = p.PresetCount - 1;
+            for (int i = 0; i < p.PresetCount; i++)
+            {
+                currentBulkFetch = i;
+                System.Threading.Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
+                midiManager.BulkPedal = p;
+                midiManager.FetchByIndex(i);
+            }
+            System.Threading.Thread.Sleep(1000);
+            midiManager.BulkPedal = null;
+        }
+
+
+
         private void BulkPresetRead(object o)
         {
             var preset = o as StrymonPreset;
-            PBValue = preset.SourceIndex;
-            PBStatus = string.Format("Fetching : {0}({1})", preset.Pedal.Name, preset.SourceIndex);
-            if (preset.SourceIndex == PBMax)
+            PBValue = currentBulkFetch;
+            if (preset != null) PBStatus = string.Format("Fetched : {0}({1})", preset.Pedal.Name, preset.SourceIndex);
+            else
             {
-                PBStatus = "Loaded";
+                failedFetchCount ++;
+                PBStatus = string.Format("Fetch Failed : {0}", currentBulkFetch);
+            }
+            if (currentBulkFetch == PBMax)
+            {
+                PBStatus = (failedFetchCount>0) ? string.Format("Loaded ({0} failed)", failedFetchCount) : "Loaded";
                 ShowProgressBar = false;
-                ViewModelBase.mediatorInstance.NotifyColleagues(ViewModelMessages.BulkLoadComplete, null);
+                Mediator.NotifyColleagues(ViewModelMessages.BulkLoadComplete, null);
             }
         }
 

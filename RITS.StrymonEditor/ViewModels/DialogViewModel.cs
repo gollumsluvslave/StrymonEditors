@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.ViewModels
 {
     public abstract class DialogViewModel:ViewModelBase

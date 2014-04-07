@@ -139,7 +139,7 @@ namespace RITS.StrymonEditor.Models
             public static byte Start { get { return 0xF0; } }
             public static byte SendRequestByte { get { return 0x12; } }
             public static byte End { get { return 0xF7; } }
-            public static byte[] StrymonId { get { return new byte[] { 0x00, 0x01, 0x85 }; } }
+            public static byte[] StrymonId { get { return new byte[] { 0x00, 0x01, 0x55 }; } }
 
             /// <summary>
             /// Address start including pedal id and preset info

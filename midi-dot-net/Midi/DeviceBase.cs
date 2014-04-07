@@ -35,7 +35,7 @@ namespace Midi
         /// Protected constructor.
         /// </summary>
         /// <param name="name">The name of this device.</param>
-        protected DeviceBase(string name)
+        public DeviceBase(string name)
         {
             this.name = name;
         }

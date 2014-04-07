@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
-
+using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
@@ -22,13 +22,12 @@ namespace RITS.StrymonEditor.Views
     public partial class PedalEditor : Window, INotifyPropertyChanged
     {
         private StrymonPreset editingPreset;
-        private StrymonMidiManager midiManager;
-        public PedalEditor(StrymonPreset preset, StrymonMidiManager midiManager)
+        private IStrymonMidiManager midiManager;
+        public PedalEditor(StrymonPreset preset, IStrymonMidiManager midiManager)
         {
             editingPreset = preset;
             this.midiManager = midiManager;
-            InitializeComponent();            
-            ViewModelBase.mediatorInstance.Register(ViewModelMessages.RequestPedalClose, Close);
+            InitializeComponent();                        
         }
 
         #region INotify
@@ -46,7 +45,12 @@ namespace RITS.StrymonEditor.Views
         {
             get
             {
-                if (_pedalViewModel == null) _pedalViewModel = new StrymonPedalViewModel(editingPreset, midiManager);
+                if (_pedalViewModel == null) 
+                {
+                    _pedalViewModel = new StrymonPedalViewModel(editingPreset, midiManager);
+                    _pedalViewModel.CloseWindow = CloseMe;
+                }
+                
                 return _pedalViewModel;
             }
             set
@@ -60,7 +64,7 @@ namespace RITS.StrymonEditor.Views
             }
         }
 
-        private void Close(object o)
+        private void CloseMe()
         {
             this.Close();
         }

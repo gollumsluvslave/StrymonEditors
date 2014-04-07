@@ -39,7 +39,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Moq.Contrib.0.3\lib\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq.Contrib">
+      <HintPath>..\packages\Moq.Contrib.0.3\lib\Moq.Contrib.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -55,10 +66,19 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Conversion\BPMConversionShould.cs" />
+    <Compile Include="Views\EncoderControlShould.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="MockPresentationSource.cs" />
     <Compile Include="Models\IncrementShould.cs" />
     <Compile Include="Conversion\FineCoarseSynchroniserShould.cs" />
     <Compile Include="Conversion\PotValueMapShould.cs" />
+    <Compile Include="Models\StrymonMidiManagerShould.cs" />
     <Compile Include="Models\StymonSysExUtilsShould.cs" />
+    <Compile Include="Views\PotControlShould.cs" />
+    <Compile Include="TestContext.cs" />
+    <Compile Include="TestHelper.cs" />
+    <Compile Include="ViewModels\BindableCollectionShould.cs" />
+    <Compile Include="ViewModels\MainWindowViewModelShould.cs" />
     <Compile Include="ViewModels\PotViewModelFactoryShould.cs" />
     <Compile Include="ViewModels\PotViewModelShould.cs" />
     <Compile Include="Conversion\FineCoarseValueConverterFactoryShould.cs" />
@@ -66,12 +86,21 @@
     <Compile Include="ViewModels\ParameterViewModelShould.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Conversion\ValueLabelConverterFactoryShould.cs" />
+    <Compile Include="ViewModels\StrymonPedalViewModelShould.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\midi-dot-net\Midi\Midi.csproj">
+      <Project>{f60d8b7b-2d2e-4b94-a736-3783ffe1a25c}</Project>
+      <Name>Midi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RITS.StrymonEditor\RITS.StrymonEditor.csproj">
       <Project>{406cbeed-017d-4692-bce5-c273f5fb136b}</Project>
       <Name>RITS.StrymonEditor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

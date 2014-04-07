@@ -102,12 +102,14 @@
     <Compile Include="Logging\RollingTextListener.cs" />
     <Compile Include="Logging\StaticLogger.cs" />
     <Compile Include="Messaging\IColleague.cs" />
+    <Compile Include="Messaging\IMediator.cs" />
     <Compile Include="Messaging\Mediator.cs" />
     <Compile Include="Messaging\MultiDictionary.cs" />
     <Compile Include="Models\ControlChangeMsg.cs" />
     <Compile Include="Models\FineCoarseSynchroniser.cs" />
     <Compile Include="Models\HeelToeSetting.cs" />
     <Compile Include="Models\Increment.cs" />
+    <Compile Include="Models\IStrymonMidiManager.cs" />
     <Compile Include="Models\MidiDevices.cs" />
     <Compile Include="Models\ParameterDef.cs" />
     <Compile Include="Models\PotValueMap.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\DirectEntryViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\ModalProgressDialogViewModel.cs" />
     <Compile Include="ViewModels\ParameterViewModel.cs" />
     <Compile Include="ViewModels\PotViewModel.cs" />
     <Compile Include="ViewModels\PresetControlViewModel.cs" />
@@ -146,7 +149,9 @@
     <Compile Include="Views\Dialog.xaml.cs">
       <DependentUpon>Dialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GridHelper.cs" />
+    <Compile Include="Views\ModalProgressDialog.xaml.cs">
+      <DependentUpon>ModalProgressDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ParamTemplateSelector.cs" />
     <Compile Include="Views\PresetControl.xaml.cs">
       <DependentUpon>PresetControl.xaml</DependentUpon>
@@ -189,6 +194,10 @@
     <Page Include="Views\Dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ModalProgressDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PedalEditor.xaml">
       <SubType>Designer</SubType>

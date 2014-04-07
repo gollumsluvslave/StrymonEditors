@@ -139,5 +139,17 @@ namespace RITS.StrymonEditor.Properties {
                 return ((string)(this["LogFileName"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisableBulkFetch {
+            get {
+                return ((bool)(this["DisableBulkFetch"]));
+            }
+            set {
+                this["DisableBulkFetch"] = value;
+            }
+        }
     }
 }

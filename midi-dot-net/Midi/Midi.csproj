@@ -64,8 +64,10 @@
     <Compile Include="Clock.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="DeviceBase.cs" />
+    <Compile Include="IInputDevice.cs" />
     <Compile Include="Instrument.cs" />
     <Compile Include="Interval.cs" />
+    <Compile Include="IOutputDevice.cs" />
     <Compile Include="LongMsg.cs" />
     <Compile Include="Note.cs" />
     <Compile Include="Percussion.cs" />
