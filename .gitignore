@@ -154,3 +154,6 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+/RITS.StrymonEditorTests/ViewModels/StrymonPedalViewModelShould.cs
+/RITS.StrymonEditor/Conversion/ConversionUtils.cs
+/packages
