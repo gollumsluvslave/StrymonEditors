@@ -33,7 +33,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         public virtual ViewModelMessages NotifyType { get; set; }
 
-        public virtual RelayCommand Complete
+        public new virtual RelayCommand Complete
         {
             get
             {

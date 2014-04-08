@@ -58,6 +58,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         protected override void Complete()
         {
+            MessageDialog.ShowInfo("Restore completed succesfully!", "Restore Backup");
             Close();
         }
     }

@@ -5,7 +5,7 @@ using System.Text;
 
 using RITS.StrymonEditor.Models;
 
-namespace RITS.StrymonEditor
+namespace RITS.StrymonEditor.Conversion
 {
     /// <summary>
     /// Responsible for creating instances of <see cref="IPotValueConverter"/>

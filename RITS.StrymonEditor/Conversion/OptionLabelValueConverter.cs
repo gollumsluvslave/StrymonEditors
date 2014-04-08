@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 using RITS.StrymonEditor.Models;
-namespace RITS.StrymonEditor
+namespace RITS.StrymonEditor.Conversion
 {
     /// <summary>
     /// Handles the conversion of the value (0,1,2) for a 

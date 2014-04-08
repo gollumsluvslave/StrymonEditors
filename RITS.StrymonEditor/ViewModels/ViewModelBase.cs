@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Threading;
 using RITS.StrymonEditor.Messaging;
+using RITS.StrymonEditor.IO;
 
 namespace RITS.StrymonEditor.ViewModels
 {
@@ -16,6 +17,8 @@ namespace RITS.StrymonEditor.ViewModels
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged, IColleague, IDisposable
     {
+        private IFileIOService fileIOService;
+        private IMessageDialog messageDialog;
         protected static IMediator mediatorInstance = new Mediator();
         /// <summary>
         /// Default constructor
@@ -39,6 +42,39 @@ namespace RITS.StrymonEditor.ViewModels
                 RegisterWithMediator();
             }
         } // Should be private set, but leave as public to allow testing with Mock
+
+        // Property to allow IO mocks to be injected in
+        public IFileIOService FileIOService
+        {
+            get
+            {
+                if (fileIOService == null)
+                {
+                    fileIOService = new FileIOService(new FileDialogOpen(), new FileDialogSave(), new MessageDialog());
+                }
+                return fileIOService;
+            }
+            set
+            {
+                fileIOService = value;
+            }
+        }
+
+        public IMessageDialog MessageDialog
+        {
+            get
+            {
+                if (messageDialog == null)
+                {
+                    messageDialog = new MessageDialog(); ;
+                }
+                return messageDialog;
+            }
+            set
+            {
+                messageDialog = value;
+            }
+        }
 
         #region INotifyPropertyChanged Members
 

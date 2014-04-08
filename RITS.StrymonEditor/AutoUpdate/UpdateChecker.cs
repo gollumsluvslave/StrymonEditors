@@ -9,6 +9,7 @@ using System.IO;
 using System.Net;
 using RITS.StrymonEditor.Serialization;
 using RITS.StrymonEditor.Logging;
+using RITS.StrymonEditor.IO;
 namespace RITS.StrymonEditor.AutoUpdate
 {
     public class UpdateChecker
@@ -18,14 +19,15 @@ namespace RITS.StrymonEditor.AutoUpdate
         private VersionConfig _currentVersionConfig;
         private VersionConfig _newVersionConfig;
         private string _newVersionConfigLocalPath;
-
+        private IMessageDialog messageDialog;
         // constructors
         /// <summary>
         /// Default constructor - initialises required params.
         /// </summary>
         /// <param name="remotePath">The path to the remote update folder.</param>
-        public UpdateChecker()
+        public UpdateChecker(IMessageDialog dialog)
         {
+            this.messageDialog = dialog;
             using (XmlSerializer<VersionConfig> xs = new XmlSerializer<VersionConfig>())
             {
                 _currentVersionConfig = xs.DeserializeFile("VersionConfig.xml");
@@ -110,7 +112,7 @@ namespace RITS.StrymonEditor.AutoUpdate
             catch (Exception e)
             {
                 // inform user of error
-                MessageBox.Show("There was a problem runing the Auto Update.\n" + e.Message + "\nPlease contact your system administrator.", "Error occured.", MessageBoxButton.OK, MessageBoxImage.Error);
+                messageDialog.ShowError("There was a problem runing the Auto Update.\n" + e.Message + "\nPlease contact your system administrator.", "Error occured.");
             }
         }
 

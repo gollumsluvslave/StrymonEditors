@@ -6,6 +6,7 @@ using System.Windows;
 using RITS.StrymonEditor.AutoUpdate;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.Views;
+using RITS.StrymonEditor.IO;
 using RITS.StrymonEditor.Messaging;
 
 namespace RITS.StrymonEditor.ViewModels
@@ -24,12 +25,13 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 Globals.Init();
                 StatusText = "Initialising Midi...";
-                if(this.midiManager==null) this.midiManager= new StrymonMidiManager(MidiDevices.ConfiguredInputDevice, MidiDevices.ConfiguredOutputDevice);
                 this.midiManager.InitMidi();
                 StatusText = "Ready. No Pedals Connected.";
             }
 
         }
+
+
 
         public override void RegisterWithMediator()
         {
@@ -44,7 +46,7 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.UnRegister(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             base.Dispose();
         }
@@ -53,7 +55,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         private bool HandleAutoUpdateUpdate()
         {
-            UpdateChecker checker = new AutoUpdate.UpdateChecker();
+            UpdateChecker checker = new AutoUpdate.UpdateChecker(MessageDialog);
             if (checker.CheckForUpdate())
             {
                 checker.RunUpdate();
@@ -256,7 +258,7 @@ namespace RITS.StrymonEditor.ViewModels
                 MenuText = "About",
                 Command = new RelayCommand(new Action(() =>
                 {
-                    MessageBox.Show(string.Format("Strymon Editors {0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
+                    MessageDialog.ShowInfo(string.Format("Strymon Editors {0}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()),"Strymon Editors");
                 }))
             };
             editorMenu.Add(aboutMenu);
@@ -279,7 +281,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    var preset = IOUtils.LoadSyxPreset();
+                    var preset = FileIOService.LoadSyxPreset();
                     if (preset != null)
                     {
                         OpenEditor(preset);
@@ -353,7 +355,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         private void LoadXml()
         {
-            var preset = IOUtils.LoadXmlPreset();
+            var preset = FileIOService.LoadXmlPreset();
             if (preset != null)
             {
                 OpenEditor(preset);

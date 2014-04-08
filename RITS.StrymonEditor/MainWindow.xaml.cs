@@ -35,7 +35,7 @@ namespace RITS.StrymonEditor
         /// <summary>
         /// Returns the ViewModel instance for databinding
         /// </summary>
-        private MainWindowViewModel viewModel = new MainWindowViewModel(null);
+        private MainWindowViewModel viewModel = new MainWindowViewModel(new StrymonMidiManager(MidiDevices.ConfiguredInputDevice, MidiDevices.ConfiguredOutputDevice));
         public MainWindowViewModel ViewModel
         {
             get

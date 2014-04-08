@@ -72,7 +72,7 @@ namespace RITS.StrymonEditor.Views
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (PedalViewModel.IsDirty)
-            {
+            {                
                 MessageBoxResult result = MessageBox.Show("There are unsaved edits, do you wish to close?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.No)
                 {

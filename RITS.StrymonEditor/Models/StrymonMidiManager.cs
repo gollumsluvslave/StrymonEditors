@@ -5,6 +5,7 @@ using System.Threading;
 using System.Text;
 
 using Midi;
+using RITS.StrymonEditor.Conversion;
 using RITS.StrymonEditor.ViewModels;
 using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.Messaging;
@@ -616,11 +617,6 @@ namespace RITS.StrymonEditor.Models
         {
             int byte1 = preset / 128;
             int byte2 = preset % 128;
-            if (preset >= 256)
-            {
-                byte1 = preset / 256;
-                byte2 = preset % 256;
-            }
             request[7] = Convert.ToByte(byte1);
             request[8] = Convert.ToByte(byte2);
         }
