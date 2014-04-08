@@ -11,6 +11,7 @@ namespace RITS.StrymonEditor.Tests
     public class TestContext<T> where T : class
     {
         private MockRepository _repository;
+        private readonly object lockObject = new object();
         private T _sut;
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoMockingTests"/> class.
@@ -149,12 +150,18 @@ namespace RITS.StrymonEditor.Tests
         {
             get
             {
-                if(_sut==null) return Container.Create<T>();
-                return _sut;
+                lock (lockObject)
+                {
+                    if (_sut == null) return Container.Create<T>();
+                    return _sut;
+                }
             }
             set
             {
-                _sut = value;
+                lock (lockObject)
+                {
+                    _sut = value;
+                }
             }
         }
 

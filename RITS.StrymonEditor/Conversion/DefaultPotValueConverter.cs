@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RITS.StrymonEditor
+namespace RITS.StrymonEditor.Conversion
 {
     /// <summary>
     /// Default implementation of <see cref="IPotValueConverter"/>

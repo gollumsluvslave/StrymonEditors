@@ -683,6 +683,16 @@ namespace RITS.StrymonEditor.Tests.Models
         {
             return new byte[] { 0xF0, 0x00, 0x01, 0x55, 0x12, 0x01, 0x63, presetSlot1, presetSlot2, 0xF7 };
         }
+        private byte[] BigSkyFetchRequest(byte presetSlot1, byte presetSlot2)
+        {
+            return new byte[] { 0xF0, 0x00, 0x01, 0x55, 0x12, 0x03, 0x63, presetSlot1, presetSlot2, 0xF7 };
+        }
+
+        private byte[] MobiusFetchRequest(byte presetSlot1, byte presetSlot2)
+        {
+            return new byte[] { 0xF0, 0x00, 0x01, 0x55, 0x12, 0x02, 0x63, presetSlot1, presetSlot2, 0xF7 };
+        }
+
         private void SetPresetIndex(byte[] data, byte presetSlot1, byte presetSlot2)
         {
             data[7] = presetSlot1;

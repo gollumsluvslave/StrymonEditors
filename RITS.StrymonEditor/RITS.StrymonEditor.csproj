@@ -95,6 +95,13 @@
     <Compile Include="Conversion\IPotValueConverter.cs" />
     <Compile Include="Conversion\OptionLabelValueConverter.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="IO\FileDialogOpen.cs" />
+    <Compile Include="IO\FileDialogSave.cs" />
+    <Compile Include="IO\FileIOService.cs" />
+    <Compile Include="IO\IFileIOService.cs" />
+    <Compile Include="IO\IFileDialog.cs" />
+    <Compile Include="IO\IMessageDialog.cs" />
+    <Compile Include="IO\MessageDialog.cs" />
     <Compile Include="Logging\DefaultLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LoggingConfigurationException.cs" />
@@ -124,7 +131,6 @@
     <Compile Include="Models\StrymonXmlPreset.cs" />
     <Compile Include="Models\StrymonPedal.cs" />
     <Compile Include="Models\StrymonSysExUtils.cs" />
-    <Compile Include="IOUtils.cs" />
     <Compile Include="Models\PotValueItem.cs" />
     <Compile Include="Models\XmlParameter.cs" />
     <Compile Include="Settings.cs" />
@@ -140,6 +146,7 @@
     <Compile Include="ViewModels\StrymonMachineViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Views\IInputDialog.cs" />
     <Compile Include="Views\MidiSetup.xaml.cs">
       <DependentUpon>MidiSetup.xaml</DependentUpon>
     </Compile>

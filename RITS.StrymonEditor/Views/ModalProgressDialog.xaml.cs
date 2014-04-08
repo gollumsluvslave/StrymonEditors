@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using RITS.StrymonEditor.ViewModels;
+using RITS.StrymonEditor.IO;
 
 namespace RITS.StrymonEditor.Views
 {
@@ -19,6 +20,7 @@ namespace RITS.StrymonEditor.Views
     /// </summary>
     public partial class ModalProgressDialog : Window
     {
+        private IMessageDialog messageDialog;
         public ModalProgressDialog(ModalProgressDialogViewModel vm)
         {
             vm.Close = CloseMe;
@@ -35,7 +37,6 @@ namespace RITS.StrymonEditor.Views
 
         private void CloseMe()
         {
-            MessageBox.Show("Restore completed succesfully!");
             this.Close();
         }
 

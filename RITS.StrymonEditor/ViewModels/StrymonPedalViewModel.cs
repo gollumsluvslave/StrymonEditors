@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
+using RITS.StrymonEditor.IO;
 using RITS.StrymonEditor.Views;
 using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.Models;
@@ -39,6 +40,9 @@ namespace RITS.StrymonEditor.ViewModels
             originalState = preset.ToXmlPreset();
 
         }
+
+
+
 
         public override void RegisterWithMediator()
         {
@@ -738,9 +742,7 @@ namespace RITS.StrymonEditor.ViewModels
         {
             if (IsDirty)
             {
-                
-                MessageBoxResult result = MessageBox.Show("There are unsaved edits, do you wish to fetch?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.No)
+                if (!MessageDialog.ShowYesNo("There are unsaved edits, do you wish to fetch?", "Confirmation"))
                 {
                     return;
                 }
@@ -756,13 +758,9 @@ namespace RITS.StrymonEditor.ViewModels
 
         private void PushPresetRequested(object index)
         {
-            if (IsDirty)
+            if (!MessageDialog.ShowYesNo("This action will OVERWRITE the selected preset in the pedal, do you wish to proceed?", "Confirmation"))
             {
-                MessageBoxResult result = MessageBox.Show("This action will OVERWRITE the selected preset, do you wish to proceed?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.No)
-                {
-                    return;
-                }
+                return;
             }
             midiManager.PushToIndex(ActivePreset, (int)index);
         }
@@ -781,7 +779,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         private void PushPresetFailed(object arg)
         {
-            MessageBox.Show("Preset Push Failed");
+            MessageDialog.ShowError("Preset Push Failed","Push Rejected");
         }
 
 
@@ -842,7 +840,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    IOUtils.SavePreset(ActivePreset);
+                    FileIOService.SavePreset(ActivePreset);
                     IsDirty = false;
                 }));
             }
@@ -857,7 +855,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    if (IOUtils.SavePresetToXml(ActivePreset))
+                    if (FileIOService.SavePresetToXml(ActivePreset))
                     {
                         IsDirty = false;
                     }
@@ -874,7 +872,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    if (IOUtils.SavePresetToSyx(ActivePreset))
+                    if (FileIOService.SavePresetToSyx(ActivePreset))
                     {
                         IsDirty = false;
                     }
@@ -893,14 +891,13 @@ namespace RITS.StrymonEditor.ViewModels
                 {
                     if (IsDirty)
                     {
-                        MessageBoxResult result = MessageBox.Show("There are unsaved edits, do you wish to load?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (result == MessageBoxResult.No)
+                        if (!MessageDialog.ShowYesNo("There are unsaved edits, do you wish to fetch?", "Confirmation"))
                         {
                             return;
                         }
                     }
 
-                    var presetToLoad = IOUtils.LoadXmlPreset();
+                    var presetToLoad = FileIOService.LoadXmlPreset();
                     if (presetToLoad != null)
                     {
                         ActivePreset = presetToLoad;
@@ -920,14 +917,13 @@ namespace RITS.StrymonEditor.ViewModels
                 {
                     if (IsDirty)
                     {
-                        MessageBoxResult result = MessageBox.Show("There are unsaved edits, do you wish to load?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (result == MessageBoxResult.No)
+                        if (!MessageDialog.ShowYesNo("There are unsaved edits, do you wish to fetch?", "Confirmation"))
                         {
                             return;
                         }
                     }
 
-                    var presetToLoad = IOUtils.LoadSyxPreset();
+                    var presetToLoad = FileIOService.LoadSyxPreset();
                     if (presetToLoad != null)
                     {
                         ActivePreset = presetToLoad;
@@ -1187,8 +1183,7 @@ namespace RITS.StrymonEditor.ViewModels
         // Rename the currently active preset
         private void Rename()
         {
-            Views.Dialog dlg = new Views.Dialog(new PresetRenameViewModel(ActivePreset.Name));
-            dlg.ShowDialog();
+            RenameDialog.ShowModal();
             // Refresh name
             OnPropertyChanged("Title");
             LCDValue = ActivePreset.Name;
@@ -1207,10 +1202,30 @@ namespace RITS.StrymonEditor.ViewModels
         // Rename the currently active preset
         private void DirectEntry()
         {
-            Views.Dialog dlg = new Views.Dialog(new DirectEntryViewModel(ActivePreset.FineValue));
-            dlg.ShowDialog();
+            DirectEntryDialog.ShowModal();
         }
 
+        private IInputDialog directEntryDialog;
+        public IInputDialog DirectEntryDialog
+        {
+            get 
+            {
+                if (directEntryDialog == null) return new DirectEntryDialog(ActivePreset.FineValue);
+                return directEntryDialog; 
+            }
+            set { directEntryDialog = value; }
+        }
+
+        private IInputDialog renameDialog;
+        public IInputDialog RenameDialog
+        {
+            get
+            {
+                if (renameDialog == null) return new PresetRenameDialog(ActivePreset.Name);
+                return renameDialog;
+            }
+            set { renameDialog = value; }
+        }
 
         public RelayCommand LoopRecord
         {
@@ -1324,8 +1339,7 @@ namespace RITS.StrymonEditor.ViewModels
                 {
                     if (IsDirty)
                     {
-                        MessageBoxResult result = MessageBox.Show("There are unsaved edits, do you wish to fetch?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (result == MessageBoxResult.No)
+                        if (!MessageDialog.ShowYesNo("There are unsaved edits, do you wish to fetch?", "Confirmation"))
                         {
                             return;
                         }
@@ -1363,7 +1377,7 @@ namespace RITS.StrymonEditor.ViewModels
                     (
                         new Action(() =>
                         {
-                            IOUtils.PedalBackupToSyx(ActivePedal);
+                            FileIOService.PedalBackupToSyx(ActivePedal);
                         }),
                         new Func<bool>(BackupOk));
                 }
@@ -1405,7 +1419,7 @@ namespace RITS.StrymonEditor.ViewModels
         {
             int index = 0;
             var pvm = vm as ModalProgressDialogViewModel;
-            foreach (var presetData in IOUtils.GetPresetBackupDataFromSyx(ActivePedal))
+            foreach (var presetData in FileIOService.GetPresetBackupDataFromSyx(ActivePedal))
             {
                 midiManager.PushToIndex(presetData, index);
                 System.Threading.Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);

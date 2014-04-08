@@ -7,6 +7,8 @@ using System.Windows.Input;
 using System.Threading.Tasks;
 using RITS.StrymonEditor.Views;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RITS.StrymonEditor.Models;
+using RITS.StrymonEditor.ViewModels;
 namespace RITS.StrymonEditor.Tests
 {
     [TestClass]
@@ -18,7 +20,11 @@ namespace RITS.StrymonEditor.Tests
         {
             // A bit nasty, but simulating PWF events is not easy
             var mockKeyboard = new MockKeyboardDevice();
-
+            // Need a datacontext for this control - TODO would be better to keep clean
+            var fpVM = new FinePotViewModel(TestHelper.TimelinePedal.Pots.First(), new Parameter{Definition= TestHelper.TimelinePedal.ControlParameters.First()});
+            fpVM.ContextPedal=TestHelper.TimelinePedal;
+            Sut.DataContext = fpVM;
+            
             var privSut = new PrivateObject(Sut);
             privSut.Invoke("UserControl_GotFocus", new object[] { null, null });
             privSut.Invoke("PotControl_KeyUp", new object[] { null, mockKeyboard.CreateKeyEventArgs(Key.PageUp) });
@@ -32,6 +38,10 @@ namespace RITS.StrymonEditor.Tests
         {
             // A bit nasty, but simulating PWF events is not easy
             var mockKeyboard = new MockKeyboardDevice();
+            // Need a datacontext for this control - TODO would be better to keep clean
+            var fpVM = new FinePotViewModel(TestHelper.TimelinePedal.Pots.First(), new Parameter { Definition = TestHelper.TimelinePedal.ControlParameters.First() });
+            fpVM.ContextPedal = TestHelper.TimelinePedal;
+            Sut.DataContext = fpVM;
             Sut.Data = 20;
             var privSut = new PrivateObject(Sut);
             privSut.Invoke("UserControl_GotFocus", new object[] { null, null });

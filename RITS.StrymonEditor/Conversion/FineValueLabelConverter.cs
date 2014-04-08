@@ -5,7 +5,7 @@ using System.Text;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.Conversion;
 
-namespace RITS.StrymonEditor
+namespace RITS.StrymonEditor.Conversion
 {
     /// <summary>
     /// Implementation of <see cref="IValueLabelConverter"/> that
