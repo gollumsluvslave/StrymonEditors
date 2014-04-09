@@ -37,4 +37,18 @@ namespace RITS.StrymonEditor.Views
             dlg.ShowDialog();
         }
     }
+
+    public class ModalProgressBar : IInputDialog
+    {
+        private ModalProgressDialog dlg;
+        public ModalProgressBar(ModalProgressDialogViewModel vm)
+        {
+            dlg = new ModalProgressDialog(vm);
+        }
+
+        public void ShowModal()
+        {
+            dlg.ShowDialog();
+        }
+    }
 }

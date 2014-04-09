@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<StrymonXmlPreset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="BLACK METALLIC" Pedal="Mobius" Machine="7">
+  <Parameters>
+    <Parameter Name="Speed">
+      <Value>92</Value>
+    </Parameter>
+    <Parameter Name="Depth">
+      <Value>65</Value>
+    </Parameter>
+    <Parameter Name="Level">
+      <Value>70</Value>
+    </Parameter>
+    <Parameter Name="Filter">
+      <Value>0</Value>
+    </Parameter>
+    <Parameter Name="Depth">
+      <Value>65</Value>
+    </Parameter>
+    <Parameter Name="Mode">
+      <Value>2</Value>
+    </Parameter>
+    <Parameter Name="Mix">
+      <Value>67</Value>
+    </Parameter>
+    <Parameter Name="Tone">
+      <Value>0</Value>
+    </Parameter>
+    <Parameter Name="TapDivision">
+      <Value>2</Value>
+    </Parameter>
+    <Parameter Name="EP">
+      <Value>0</Value>
+    </Parameter>
+    <Parameter Name="PrePost">
+      <Value>0</Value>
+    </Parameter>
+  </Parameters>
+</StrymonXmlPreset>

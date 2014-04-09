@@ -14,6 +14,15 @@
               </Exclude>
             </ModulePaths>
 
+            <Functions>
+              <Exclude>
+                <!-- Exclude methods in a class or namespace named UnitTest: -->
+                <Function>RITS.StrymonEditor.Logging.\..*</Function>
+                <Function>RITS.StrymonEditor.Serialization.\..*</Function>
+                <Function>RITS.StrymonEditor.AutoUpdate.\..*</Function>
+              </Exclude>
+            </Functions>
+
             <!-- We recommend you do not change the following values: -->
             <UseVerifiableInstrumentation>True</UseVerifiableInstrumentation>
             <AllowLowIntegrityProcesses>True</AllowLowIntegrityProcesses>

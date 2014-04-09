@@ -46,5 +46,16 @@ namespace RITS.StrymonEditor.Tests
         {
             Assert.AreEqual(180, ConversionUtils.ConvertMilliHzToBPM(3000));
         }
+
+        [TestMethod]
+        public void ConvertBPMToMillisecondsCorrectly()
+        {
+            Assert.AreEqual(500, ConversionUtils.ConvertBPMToMilliseconds(120));
+        }
+        [TestMethod]
+        public void ConvertBPMToMilliHzCorrectly()
+        {
+            Assert.AreEqual(3000, ConversionUtils.ConvertBPMToMilliHz(180));
+        }
     }
 }

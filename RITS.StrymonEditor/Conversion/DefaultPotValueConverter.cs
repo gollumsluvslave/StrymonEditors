@@ -23,6 +23,7 @@ namespace RITS.StrymonEditor.Conversion
         }
         public double ValueToAngle(int value)
         {
+            if (value <= 0) return 0;
             if (value >= max)
             {
                 return 290;
@@ -33,6 +34,7 @@ namespace RITS.StrymonEditor.Conversion
         }
         public int AngleToValue(double angle)
         {
+            if (angle <= 0) return 0;
             if (angle >= 290) return Convert.ToInt32(max);
             // Dynamically assigned pots with smaller max
             if (max < 127) return Convert.ToInt32(angle / valueToAngleRatio);

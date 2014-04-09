@@ -20,7 +20,6 @@ namespace RITS.StrymonEditor.Views
     /// </summary>
     public partial class ModalProgressDialog : Window
     {
-        private IMessageDialog messageDialog;
         public ModalProgressDialog(ModalProgressDialogViewModel vm)
         {
             vm.Close = CloseMe;

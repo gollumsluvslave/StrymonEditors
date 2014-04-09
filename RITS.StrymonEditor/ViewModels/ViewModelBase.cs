@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using System.Threading;
 using RITS.StrymonEditor.Messaging;
 using RITS.StrymonEditor.IO;
+using RITS.StrymonEditor.Views;
 
 namespace RITS.StrymonEditor.ViewModels
 {
@@ -75,6 +76,8 @@ namespace RITS.StrymonEditor.ViewModels
                 messageDialog = value;
             }
         }
+
+
 
         #region INotifyPropertyChanged Members
 

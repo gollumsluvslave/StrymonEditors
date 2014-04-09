@@ -85,7 +85,7 @@ namespace RITS.StrymonEditor.IO
             {
                 try
                 {
-                    saveDialog.FileName = preset.Name;
+                    if(saveDialog.FileName==null)saveDialog.FileName=  preset.Name;
                     saveDialog.DefaultExt = ".xml";
                     saveDialog.Filter = "Xml Files (.xml)|*.xml";
                     string filePath = null;
@@ -116,6 +116,7 @@ namespace RITS.StrymonEditor.IO
             {
                 try
                 {
+                    if (saveDialog.FileName == null) saveDialog.FileName = preset.Name;
                     saveDialog.DefaultExt = ".syx";
                     saveDialog.Filter = "Sysex Files (.syx)|*.syx";
                     string filePath = null;

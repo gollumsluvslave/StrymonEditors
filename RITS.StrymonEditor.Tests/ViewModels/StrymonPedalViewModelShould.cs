@@ -167,7 +167,7 @@ namespace RITS.StrymonEditor.Tests
             Sut.MessageDialog = dialogMock.Object;
             Sut.ShouldNotifyOn(x => x.ActiveMachine).
                     When(setAction);
-
+            Sut.PotControls.First();
             Assert.AreEqual(newMachine.Value, Sut.ActiveMachine.Value);
             midiManagerMock.Verify(x => x.SynchMachine(newMachine));
             Sut.Dispose();
@@ -704,5 +704,131 @@ namespace RITS.StrymonEditor.Tests
             Assert.IsFalse(Sut.IsDirty);
             Sut.Dispose();
         }
+
+        [TestMethod]
+        public void ExecutePedalBackupCorrectly()
+        {
+            // Arrange
+            var pedal = TestHelper.TimelinePedal;
+            var mockFileService = Container.GetMock<IFileIOService>();
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            Sut.FileIOService = mockFileService.Object;
+            // Act
+            Sut.PedalBackup.Execute(null);
+            // Assert
+            mockFileService.Verify(x => x.PedalBackupToSyx(pedal), Times.Once());
+        }
+
+        [TestMethod]
+        public void ExecuteRestoreBackupCorrectly()
+        {
+            // Arrange
+            var pedal = TestHelper.TimelinePedal;
+            var midiManagerMock = Container.GetMock<IStrymonMidiManager>();
+            var mockFileService = Container.GetMock<IFileIOService>();
+            var mockProgessBar = Container.GetMock<IInputDialog>();
+            var presetList = new StrymonPreset[] { TestHelper.TestTimelinePreset, TestHelper.TestTimelinePreset }.ToList();
+            mockFileService.Setup(x => x.GetPresetBackupDataFromSyx(pedal)).Returns(presetList);
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            Sut.FileIOService = mockFileService.Object;
+            Sut.ProgressDialog = mockProgessBar.Object;
+            Sut.ActivePreset.Name = "MAKEDIRTY";
+            // Act
+            Sut.RestorePedalBackup.Execute(null);
+            Sut.ModalProgressVM.Start(); // Have to simulate window loaded to do the callback
+            // Assert
+            mockProgessBar.Verify(x => x.ShowModal(), Times.Once());
+            mockFileService.Verify(x => x.GetPresetBackupDataFromSyx(pedal), Times.Once());
+            midiManagerMock.Verify(x=>x.PushToIndex(It.IsAny<StrymonPreset>(),It.IsAny<int>()),Times.Exactly(2));
+            Sut.Dispose();
+        }
+
+        [TestMethod]
+        public void HandleBackupOk()
+        {
+
+            var midiManagerMock = Container.GetMock<IStrymonMidiManager>();
+            var mockDialog = Container.GetMock<IMessageDialog>();
+            mockDialog.Setup(x => x.ShowYesNo(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            Sut.MessageDialog = mockDialog.Object;
+            // Act
+            var retval =Sut.PedalBackup.CanExecute(null);
+            Assert.IsFalse(retval);
+            Sut.Dispose();
+        }
+
+        [TestMethod]
+        public void HandleMachineChanged()
+        {
+
+            var midiManagerMock = Container.GetMock<IStrymonMidiManager>();
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            var newmachine = new StrymonMachineViewModel(TestHelper.TimelinePedal.Machines[3]);
+            // Act
+            Sut.Mediator.NotifyColleagues(ViewModelMessages.MachineSelected, newmachine);
+            // Assert
+            Assert.AreEqual(newmachine.Value,Sut.ActiveMachine.Value);
+            Sut.Dispose();
+        }
+
+
+        [TestMethod]
+        public void ExecuteFetchCurrent()
+        {
+
+            var midiManagerMock = Container.GetMock<IStrymonMidiManager>();
+            var mockDialog = Container.GetMock<IMessageDialog>();
+            mockDialog.Setup(x => x.ShowYesNo(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            Sut.MessageDialog = mockDialog.Object;
+            Sut.ActivePreset.Name = "MAKEDIRTY";
+            // Act
+            Sut.FetchCurrent.Execute(null);
+            mockDialog.Verify(x => x.ShowYesNo(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+            midiManagerMock.Verify(x => x.FetchCurrent(), Times.Once());
+            Sut.Dispose();
+        }
+
+        [TestMethod]
+        public void MiscGet()
+        {
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            var x =Sut.Image;
+            var y = Sut.PedalColour;
+            // Just for code coverage 
+            Sut.Dispose();
+        }
+
+        [TestMethod]
+        public void ExecutePushCurrent()
+        {
+            // Arrange
+            var midiManagerMock = Container.GetMock<IStrymonMidiManager>();
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            // Act
+            Sut.SendToEdit.Execute(null);
+            // Assert
+            midiManagerMock.Verify(x => x.PushToEdit(It.IsAny<StrymonPreset>()), Times.Once());
+            Sut.Dispose();
+        }
+
+        [TestMethod]
+        public void ExecuteSaveCommandCorrectly()
+        {
+            // Arrange
+            var mockFileService = Container.GetMock<IFileIOService>();
+            mockFileService.Setup(x => x.SavePreset(It.IsAny<StrymonPreset>())).Returns(true);
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            Sut.FileIOService = mockFileService.Object;
+            Sut.ActivePreset.Name = "MAKEDIRTY";
+            // Act
+            Sut.SaveCommand.Execute(null);
+            // Assert
+            mockFileService.Verify(x => x.SavePreset(It.IsAny<StrymonPreset>()), Times.Once());
+            Assert.IsFalse(Sut.IsDirty);
+            Sut.Dispose();
+        }
+
     }
 }

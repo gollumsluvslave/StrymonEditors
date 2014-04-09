@@ -31,6 +31,10 @@ namespace RITS.StrymonEditor.Conversion
                     opt = optionList.First();
                 }
             }
+            if (opt == null)
+            {
+                throw new ArgumentOutOfRangeException(string.Format("Value {0} is not valid for the supplied Option list", value));
+            }
             return opt.Name;
         }
     }

@@ -1227,6 +1227,33 @@ namespace RITS.StrymonEditor.ViewModels
             set { renameDialog = value; }
         }
 
+        private IInputDialog progressDialog;
+        public IInputDialog ProgressDialog
+        {
+            get
+            {
+                if (progressDialog == null)
+                {
+                    progressDialog = new ModalProgressBar(ModalProgressVM); ;
+                }
+                return progressDialog;
+            }
+            set
+            {
+                progressDialog = value;
+            }
+        }
+
+        private ModalProgressDialogViewModel modalProgressVM;
+        public ModalProgressDialogViewModel ModalProgressVM
+        {
+            get
+            {
+                if (modalProgressVM == null) modalProgressVM=new ModalProgressDialogViewModel(RestorePresets);
+                return modalProgressVM;
+            }
+        }
+
         public RelayCommand LoopRecord
         {
             get
@@ -1404,10 +1431,7 @@ namespace RITS.StrymonEditor.ViewModels
                         new Action(() =>
                         {
 
-                            var pbVM = new ModalProgressDialogViewModel(RestorePresets);
-                            pbVM.PBMax = ActivePedal.PresetCount;
-                            var progressDialog = new ModalProgressDialog(pbVM);
-                            progressDialog.ShowDialog();
+                            ProgressDialog.ShowModal();
                             
                         }));
                 }

@@ -12,6 +12,7 @@ namespace RITS.StrymonEditor.Conversion
     public class BoostValueLabelConverter : IValueLabelConverter
     {
         double min = -3.0;
+        double max = 3.0;
         public BoostValueLabelConverter()
         {
         }
@@ -19,6 +20,9 @@ namespace RITS.StrymonEditor.Conversion
         {
             double incr = Math.Round((value * 0.1), 1);
             double val = (min + incr);
+            if (val <= min) val = min;
+            if (val >= max) val = max;
+
             string sign = "";
             sign = val > 0 ? "+" : "";
             return string.Format("{0}{1} db", sign, val.ToString("0.0"));

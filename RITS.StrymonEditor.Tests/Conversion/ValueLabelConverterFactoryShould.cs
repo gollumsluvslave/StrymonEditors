@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using RITS.StrymonEditor;
+using RITS.StrymonEditor.Conversion;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
 namespace RITS.StrymonEditor.Tests

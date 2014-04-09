@@ -66,6 +66,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Conversion\BPMConversionShould.cs" />
+    <Compile Include="Conversion\DefaultPotValueConverterShould.cs" />
+    <Compile Include="Conversion\DefaultFineCoarseValueConverterShould.cs" />
+    <Compile Include="Conversion\OptionListPotValueConverterShould.cs" />
+    <Compile Include="Conversion\BoostValueLabelConverterShould.cs" />
+    <Compile Include="Conversion\OptionValueLabelConverterShould.cs" />
+    <Compile Include="Integration\FileIOServiceShould.cs" />
     <Compile Include="Views\EncoderControlShould.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="MockPresentationSource.cs" />
@@ -74,6 +80,7 @@
     <Compile Include="Conversion\PotValueMapShould.cs" />
     <Compile Include="Models\StrymonMidiManagerShould.cs" />
     <Compile Include="Models\StymonSysExUtilsShould.cs" />
+    <Compile Include="Views\PresetControlShould.cs" />
     <Compile Include="Views\PotControlShould.cs" />
     <Compile Include="TestContext.cs" />
     <Compile Include="TestHelper.cs" />
@@ -99,9 +106,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Integration\Data\Black Metallic.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="app.config" />
+    <Content Include="Integration\Data\Base_BigSky.syx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Integration\Data\Base_Mobius.syx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Integration\Data\Base_Timeline.syx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
