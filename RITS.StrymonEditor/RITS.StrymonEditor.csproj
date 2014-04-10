@@ -81,6 +81,7 @@
     <Compile Include="AutoUpdate\HttpUtils.cs" />
     <Compile Include="AutoUpdate\UpdateChecker.cs" />
     <Compile Include="AutoUpdate\VersionConfig.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Conversion\BoostLabelValueConverter.cs" />
     <Compile Include="Conversion\ConversionUtils.cs" />
@@ -134,9 +135,11 @@
     <Compile Include="Models\PotValueItem.cs" />
     <Compile Include="Models\XmlParameter.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="ViewModels\BindableCollection.cs" />
     <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\DirectEntryViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\MenuItemViewModel.cs" />
     <Compile Include="ViewModels\ModalProgressDialogViewModel.cs" />
     <Compile Include="ViewModels\ParameterViewModel.cs" />
     <Compile Include="ViewModels\PotViewModel.cs" />

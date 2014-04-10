@@ -12,8 +12,15 @@ namespace RITS.StrymonEditor.Models
     [Serializable]
     public class Range
     {
+        /// <summary>
+        /// The minimum value accpetbale
+        /// </summary>
         [XmlAttribute]
         public int MinValue { get; set; }
+
+        /// <summary>
+        /// The maximum value acceptable
+        /// </summary>
         [XmlAttribute]
         public int MaxValue { get; set; }
 

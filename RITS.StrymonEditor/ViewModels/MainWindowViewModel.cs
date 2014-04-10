@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using RITS.StrymonEditor.AutoUpdate;
+using RITS.StrymonEditor.Commands;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.Views;
 using RITS.StrymonEditor.IO;
@@ -11,6 +12,9 @@ using RITS.StrymonEditor.Messaging;
 
 namespace RITS.StrymonEditor.ViewModels
 {
+    /// <summary>
+    /// View Model responsible for the <see cref="MainWindow"/>
+    /// </summary>
     public class MainWindowViewModel:ViewModelBase, IDisposable
     {
         private IStrymonMidiManager midiManager;
@@ -18,6 +22,7 @@ namespace RITS.StrymonEditor.ViewModels
         private int connectedPedalCount = 0;
         private int currentBulkFetch =0;
         private int failedFetchCount = 0;
+
         public MainWindowViewModel(IStrymonMidiManager midiManager)
         {
             this.midiManager = midiManager;
@@ -31,87 +36,16 @@ namespace RITS.StrymonEditor.ViewModels
 
         }
 
+        #region Public Properties
 
-
-        public override void RegisterWithMediator()
-        {
-            Mediator.Register(ViewModelMessages.PedalConnected, PedalConnected);
-            Mediator.Register(ViewModelMessages.BulkPresetRead, BulkPresetRead);
-            Mediator.Register(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
-        }
-        public override void DeRegisterFromMediator()
-        {
-            Mediator.UnRegister(ViewModelMessages.PedalConnected, PedalConnected);
-            Mediator.UnRegister(ViewModelMessages.BulkPresetRead, BulkPresetRead);
-            Mediator.UnRegister(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-        }
-
+        /// <summary>
+        /// Delegate for closing the associated view / window
+        /// </summary>
         public Action CloseWindow { get; set; }
 
-        private bool HandleAutoUpdateUpdate()
-        {
-            UpdateChecker checker = new AutoUpdate.UpdateChecker(MessageDialog);
-            if (checker.CheckForUpdate())
-            {
-                checker.RunUpdate();
-                CloseWindow();
-                return false;
-            }
-            return true;
-        }
-
-        private void MIDIConnectionComplete(object o)
-        {
-            // Kick of preset load
-            if (Properties.Settings.Default.DisableBulkFetch) return;
-            ShowProgressBar = true;
-            
-            if (midiManager.ConnectedPedals.Count > 0)
-            {
-                BulkFetch(midiManager.ConnectedPedals.FirstOrDefault());
-            }
-
-        }
-
-        private void BulkFetch(StrymonPedal p)
-        {
-            PBMax = p.PresetCount - 1;
-            for (int i = 0; i < p.PresetCount; i++)
-            {
-                currentBulkFetch = i;
-                System.Threading.Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
-                midiManager.BulkPedal = p;
-                midiManager.FetchByIndex(i);
-            }
-            System.Threading.Thread.Sleep(1000);
-            midiManager.BulkPedal = null;
-        }
-
-
-
-        private void BulkPresetRead(object o)
-        {
-            var preset = o as StrymonPreset;
-            PBValue = currentBulkFetch;
-            if (preset != null) PBStatus = string.Format("Fetched : {0}({1})", preset.Pedal.Name, preset.SourceIndex);
-            else
-            {
-                failedFetchCount ++;
-                PBStatus = string.Format("Fetch Failed : {0}", currentBulkFetch);
-            }
-            if (currentBulkFetch == PBMax)
-            {
-                PBStatus = (failedFetchCount>0) ? string.Format("Loaded ({0} failed)", failedFetchCount) : "Loaded";
-                ShowProgressBar = false;
-                Mediator.NotifyColleagues(ViewModelMessages.BulkLoadComplete, null);
-            }
-        }
-
+        /// <summary>
+        /// Returns the image that indicates MIDI connectivity
+        /// </summary>
         public string MidiImage
         {
             get
@@ -127,6 +61,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Flag for the visibility of the bulk fetch progress bar
+        /// </summary>
         private bool showProgressBar;
         public bool ShowProgressBar
         {
@@ -134,31 +71,9 @@ namespace RITS.StrymonEditor.ViewModels
             set { showProgressBar = value; OnPropertyChanged("ShowProgressBar"); }
         }
 
-        private void PedalConnected(object pedal)
-        {
-            lock (lockObject)
-            {
-                var p = pedal as StrymonPedal;
-                connectedPedalCount++;
-
-                if (connectedPedalCount == 1)
-                {
-                    ConnectedPedal1 = p.Name;
-                    OnPropertyChanged("MidiImage");
-                }
-                if (connectedPedalCount == 2) ConnectedPedal2 = p.Name;
-                if (connectedPedalCount == 3) ConnectedPedal3 = p.Name;
-                StatusText = string.Format("Ready. ({0} Pedal Connected)", connectedPedalCount);
-
-                // How to queue these in synchronous sequence?
-                //midiManager.BulkFetch(p);
-            }
-
-
-        }
-
-
-
+        /// <summary>
+        /// The current status text
+        /// </summary>
         private string status;
         public string StatusText
         {
@@ -166,6 +81,9 @@ namespace RITS.StrymonEditor.ViewModels
             set { status = value; OnPropertyChanged("StatusText"); }
         }
 
+        /// <summary>
+        /// Returns the name of the 1st connected pedal
+        /// </summary>
         private string ped1;
         public string ConnectedPedal1
         {
@@ -173,6 +91,10 @@ namespace RITS.StrymonEditor.ViewModels
             set { ped1 = value; OnPropertyChanged("ConnectedPedal1"); }
         }
 
+        /// <summary>
+        /// Returns the name of the 2nd connected pedal
+        /// NB Not supported
+        /// </summary>
         private string ped2;
         public string ConnectedPedal2
         {
@@ -180,6 +102,10 @@ namespace RITS.StrymonEditor.ViewModels
             set { ped2 = value; OnPropertyChanged("ConnectedPedal2"); }
         }
 
+        /// <summary>
+        /// Returns the name of the 3rd connected pedal
+        /// NB Not supported
+        /// </summary>
         private string ped3;
         public string ConnectedPedal3
         {
@@ -187,6 +113,9 @@ namespace RITS.StrymonEditor.ViewModels
             set { ped3 = value; OnPropertyChanged("ConnectedPedal3"); }
         }
 
+        /// <summary>
+        /// Status text for the bulk fetch progress operation
+        /// </summary>
         private string pbStatus;
         public string PBStatus
         {
@@ -194,6 +123,9 @@ namespace RITS.StrymonEditor.ViewModels
             set { pbStatus = value; OnPropertyChanged("PBStatus"); }
         }
 
+        /// <summary>
+        /// Max for the bulk fetch operation
+        /// </summary>
         private int pbMax;
         public int PBMax
         {
@@ -201,14 +133,22 @@ namespace RITS.StrymonEditor.ViewModels
             set { pbMax = value; OnPropertyChanged("PBMax"); }
         }
 
+        /// <summary>
+        /// Current value for the bulk fetch operation
+        /// </summary>
         private int pbValue;
         public int PBValue
         {
             get { return pbValue; }
             set { pbValue = value; OnPropertyChanged("PBValue"); }
         }
+        #endregion
 
+        #region Menu Related
 
+        /// <summary>
+        /// Returns a bindable collection of <see cref="MenuItemViewModel"/> that drives the menu
+        /// </summary>
         private BindableCollection<MenuItemViewModel> editorMenu;
         public BindableCollection<MenuItemViewModel> EditorMenu
         {
@@ -219,6 +159,7 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        // Helper that setups the menu
         private void SetupMenu()
         {
             editorMenu = new BindableCollection<MenuItemViewModel>();
@@ -263,7 +204,43 @@ namespace RITS.StrymonEditor.ViewModels
             };
             editorMenu.Add(aboutMenu);
         }
+
+        // Helper that opens the editor window based on the supplied MenuItemViewModel
+        private void OpenEditor(MenuItemViewModel menuItem)
+        {
+            StrymonPedal pedal = menuItem.Tag as StrymonPedal;
+            OpenEditor(new StrymonPreset(pedal, true));
+        }
+
+        // Helper that opens the editor window based on the supplied StrymonPedal
+        private void OpenEditor(StrymonPedal pedal)
+        {
+            OpenEditor(new StrymonPreset(pedal, true));
+        }
+
+        // Helper that opens the editor window using the supplied StrymonPreset
+        private void OpenEditor(StrymonPreset preset)
+        {
+            PedalEditor editor = new PedalEditor(preset, midiManager);
+            editor.ShowDialog();
+        }
+
+        // Helper that loads an xml file preset
+        private void LoadXml()
+        {
+            var preset = FileIOService.LoadXmlPreset();
+            if (preset != null)
+            {
+                OpenEditor(preset);
+            }
+        }
+        #endregion
+
         #region Commands
+
+        /// <summary>
+        /// ICommand that handles loading an xml file preset
+        /// </summary>
         public RelayCommand LoadXmlCommand
         {
             get
@@ -275,6 +252,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// ICommand that handles loading a .syx file preset
+        /// </summary>
         public RelayCommand LoadSyxCommand
         {
             get
@@ -290,6 +270,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// ICommand that handles exiting the application
+        /// </summary>
         public RelayCommand ExitCommand
         {
             get
@@ -301,6 +284,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// ICommand that handles creating a new Timeline preset
+        /// </summary>
         public RelayCommand NewTimelinePresetCommand
         {
             get
@@ -312,6 +298,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// ICommand that handles creating a new Mobius preset
+        /// </summary>
         public RelayCommand NewMobiusPresetCommand
         {
             get
@@ -323,6 +312,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// ICommand that handles creating a new BigSky preset
+        /// </summary>
         public RelayCommand NewBigSkyPresetCommand
         {
             get
@@ -335,31 +327,121 @@ namespace RITS.StrymonEditor.ViewModels
         }
         #endregion
 
-
-        private void OpenEditor(MenuItemViewModel menuItem)
+        #region IColleague
+        /// <inheritdoc/>
+        public override void RegisterWithMediator()
         {
-            StrymonPedal pedal = menuItem.Tag as StrymonPedal;
-            OpenEditor(new StrymonPreset(pedal, true));
+            Mediator.Register(ViewModelMessages.PedalConnected, PedalConnected);
+            Mediator.Register(ViewModelMessages.BulkPresetRead, BulkPresetRead);
+            Mediator.Register(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
         }
 
-        private void OpenEditor(StrymonPedal pedal)
+        /// <inheritdoc/>
+        public override void DeRegisterFromMediator()
         {
-            OpenEditor(new StrymonPreset(pedal, true));
+            Mediator.UnRegister(ViewModelMessages.PedalConnected, PedalConnected);
+            Mediator.UnRegister(ViewModelMessages.BulkPresetRead, BulkPresetRead);
+            Mediator.UnRegister(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
         }
+        #endregion
 
-        private void OpenEditor(StrymonPreset preset)
-        {
-            PedalEditor editor = new PedalEditor(preset, midiManager);
-            editor.ShowDialog();
-        }
+        #region Mediator Callbacks
 
-        private void LoadXml()
+        // Handle the MIDIConnection complete notification
+        private void MIDIConnectionComplete(object o)
         {
-            var preset = FileIOService.LoadXmlPreset();
-            if (preset != null)
+            // Kick of preset load
+            if (Properties.Settings.Default.DisableBulkFetch) return;
+            ShowProgressBar = true;
+
+            if (midiManager.ConnectedPedals.Count > 0)
             {
-                OpenEditor(preset);
+                BulkFetch(midiManager.ConnectedPedals.FirstOrDefault());
+            }
+
+        }
+        
+        // Initiate a bulk fetch for the supplied pedal
+        private void BulkFetch(StrymonPedal p)
+        {
+            PBMax = p.PresetCount - 1;
+            for (int i = 0; i < p.PresetCount; i++)
+            {
+                currentBulkFetch = i;
+                System.Threading.Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
+                midiManager.BulkPedal = p;
+                midiManager.FetchByIndex(i);
+            }
+            System.Threading.Thread.Sleep(1000);
+            midiManager.BulkPedal = null;
+        }
+
+        // handle the bulkpresetread notification
+        private void BulkPresetRead(object o)
+        {
+            var preset = o as StrymonPreset;
+            PBValue = currentBulkFetch;
+            if (preset != null) PBStatus = string.Format("Fetched : {0}({1})", preset.Pedal.Name, preset.SourceIndex);
+            else
+            {
+                failedFetchCount++;
+                PBStatus = string.Format("Fetch Failed : {0}", currentBulkFetch);
+            }
+            if (currentBulkFetch == PBMax)
+            {
+                PBStatus = (failedFetchCount > 0) ? string.Format("Loaded ({0} failed)", failedFetchCount) : "Loaded";
+                ShowProgressBar = false;
+                Mediator.NotifyColleagues(ViewModelMessages.BulkLoadComplete, null);
             }
         }
+
+        // Handles the pedalconnected notification
+        private void PedalConnected(object pedal)
+        {
+            lock (lockObject)
+            {
+                var p = pedal as StrymonPedal;
+                connectedPedalCount++;
+
+                if (connectedPedalCount == 1)
+                {
+                    ConnectedPedal1 = p.Name;
+                    OnPropertyChanged("MidiImage");
+                }
+                if (connectedPedalCount == 2) ConnectedPedal2 = p.Name;
+                if (connectedPedalCount == 3) ConnectedPedal3 = p.Name;
+                StatusText = string.Format("Ready. ({0} Pedal Connected)", connectedPedalCount);
+
+                // How to queue these in synchronous sequence?
+                //midiManager.BulkFetch(p);
+            }
+
+
+        }
+
+        #endregion
+     
+        #region IDisposable
+        /// <inheritdoc/>
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
+        #endregion
+
+        #region AutoUpdate Check
+        private bool HandleAutoUpdateUpdate()
+        {
+            UpdateChecker checker = new AutoUpdate.UpdateChecker(MessageDialog);
+            if (checker.CheckForUpdate())
+            {
+                checker.RunUpdate();
+                CloseWindow();
+                return false;
+            }
+            return true;
+        }
+        #endregion
+
     }
 }

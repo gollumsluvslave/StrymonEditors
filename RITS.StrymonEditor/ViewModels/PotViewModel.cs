@@ -12,6 +12,12 @@ namespace RITS.StrymonEditor.ViewModels
     /// </summary>
     public static class PotViewModelFactory
     {
+        /// <summary>
+        /// Returns the correct <see cref="PotViewModel"/> based on the supplied <see cref="Pot"/> and <see cref="Parameter"/>
+        /// </summary>
+        /// <param name="pot"></param>
+        /// <param name="linkedParameter"></param>
+        /// <returns></returns>
         public static PotViewModel Create(Pot pot, Parameter linkedParameter)
         {
             if (pot.IsDynamic)
@@ -31,7 +37,7 @@ namespace RITS.StrymonEditor.ViewModels
     }
 
     /// <summary>
-    /// Standard pot view model
+    /// Standard / base pot view model
     /// </summary>
     public class PotViewModel:ViewModelBase
     {
@@ -43,6 +49,10 @@ namespace RITS.StrymonEditor.ViewModels
             _linkedParameter = linkedParameter;
             _potValueConverter = PotValueConverterFactory.Create(_linkedParameter, this._pot);
         }
+
+        /// <summary>
+        /// The id of the <see cref="Pot"/>
+        /// </summary>
         public int Id 
         {
             get { return _pot.Id; }
@@ -50,7 +60,14 @@ namespace RITS.StrymonEditor.ViewModels
 
         protected string _labelOverride;
 
+        /// <summary>
+        /// The name of the context <see cref="StrymonPedal"/>
+        /// </summary>
         public StrymonPedal ContextPedal { get; set; }
+
+        /// <summary>
+        /// A textual label for this pot
+        /// </summary>
         public virtual string Label 
         {
             get { return _labelOverride;  }
@@ -61,12 +78,24 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Expose the left property of the <see cref="Pot"/>
+        /// </summary>
         public int Left { get { return _pot.Left; } }
 
+        /// <summary>
+        /// Expose the top property of the <see cref="Pot"/>
+        /// </summary>
         public int Top { get { return _pot.Top; } }
 
+        /// <summary>
+        /// Expose the Hide property of the <see cref="Pot"/>
+        /// </summary>
         public bool Hide { get { return _pot.Hide; } }
 
+        /// <summary>
+        /// The angle of the <see cref="Pot"/>
+        /// </summary>
         protected double _angle;
         protected int _value;
         public virtual double Angle
@@ -88,6 +117,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// The underlying value of the <see cref="Pot"/> / <see cref="Parameter"/>
+        /// </summary>
         public virtual int Value
         {
             get 
@@ -102,7 +134,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
         
-        
+        /// <summary>
+        /// The <see cref="Parameter"/> linked to the underlying <see cref="Pot"/>
+        /// </summary>
         protected Parameter _linkedParameter;
         public Parameter LinkedParameter
         {
@@ -116,6 +150,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Exposes the value label of the linked <see cref="Parameter"/>
+        /// </summary>
         public virtual string ValueLabel
         {
             get 
@@ -124,21 +161,33 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// returns whether the underlying <see cref="Pot"/> is a 'fine' encoder pot
+        /// </summary>
         public bool IsFineControlPot
         {
             get { return this is FinePotViewModel; }
         }
 
+        /// <summary>
+        /// returns whether the underlying <see cref="Pot"/> is a 'coarse' pot
+        /// </summary>
         public bool IsCoarseControlPot
         {
             get { return this is CoarsePotViewModel; }
         }
 
+        /// <summary>
+        /// returns whether the underlying <see cref="Pot"/> is a dyanmic pot that can be assigned to differente parameters
+        /// </summary>
         public bool IsDynamicControlPot
         {
             get { return this is DynamicPotViewModel; }
         }
 
+        /// <summary>
+        /// returns whether the underlying <see cref="Pot"/> is a standard pot
+        /// </summary>
         public bool IsNormalControlPot
         {
             get { return !IsFineControlPot && !IsCoarseControlPot && !IsDynamicControlPot; }
@@ -168,6 +217,9 @@ namespace RITS.StrymonEditor.ViewModels
         }
 
 
+        /// <summary>
+        /// Handle set/retrieval of the angle property
+        /// </summary>
         public override double Angle
         {
             get
@@ -191,9 +243,13 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
-
         
-
+        /// <summary>
+        /// Process <see cref="Pot"/> overrides
+        /// </summary>
+        /// <param name="machineOverridePot"></param>
+        /// <param name="preset"></param>
+        /// <returns></returns>
         public bool HandleFineRangeOverrides(Pot machineOverridePot, StrymonPreset preset)
         {
             // Range Overrides to FineRange
@@ -237,7 +293,10 @@ namespace RITS.StrymonEditor.ViewModels
 
         }
 
-
+        /// <summary>
+        /// Overides the setting of the 'fine' value on the linked parameter
+        /// Delegates to the <see cref="FineCoarseSynchroniser"/>
+        /// </summary>
         public override int Value
         {
             get
@@ -257,6 +316,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Handle the supplied value as a result of a direct entry operation
+        /// </summary>
+        /// <param name="value"></param>
         public void HandleDirectEntry(double value)
         {
             // Now we have a differentiator

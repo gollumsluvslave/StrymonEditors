@@ -33,6 +33,11 @@ namespace RITS.StrymonEditor.Models
         /// </summary>
         public PotValueMap PotValueMap { get; set; }
 
+        /// <summary>
+        /// Returns the MIDI CC# for the machine
+        /// NB there is a bit of 'mung' logic here as the CC values 
+        /// Strymon uses appear to be different to the values stored in the .syx files
+        /// </summary>
         [XmlIgnore]
         public int CCValue
         {

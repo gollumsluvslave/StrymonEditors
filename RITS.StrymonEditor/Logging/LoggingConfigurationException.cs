@@ -5,7 +5,7 @@ using System.Security.Permissions;
 namespace RITS.StrymonEditor.Logging
 {
     /// <summary>
-    /// Exception that is thrown when the MC.Core.Logging configuration is invalid in some way
+    /// Exception that is thrown when the logging configuration is invalid in some way
     /// </summary>
     [Serializable]
     public class LoggingConfigurationException : Exception

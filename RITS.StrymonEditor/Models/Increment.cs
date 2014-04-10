@@ -38,6 +38,8 @@ namespace RITS.StrymonEditor.Models
         }
 
 
+        // Helper method that uses regex to build a map for the specified value
+        // This allows shortcut definitions to be specified
         List<int> map;
         private List<int> IncrementIndexMap
         {

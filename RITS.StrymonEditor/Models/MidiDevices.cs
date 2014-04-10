@@ -5,9 +5,15 @@ using System.Text;
 using Midi;
 namespace RITS.StrymonEditor.Models
 {
+    /// <summary>
+    /// Static helper class that returns various MIDI Device related information
+    /// </summary>
     public static class MidiDevices
     {
-
+        /// <summary>
+        /// Enumerates the list of <see cref="InputDevice"/> supported by the current system, and returns the names
+        /// </summary>
+        /// <returns></returns>
         public static IEnumerable<string> GetInputDevices()
         {
             foreach (var id in InputDevice.InstalledDevices)
@@ -15,6 +21,11 @@ namespace RITS.StrymonEditor.Models
                 yield return id.Name;
             }
         }
+
+        /// <summary>
+        /// Enumerates the list of <see cref="OutputDevice"/> supported by the current system, and returns the names
+        /// </summary>
+        /// <returns></returns>
         public static IEnumerable<string> GetOutputDevices()
         {
             foreach (var id in OutputDevice.InstalledDevices)
@@ -23,6 +34,9 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
+        /// <summary>
+        /// Returns the currently configured <see cref="InputDevice"/> based on the users settings
+        /// </summary>
         public static InputDevice ConfiguredInputDevice
         {
             get
@@ -31,6 +45,9 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
+        /// <summary>
+        /// Returns the currently configured <see cref="OutputDevice"/> based on the users settings
+        /// </summary>
         public static OutputDevice ConfiguredOutputDevice
         {
             get

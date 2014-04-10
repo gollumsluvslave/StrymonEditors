@@ -14,6 +14,9 @@ namespace RITS.StrymonEditor.Models
     /// </summary>
     public class StrymonPreset : NameBase
     {
+        private StrymonMachine currentMachine;
+        private StrymonMachine prevMachine;
+
         #region Constructors
         // Default 
         private Dictionary<string, int> previousParameterValues = new Dictionary<string, int>();
@@ -37,17 +40,31 @@ namespace RITS.StrymonEditor.Models
         /// The pedal this preset is related to
         /// </summary>
         public StrymonPedal Pedal { get; set; }
-        public bool IsNew { get { return Name == null; } }
-        private StrymonMachine currentMachine;
-        private StrymonMachine prevMachine;
 
+        /// <summary>
+        /// Flag that indicates whether this preset is new and has not been sourced from a pre-existing file
+        /// </summary>
+        public bool IsNew { get { return Name == null; } }
+
+        /// <summary>
+        /// List of <see cref="HeelToeSetting"/> values used to store the EPSet information
+        /// </summary>
         public List<HeelToeSetting> EPSetValues { get; set; }
 
+        /// <summary>
+        /// The index of the parameter currently assigned to the dynamic 'Param1' <see cref="Pot"/>
+        /// Only relevant for Mobius and BigSky presets
+        /// </summary>
         public int Param1ParameterIndex 
         { 
             get; 
             set; 
         }
+
+        /// <summary>
+        /// The index of the parameter currently assigned to the dynamic 'Param2' <see cref="Pot"/>
+        /// Only relevant for Mobius and BigSky presets
+        /// </summary>
         public int Param2ParameterIndex 
         { 
             get; 
@@ -101,101 +118,21 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
-        private void CachePreviousParameters()
-        {
-            if (HiddenParameters == null) return;
-            previousParameterValues.Clear();
-            foreach (var p in HiddenParameters)
-            {
-                previousParameterValues.Add(p.Name, p.Value);
-            }
-        }
-
-        private int GetValueFromPreviousParameter(string paramName)
-        {
-            if (previousParameterValues.ContainsKey(paramName))
-            {
-                return previousParameterValues[paramName];
-            }
-            return 0;
-        }
-
-
-        private void RebuildParameters()
-        {
-            CachePreviousParameters();
-            using (RITSLogger logger = new RITSLogger())
-            {
-
-                if (prevMachine == null || prevMachine.Value != currentMachine.Value)
-                {
-                    PotValueMap.Reset();
-                    // Tell Fine/Coarse ViewModels to refresh the IncrementMap too
-                    
-                    int offset = 1;
-                    // Only create ControlParameters 1st time
-                    if (ControlParameters == null)
-                    {
-                        ControlParameters = new List<Parameter>();
-                        foreach (var p in Pedal.ControlParameters)
-                        {
-                            p.SysExOffset = offset;
-                            Parameter pv = new Parameter { Definition = p, ContextPedalName=Pedal.Name };
-                            ControlParameters.Add(pv);
-                            if (offset == 5) { offset++; } // Odd offset not used
-                            offset++;
-                        }
-                    }
-                    // Hidden & Common Parameters start at offset 17
-                    offset=17;
-
-                    HiddenParameters = new List<Parameter>();
-                    // Order by index? Serialized order would be best, less code, but more brittle
-                    foreach (var p in Machine.MachineParameters)
-                    {
-                        var def = p;
-                        if (p.IsRef)
-                        {
-                            def = Pedal.SharedParameters.FirstOrDefault(x => x.Name == p.Name);
-                            if (def == null)
-                            {
-                                logger.Warn(string.Format("Orphaned Reference to Shared Parameter : {0}",p.Name));
-                            }
-                        }
-                        def.SysExOffset = offset;
-                        Parameter pv = new Parameter { Definition = def, ContextPedalName = Pedal.Name, Value = GetValueFromPreviousParameter(p.Name) };
-                        HiddenParameters.Add(pv);
-                        offset++;
-                    }
-                    // Order by index? Serialized order would be best, less code, but more brittle
-                    foreach (var p in Pedal.CommonParameters)
-                    {
-                        p.SysExOffset = offset;
-                        Parameter pv = new Parameter { Definition = p, ContextPedalName = Pedal.Name, Value = GetValueFromPreviousParameter(p.Name) };
-                        HiddenParameters.Add(pv);
-                        offset += p.PostOffset;
-                        offset++;
-                    }
-
-                }
-            }
-        }
-
-         
-        public StrymonPreset Clone()
-        {
-            using (XmlSerializer<StrymonPreset> xs = new XmlSerializer<StrymonPreset>())
-            {
-                return xs.DeserializeString(xs.SerializeToString(this));
-            }
-        }
-
+        /// <summary>
+        /// Return the SysEx 'index' for the supplied pot id
+        /// NB this is based on an offset of 17
+        /// </summary>
+        /// <param name="potId"></param>
+        /// <returns></returns>
         public int GetDynamicAssignedParameterIndex(int potId)
         {
             var p1Pot = HiddenParameters.FirstOrDefault(x => x.DynamicPotIdAssigned == potId);
             return p1Pot.SysExOffset-17; // Touchy Feely
         }
 
+        /// <summary>
+        /// Returns the current 'fine' value for this preset - it is unique at any given time
+        /// </summary>
         public string FineValue
         {
             get
@@ -210,7 +147,7 @@ namespace RITS.StrymonEditor.Models
         }
 
         /// <summary>
-        /// Convert the Preset to a light-weight xml format
+        /// Convert the Preset to a light-weight <see cref="StrymonXmlPreset"/> format
         /// </summary>
         /// <returns></returns>
         public StrymonXmlPreset ToXmlPreset()
@@ -234,7 +171,94 @@ namespace RITS.StrymonEditor.Models
         /// </summary>
         public string Filename { get; set; }
 
+        /// <summary>
+        /// The index position for this preset in the pedal
+        /// </summary>
         public int SourceIndex { get; set; }
+
+
+        // Helper that caches the previous values of the hidden parameters
+        // to allow them to be reset on a change of machine
+        private void CachePreviousParameters()
+        {
+            if (HiddenParameters == null) return;
+            previousParameterValues.Clear();
+            foreach (var p in HiddenParameters)
+            {
+                previousParameterValues.Add(p.Name, p.Value);
+            }
+        }
+
+        // Helper that returns the previous value for a named parameter
+        private int GetValueFromPreviousParameter(string paramName)
+        {
+            if (previousParameterValues.ContainsKey(paramName))
+            {
+                return previousParameterValues[paramName];
+            }
+            return 0;
+        }
+
+        // Helper that rebuilds the parameters for this preset
+        private void RebuildParameters()
+        {
+            CachePreviousParameters();
+            using (RITSLogger logger = new RITSLogger())
+            {
+
+                if (prevMachine == null || prevMachine.Value != currentMachine.Value)
+                {
+                    PotValueMap.Reset();
+                    // Tell Fine/Coarse ViewModels to refresh the IncrementMap too
+
+                    int offset = 1;
+                    // Only create ControlParameters 1st time
+                    if (ControlParameters == null)
+                    {
+                        ControlParameters = new List<Parameter>();
+                        foreach (var p in Pedal.ControlParameters)
+                        {
+                            p.SysExOffset = offset;
+                            Parameter pv = new Parameter { Definition = p, ContextPedalName = Pedal.Name };
+                            ControlParameters.Add(pv);
+                            if (offset == 5) { offset++; } // Odd offset not used
+                            offset++;
+                        }
+                    }
+                    // Hidden & Common Parameters start at offset 17
+                    offset = 17;
+
+                    HiddenParameters = new List<Parameter>();
+                    // Order by index? Serialized order would be best, less code, but more brittle
+                    foreach (var p in Machine.MachineParameters)
+                    {
+                        var def = p;
+                        if (p.IsRef)
+                        {
+                            def = Pedal.SharedParameters.FirstOrDefault(x => x.Name == p.Name);
+                            if (def == null)
+                            {
+                                logger.Warn(string.Format("Orphaned Reference to Shared Parameter : {0}", p.Name));
+                            }
+                        }
+                        def.SysExOffset = offset;
+                        Parameter pv = new Parameter { Definition = def, ContextPedalName = Pedal.Name, Value = GetValueFromPreviousParameter(p.Name) };
+                        HiddenParameters.Add(pv);
+                        offset++;
+                    }
+                    // Order by index? Serialized order would be best, less code, but more brittle
+                    foreach (var p in Pedal.CommonParameters)
+                    {
+                        p.SysExOffset = offset;
+                        Parameter pv = new Parameter { Definition = p, ContextPedalName = Pedal.Name, Value = GetValueFromPreviousParameter(p.Name) };
+                        HiddenParameters.Add(pv);
+                        offset += p.PostOffset;
+                        offset++;
+                    }
+
+                }
+            }
+        }
     }
 
 

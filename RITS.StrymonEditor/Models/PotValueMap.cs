@@ -65,6 +65,16 @@ namespace RITS.StrymonEditor.Models
             expanded = null;
 
         }
+
+        /// <summary>
+        /// Applies an increment map - or list of <see cref="Increment"/> to the supplied definition
+        /// to populate the list of 128 possible values that are possible for a <see cref="Pot"/> 
+        /// with the correct 'fine' value
+        /// This method is currently only relevant to the fine/coarse pots and parameters, 
+        /// allowing different machines to correctly be synchronised with the actual pedal
+        /// </summary>
+        /// <param name="incrementMap"></param>
+        /// <param name="definition"></param>
         public void ApplyFineValueIncrementMap(List<Increment> incrementMap, ParameterDef definition)
         {
             if (expanded == null) ExpandList();

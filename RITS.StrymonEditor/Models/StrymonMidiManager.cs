@@ -38,56 +38,14 @@ namespace RITS.StrymonEditor.Models
             midiOut = outputDevice;            
         }
 
-        public bool IsBulkFetching
-        { get { return bulkPedal != null; } }
-        #region MIDI Connectivity
+        #region Connectivity
 
-        private SyncMode syncMode;
-        public SyncMode SyncMode 
-        {
-            get { return syncMode; }
-            set
-            {
-                syncMode=value;
-
-            }
-        }
-        private List<StrymonPedal> connectedPedals = new List<StrymonPedal>();
-        public List<StrymonPedal> ConnectedPedals
-        {
-            get 
-            {
-                lock (lockObject)
-                {
-                    return connectedPedals;
-                }
-            }
-        }
-
-        private StrymonPedal contextPedal;
-        public StrymonPedal ContextPedal 
-        {
-            get { if (IsBulkFetching)return BulkPedal; return contextPedal; }
-            set
-            {
-                contextPedal = value;
-            }
-        }
-
-        private StrymonPedal bulkPedal;
-        public StrymonPedal BulkPedal 
-        {
-            get { return bulkPedal; }
-            set 
-            { 
-                bulkPedal = value;
-            }
-        }
-
-        // Attempt to initialise midi for the context pedal
+        /// <summary>
+        /// Operation that initialises / reinitilaises the MIDI setup
+        /// </summary>
         public void InitMidi()
         {
-            if(midiIn==null || midiOut == null) return;
+            if (midiIn == null || midiOut == null) return;
             using (RITSLogger logger = new RITSLogger())
             {
                 midiOut.Open();
@@ -102,11 +60,48 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
+        /// <summary>
+        /// Returns the list of <see cref="StrymonPedal"/> that have been detected after midi init
+        /// </summary>
+        private List<StrymonPedal> connectedPedals = new List<StrymonPedal>();
+        public List<StrymonPedal> ConnectedPedals
+        {
+            get
+            {
+                lock (lockObject)
+                {
+                    return connectedPedals;
+                }
+            }
+        }
 
         /// <summary>
-        /// Flag that instructs the class to NOT send CC messages while True
+        /// Specifies / returns the <see cref="StrymonPedal"/> relevant for BulkFetch oepration
+        /// NB setting this value will also set the IsBulkFetching flag to true
         /// </summary>
-        public bool DisableControlChangeSends { get; set; }
+        private StrymonPedal bulkPedal;
+        public StrymonPedal BulkPedal
+        {
+            get { return bulkPedal; }
+            set
+            {
+                bulkPedal = value;
+            }
+        }
+
+        /// <summary>
+        /// Specifies / returns the <see cref="StrymonPedal"/> relevant for normal operations (non-bulk)
+        /// </summary>
+        private StrymonPedal contextPedal;
+        public StrymonPedal ContextPedal 
+        {
+            get { if (IsBulkFetching)return BulkPedal; return contextPedal; }
+            set
+            {
+                contextPedal = value;
+            }
+        }
+        
         /// <summary>
         /// Returns whether or not a connection was established with the context pedal
         /// </summary>
@@ -120,59 +115,41 @@ namespace RITS.StrymonEditor.Models
             }
 
         }
+
+        /// <summary>
+        /// Returns whether or not the system is currently involved in a 'bulk' fetch operation
+        /// </summary>
+        public bool IsBulkFetching
+        { get { return bulkPedal != null; } }
+
         #endregion
 
-        #region Preset Fetch Support
-        /// <summary>
-        /// Initiates a request to retrieve the current Edit Buffer preset from the connected pedal
-        /// </summary>
-        public void FetchCurrent()
-        {
-            if (!IsConnected) return;
-            if (IsBulkFetching) return; 
-            Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
-            SendFetchPresetRequest(ContextPedal.PresetCount);
-        }
+        #region Control Flags
 
-        public void FetchByIndex(int index)
+        /// <summary>
+        /// Specifies / returns the current <see cref="SyncMode"/> 
+        /// </summary>
+        private SyncMode syncMode;
+        public SyncMode SyncMode
         {
-            if (!IsConnected && !IsBulkFetching) return;
-            if (!IsBulkFetching)
+            get { return syncMode; }
+            set
             {
-                SendProgramChange(index);
+                syncMode = value;
+
             }
-            SendFetchPresetRequest(index);
         }
 
+        /// <summary>
+        /// Specifies whether or not to prohibit the sending of CC messages
+        /// </summary>
+        public bool DisableControlChangeSends { get; set; }
         #endregion
 
-        #region Preset Push Support
-        /// <summary>
-        /// Sends the current preset in the editor to the Edit buffer to allow saving
-        /// </summary>
-        /// <param name="preset"></param>
-        public void PushToEdit(StrymonPreset preset)
-        {
-            if (!IsConnected) return;
-            if (IsBulkFetching) return; // TODO make this a bit more UI responsive?
-            PushPreset(preset, ContextPedal.PresetCount);
-        }
+        #region Control Change
 
         /// <summary>
-        /// Sends the current preset in the editor to the Edit buffer to allow saving
-        /// </summary>
-        /// <param name="preset"></param>
-        public void PushToIndex(StrymonPreset preset, int index)
-        {
-            if (!IsConnected) return;
-            if (IsBulkFetching) return; // TODO make this a bit more UI responsive?
-            PushPreset(preset, index);
-        }
-        #endregion
-
-        #region Standard CC Support
-        /// <summary>
-        /// Sends CC Command to Synch the Type Encoder
+        /// This method will synchronise connected pedal with the supplied <see cref="StrymonMachine"/>
         /// </summary>
         /// <param name="machine"></param>
         public void SynchMachine(StrymonMachine machine)
@@ -181,7 +158,7 @@ namespace RITS.StrymonEditor.Models
         }
 
         /// <summary>
-        /// Send CC for the supplied Parameter
+        /// This method will synchronise connected pedal with the supplied <see cref="Parameter"/>
         /// </summary>
         /// <param name="parameter"></param>
         public void SynchParameter(Parameter parameter)
@@ -209,7 +186,7 @@ namespace RITS.StrymonEditor.Models
         }
         #endregion
 
-        #region Misc Public Support
+        #region Misc CC Support
         /// <summary>
         /// Expression CC Command
         /// </summary>
@@ -303,6 +280,55 @@ namespace RITS.StrymonEditor.Models
             SendControlChange(StrymonPedal.LooperPrePost, 1);
         }
         #endregion
+
+        #region Preset Fetch Support
+        /// <summary>
+        /// Initiates a request to retrieve the current Edit Buffer preset from the connected pedal
+        /// </summary>
+        public void FetchCurrent()
+        {
+            if (!IsConnected) return;
+            if (IsBulkFetching) return;
+            Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
+            SendFetchPresetRequest(ContextPedal.PresetCount);
+        }
+
+        public void FetchByIndex(int index)
+        {
+            if (!IsConnected && !IsBulkFetching) return;
+            if (!IsBulkFetching)
+            {
+                SendProgramChange(index);
+            }
+            SendFetchPresetRequest(index);
+        }
+
+        #endregion
+
+        #region Preset Push Support
+        /// <summary>
+        /// Sends the current preset in the editor to the Edit buffer to allow saving
+        /// </summary>
+        /// <param name="preset"></param>
+        public void PushToEdit(StrymonPreset preset)
+        {
+            if (!IsConnected) return;
+            if (IsBulkFetching) return; // TODO make this a bit more UI responsive?
+            PushPreset(preset, ContextPedal.PresetCount);
+        }
+
+        /// <summary>
+        /// Sends the current preset in the editor to the Edit buffer to allow saving
+        /// </summary>
+        /// <param name="preset"></param>
+        public void PushToIndex(StrymonPreset preset, int index)
+        {
+            if (!IsConnected) return;
+            if (IsBulkFetching) return; // TODO make this a bit more UI responsive?
+            PushPreset(preset, index);
+        }
+        #endregion
+
 
         #region IDisposable
         /// <summary>
@@ -578,26 +604,32 @@ namespace RITS.StrymonEditor.Models
         }
         #endregion
 
-        #region Private ThreadPool Methods
+        #region Private ThreadPool Mediator Methods
+        // Queue notification that a BulkPreset has been read
         private void QueueBulkPresetUpdate(object preset)
         {
             Mediator.NotifyColleagues(ViewModelMessages.BulkPresetRead, preset);
         }
 
+        // Queue notification that a normal (non-bulk) Preset has been received
         private void QueuePresetReceipt(object preset)
         {
             Mediator.NotifyColleagues(ViewModelMessages.ReceivedPresetFromPedal, preset);
         }
 
+        // Queue notification that a pedal has been successfully connected
         private void QueuePedalConnected(object pedal)
         {
             Mediator.NotifyColleagues(ViewModelMessages.PedalConnected, pedal);
         }
+
+        // Queue notification that the midi conection process is complete
         private void QueueMIDIConnectionComplete(object pedal)
         {
             Mediator.NotifyColleagues(ViewModelMessages.MIDIConnectionComplete, null);
         }
 
+        // Queue notification that the push of a preset failed
         private void QueuePushPresetFailed(object pedal)
         {
             Mediator.NotifyColleagues(ViewModelMessages.PushPresetFailed, null);
@@ -650,6 +682,7 @@ namespace RITS.StrymonEditor.Models
 
         /// <summary>
         /// SysEx class to assist - deals with timeouts and callbacks
+        /// and sysex message payload
         /// </summary>
         internal class SysExCommand
         {

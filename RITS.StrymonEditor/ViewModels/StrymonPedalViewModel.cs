@@ -6,12 +6,14 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
-using RITS.StrymonEditor.IO;
-using RITS.StrymonEditor.Views;
 using RITS.StrymonEditor.Logging;
-using RITS.StrymonEditor.Models;
+using RITS.StrymonEditor.Commands;
 using RITS.StrymonEditor.Conversion;
+using RITS.StrymonEditor.IO;
 using RITS.StrymonEditor.Messaging;
+using RITS.StrymonEditor.Models;
+using RITS.StrymonEditor.Views;
+
 namespace RITS.StrymonEditor.ViewModels
 {
     /// <summary>

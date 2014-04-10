@@ -7,11 +7,14 @@ using System.Xml.Serialization;
 namespace RITS.StrymonEditor.Models
 {
     /// <summary>
-    /// base class for model types that have a name property
+    /// Base class for model types that have a name property
     /// </summary>
     [Serializable]
     public class NameBase
     {
+        /// <summary>
+        /// The name of this instance
+        /// </summary>
         [XmlAttribute]
         public string Name { get; set; }
     }

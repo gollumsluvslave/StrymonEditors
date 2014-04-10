@@ -13,8 +13,15 @@ namespace RITS.StrymonEditor.Models
     [Serializable]
     public class XmlParameter : NameBase
     {
+        /// <summary>
+        /// The value for the parameter
+        /// </summary>
         [XmlAttribute]
         public int Value { get; set; }
+
+        /// <summary>
+        /// The 'fine' value for the parameter - where applicable
+        /// </summary>
         [XmlAttribute]
         public int FineValue { get; set; }
     }

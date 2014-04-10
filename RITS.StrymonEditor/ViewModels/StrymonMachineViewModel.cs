@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RITS.StrymonEditor.Commands;
 using RITS.StrymonEditor.Messaging;
 using RITS.StrymonEditor.Models;
 namespace RITS.StrymonEditor.ViewModels

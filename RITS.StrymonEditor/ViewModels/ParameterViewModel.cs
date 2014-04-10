@@ -18,16 +18,7 @@ namespace RITS.StrymonEditor.ViewModels
             _parameter = parameter;
         }
 
-        public override void RegisterWithMediator()
-        {
-            Mediator.Register(ViewModelMessages.ParameterChanged, HandleParameterChanged);
-        }
-        public override void DeRegisterFromMediator()
-        {
-            Mediator.UnRegister(ViewModelMessages.ParameterChanged, HandleParameterChanged);
-        }
-
-
+        #region Public Properties
         /// <summary>
         /// Exposes the parameter name
         /// </summary>
@@ -58,21 +49,6 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
         
-        ///// <summary>
-        ///// Exposes a meaningful label for the parameter
-        ///// </summary>
-        //public string Label
-        //{
-        //    get
-        //    {                
-        //        return _parameter.Label;
-        //    }
-        //    set
-        //    {
-        //        OnPropertyChanged("Label");
-        //    }
-        //}
-
         /// <summary>
         /// Exposes the configured definition
         /// </summary>
@@ -95,11 +71,11 @@ namespace RITS.StrymonEditor.ViewModels
         }
 
 
-        private PotViewModel _linkedPot;
         /// <summary>
         /// Exposes the pot that this parameter 
         /// is linked to via the view models
         /// </summary>
+        private PotViewModel _linkedPot;
         public PotViewModel LinkedPot
         {
             get { return _linkedPot; }
@@ -117,8 +93,10 @@ namespace RITS.StrymonEditor.ViewModels
                 return string.Format("{0} {1}", Name, _parameter.ValueLabel); 
             }
         }
+        #endregion
 
-        // Necesary to keep dynamic controls in sync
+        #region Mediator Callbacks
+        // Handles ParamterChanged notification
         private void HandleParameterChanged(object p)
         {
             Parameter param = p as Parameter;
@@ -128,10 +106,29 @@ namespace RITS.StrymonEditor.ViewModels
                 OnPropertyChanged("Label");
             }
         }
+        #endregion
 
-        public void Dispose()
+        #region IColleague
+        
+        /// <inheritdoc/>
+        public override void RegisterWithMediator()
+        {
+            Mediator.Register(ViewModelMessages.ParameterChanged, HandleParameterChanged);
+        }
+
+        /// <inheritdoc/>
+        public override void DeRegisterFromMediator()
+        {
+            Mediator.UnRegister(ViewModelMessages.ParameterChanged, HandleParameterChanged);
+        }
+        #endregion
+
+        #region IDisposable
+        public override void Dispose()
         {
             base.Dispose();
         }
+        #endregion
+
     }
 }

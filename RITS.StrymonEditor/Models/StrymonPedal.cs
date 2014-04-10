@@ -56,6 +56,9 @@ namespace RITS.StrymonEditor.Models
         /// </summary>
         public PotValueMap PotValueMap { get; set; }
 
+        /// <summary>
+        /// Return the correct MIDI Channel number based on the users settings
+        /// </summary>
         public int MidiChannel 
         {
             get
@@ -75,11 +78,17 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
+        /// <summary>
+        /// Helper method that returns all relevant parameter definitions for the pedal by unioning the shared and machine specific parameters
+        /// </summary>
         private List<ParameterDef> AllParameters
         {
             get { return Machines.SelectMany(x => x.MachineParameters).Union(SharedParameters).ToList(); }
         }
 
+        /// <summary>
+        /// Returns the Id for this pedal
+        /// </summary>
         [XmlIgnore]
         public int Id
         {
@@ -99,8 +108,9 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
-
-
+        /// <summary>
+        /// Returns the number of presets for the pedal
+        /// </summary>
         public int PresetCount
         {
             get
@@ -115,7 +125,12 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
-
+        /// <summary>
+        /// Returns what increment to use for the fine encoder across all pedals
+        /// There is logic based on the value of milliseconds/ millihz in Mobius and BigSky
+        /// </summary>
+        /// <param name="fineValue"></param>
+        /// <returns></returns>
         public int FineIncrement(int fineValue)
         {
             if (Name == Mobius_Name)return 10;
@@ -151,7 +166,7 @@ namespace RITS.StrymonEditor.Models
 
 
         /// <summary>
-        /// Returns an instance of <see cref="StrymonPedal"/> by name
+        /// Returns an instance of <see cref="StrymonPedal"/> by device id
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -191,6 +206,9 @@ namespace RITS.StrymonEditor.Models
         public const int LooperPrePost = 96;
         #endregion
 
+        /// <summary>
+        /// Dictionary of preset names for this pedal by index position
+        /// </summary>
         private Dictionary<int, string> presetInfo = new Dictionary<int, string>();
         [XmlIgnore]
         public Dictionary<int, string> PresetInfo
@@ -198,6 +216,9 @@ namespace RITS.StrymonEditor.Models
             get { return presetInfo; }
         }
 
+        /// <summary>
+        /// Dictionary of raw preset data for this pedal by index position
+        /// </summary>
         private Dictionary<int, byte[]> presetRawData = new Dictionary<int, byte[]>();
         [XmlIgnore]
         public Dictionary<int, byte[]> PresetRawData
@@ -205,6 +226,10 @@ namespace RITS.StrymonEditor.Models
             get { return presetRawData; }
         }
 
+        /// <summary>
+        /// Updates the preset name info for the supplied <see cref="StrymonPreset"/>
+        /// </summary>
+        /// <param name="preset"></param>
         public void UpdatePresetInfo(StrymonPreset preset)
         {
             if (PresetInfo.ContainsKey(preset.SourceIndex))
@@ -217,6 +242,11 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
+        /// <summary>
+        /// Updates the preset raw data for the specified index and byte array
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="data"></param>
         public void UpdatePresetRawData(int index, byte[] data)
         {
             if (PresetRawData.ContainsKey(index))
@@ -229,6 +259,11 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
+        /// <summary>
+        /// Returns the 'name' of the preset at the supplied index position
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public string GetPresetName(int index)
         {
             if (PresetInfo.ContainsKey(index))
@@ -240,6 +275,10 @@ namespace RITS.StrymonEditor.Models
                 return null;
             }
         }
+
+        /// <summary>
+        /// Helper method that returns the raw preset data as a sequential byte array
+        /// </summary>
         public byte[] GetBackupData
         {
             get

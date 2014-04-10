@@ -56,6 +56,11 @@ namespace RITS.StrymonEditor.IO
                 }
             }
         }
+
+        /// <summary>
+        /// Load a <see cref="StrymonPreset"/> from a .syx SysEx file
+        /// </summary>
+        /// <returns></returns>
         public StrymonPreset LoadSyxPreset()
         {
             using (RITSLogger logger = new RITSLogger())
@@ -79,6 +84,12 @@ namespace RITS.StrymonEditor.IO
                 }
             }
         }
+
+        /// <summary>
+        /// Save the supplied <see cref="StrymonPreset"/> to an xml representation 
+        /// </summary>
+        /// <param name="preset"></param>
+        /// <returns></returns>
         public bool SavePresetToXml(StrymonPreset preset)
         {
             using (RITSLogger logger = new RITSLogger())
@@ -110,6 +121,11 @@ namespace RITS.StrymonEditor.IO
             }
         }
 
+        /// <summary>
+        /// Save the supplied <see cref="StrymonPreset"/> to a .syx SysEx representation
+        /// </summary>
+        /// <param name="preset"></param>
+        /// <returns></returns>
         public bool SavePresetToSyx(StrymonPreset preset)
         {
             using (RITSLogger logger = new RITSLogger())
@@ -143,6 +159,12 @@ namespace RITS.StrymonEditor.IO
                 }
             }
         }
+
+        /// <summary>
+        /// Save the supplied <see cref="StrymonPreset"/> 
+        /// </summary>
+        /// <param name="preset"></param>
+        /// <returns></returns>
         public bool SavePreset(StrymonPreset preset)
         {
             if (preset.Filename != null)
@@ -158,6 +180,12 @@ namespace RITS.StrymonEditor.IO
                 return SavePresetToXml(preset);
             }
         }
+
+        /// <summary>
+        /// Backup all presets of the supplied <see cref="StrymonPedal"/> to a single .syx file
+        /// </summary>
+        /// <param name="preset"></param>
+        /// <returns></returns>
         public void PedalBackupToSyx(StrymonPedal pedal)
         {
             using (RITSLogger logger = new RITSLogger())
@@ -195,6 +223,12 @@ namespace RITS.StrymonEditor.IO
                 }
             }
         }
+
+        /// <summary>
+        /// Enumerate all the presets for the supplied <see cref="StrymonPedal"/> from a .syx backup
+        /// </summary>
+        /// <param name="pedal"></param>
+        /// <returns></returns>
         public IEnumerable<StrymonPreset> GetPresetBackupDataFromSyx(StrymonPedal pedal)
         {
             using (RITSLogger logger = new RITSLogger())
