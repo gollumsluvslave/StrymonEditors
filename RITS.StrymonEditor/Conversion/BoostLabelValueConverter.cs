@@ -6,6 +6,7 @@ using System.Text;
 namespace RITS.StrymonEditor.Conversion
 {
     /// <summary>
+    /// Implementation of <see cref="IValueLabelConverter"/> for the Boost parameter
     /// Handles the conversion of the value (0,1,2) for 
     /// the Boost control, turning it into a string between -3.0db and +3.0db
     /// </summary>
@@ -16,6 +17,12 @@ namespace RITS.StrymonEditor.Conversion
         public BoostValueLabelConverter()
         {
         }
+
+        /// <summary>
+        /// Converts a boost value into a textual label
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public string ValueToLabel(int value)
         {
             double incr = Math.Round((value * 0.1), 1);

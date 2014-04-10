@@ -10,6 +10,9 @@ namespace RITS.StrymonEditor.Conversion
     /// <summary>
     /// Implementation of <see cref="IValueLabelConverter"/> that
     /// converts 'fine' values such as Milliseconds and Hertz to a textual representation
+    /// 
+    /// TODO - split into separate implementations depending on pedal and BPM setting?
+    /// 
     /// </summary>
     public class FineValueLabelConverter:IValueLabelConverter
     {
@@ -18,6 +21,12 @@ namespace RITS.StrymonEditor.Conversion
         {
             _parameter = parameter;
         }
+
+        /// <summary>
+        /// Returns the label  for the supplied 'fine' value 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public string ValueToLabel(int value)
         {
             // Possible reasons for inheritance here - makes serialization a bit more complex though

@@ -49,7 +49,6 @@ namespace RITS.StrymonEditor.Conversion
     {
         public static IFineCoarseValueConverter Create(ParameterDef definition)
         {
-            // TODO need different factory for Mobius where FineCoarse conversions have different ranges...
             return new DefaultFineCoarseValueConverter(definition);
         }
     }

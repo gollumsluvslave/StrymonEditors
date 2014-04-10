@@ -10,7 +10,18 @@ namespace RITS.StrymonEditor.Conversion
     /// </summary>
     public interface IPotValueConverter
     {
+        /// <summary>
+        /// Defines the conversion of a value to an angle
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         double ValueToAngle(int value);
+
+        /// <summary>
+        /// Defines the conversion of an angle to a value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         int AngleToValue(double value);
     }
 }

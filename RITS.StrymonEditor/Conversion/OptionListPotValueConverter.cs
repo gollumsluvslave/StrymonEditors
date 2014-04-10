@@ -9,6 +9,8 @@ namespace RITS.StrymonEditor.Conversion
     /// OptionList implementation of <see cref="IPotValueConverter"/>
     /// This is used to handle dynamic pot assignments in Mobius and BigSky 
     /// that do not have a 0-127 value range 
+    /// Contingent on the max value supplied in the constructor
+    /// Implicit assumption here that values have a fixed minimum of 0 across all Strymon pedals and parameters
     /// </summary>
     public class OptionListPotValueConverter : IPotValueConverter
     {
@@ -21,6 +23,12 @@ namespace RITS.StrymonEditor.Conversion
             valueToAngleRatio = Convert.ToDouble(290) / max;
             angleToValueRatio = max / 290;
         }
+
+        /// <summary>
+        /// Returns the value for the supplied angle
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public double ValueToAngle(int value)
         {
             if (value < 0) return 0;
@@ -30,6 +38,12 @@ namespace RITS.StrymonEditor.Conversion
             }
             return value * valueToAngleRatio;
         }
+
+        /// <summary>
+        /// Returns the angle for the supplied value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public int AngleToValue(double value)
         {
             if (value < 0) return 0;

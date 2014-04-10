@@ -6,14 +6,20 @@ using System.Text;
 namespace RITS.StrymonEditor.Conversion
 {
     /// <summary>
-    /// Handles the conversion of the value (0,1,2) for 
-    /// the Boost control, turning it into a string between -3.0db and +3.0db
+    /// Implementation of <see cref="IValueLabelConverter"/> that 
+    /// simply echoes back the supplied value as a string with no other alteration
     /// </summary>
     public class EchoValueLabelConverter : IValueLabelConverter
     {
         public EchoValueLabelConverter()
         {
         }
+
+        /// <summary>
+        /// Returns the supplied value as a string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public string ValueToLabel(int value)
         {
             return value.ToString();

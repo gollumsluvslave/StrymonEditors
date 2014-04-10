@@ -46,19 +46,14 @@ namespace RITS.StrymonEditor.AutoUpdate
 
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public static HttpWebRequest Request(string url)
+        // HttpWebRequest helper
+        private static HttpWebRequest Request(string url)
         {
             Uri uri = new Uri(url);
             HttpWebRequest request = WebRequest.Create(uri) as HttpWebRequest;
             request.Accept = "text/html, image/gif, image/jpeg, image/pjpeg, image/pjpeg, application/x-shockwave-flash, application/x-silverlight, application/x-ms-application, application/x-ms-xbap, application/vnd.ms-xpsdocument, application/xaml+xml, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*";
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)";
-            request.Timeout = 10000;
+            request.Timeout = 10000; // TODO configure timeout
             return request;
         }        
     }

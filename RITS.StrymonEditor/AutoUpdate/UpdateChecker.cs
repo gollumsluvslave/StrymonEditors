@@ -12,6 +12,9 @@ using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.IO;
 namespace RITS.StrymonEditor.AutoUpdate
 {
+    /// <summary>
+    /// Provides functionality to determine whether or not there is an update available to the application
+    /// </summary>
     public class UpdateChecker
     {
         // private vars
@@ -20,11 +23,10 @@ namespace RITS.StrymonEditor.AutoUpdate
         private VersionConfig _newVersionConfig;
         private string _newVersionConfigLocalPath;
         private IMessageDialog messageDialog;
-        // constructors
+        
         /// <summary>
-        /// Default constructor - initialises required params.
+        /// Default .ctor
         /// </summary>
-        /// <param name="remotePath">The path to the remote update folder.</param>
         public UpdateChecker(IMessageDialog dialog)
         {
             this.messageDialog = dialog;

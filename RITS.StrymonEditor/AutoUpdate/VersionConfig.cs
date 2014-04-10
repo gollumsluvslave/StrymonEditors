@@ -42,7 +42,7 @@ namespace RITS.StrymonEditor.AutoUpdate
         }
 
         /// <summary>
-        /// The root url where all components of the application is stored
+        /// The url that points to the <see cref="VersionConfig"/> file that is used to determine a new version is available
         /// </summary>
         public string UpdateCheckTarget
         {
@@ -51,7 +51,7 @@ namespace RITS.StrymonEditor.AutoUpdate
         }
 
         /// <summary>
-        /// The root url where all components of the application is stored
+        /// The http url where the zip of the version of the application is to be found
         /// </summary>
         public string UpdateZipTarget
         {

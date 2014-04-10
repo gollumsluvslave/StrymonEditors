@@ -17,6 +17,12 @@ namespace RITS.StrymonEditor.Conversion
         {
             this.optionList = optionList;
         }
+
+        /// <summary>
+        /// Returns the label / text equaivalent for the supplied value for the context option list
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public string ValueToLabel(int value)
         {            
             var opt = optionList.FirstOrDefault(x => x.Value == value);
