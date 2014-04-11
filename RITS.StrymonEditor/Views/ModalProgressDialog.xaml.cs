@@ -16,7 +16,8 @@ using RITS.StrymonEditor.IO;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
-    /// Interaction logic for ModalProgressDialog.xaml
+    /// Dialog that displays a modal window and progressbar to display a longrunning operation that prohibits
+    /// other UI interaction - currently only used for restoring a Pedal backup.
     /// </summary>
     public partial class ModalProgressDialog : Window
     {

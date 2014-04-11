@@ -7,7 +7,9 @@ using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.ViewModels
 {
-    // TODO
+    /// <summary>
+    /// ViewModel reponsible for the <see cref="PresetControl"/> view
+    /// </summary>
     public class PresetControlViewModel: ViewModelBase, IDisposable
 
     {
@@ -22,25 +24,36 @@ namespace RITS.StrymonEditor.ViewModels
             this.midiManager = midiManager;
         }
 
+        #region IColleague
+        /// <inheritdoc/>
         public override void RegisterWithMediator()
         {
             Mediator.Register(ViewModelMessages.BulkLoadComplete, BulkLoadCompleteCallback);
         }
+
+        /// <inheritdoc/>
         public override void DeRegisterFromMediator()
         {
             Mediator.UnRegister(ViewModelMessages.BulkLoadComplete, BulkLoadCompleteCallback);
         }
 
-
+        // Callback for BulkLoadComplete - to update menu
         private void BulkLoadCompleteCallback(object o)
         {
             execute.RaiseCanExecuteChanged();
         }
 
+        #endregion
+
+        /// <inheritdoc/>
         public void Dispose()
         {
             base.Dispose();
         }
+
+        /// <summary>
+        /// The mode of operation - either Fetch / Push
+        /// </summary>
         private string mode;
         public string Mode
         {
@@ -48,12 +61,18 @@ namespace RITS.StrymonEditor.ViewModels
             set { mode = value; OnPropertyChanged("Mode"); }
         }
 
+        /// <summary>
+        /// The preset name to display
+        /// </summary>
         public string PresetName 
         {
             get { return string.Format("{0} : {1}", GetPresetCode(PresetIndex), pedal.GetPresetName(PresetIndex)); }
             set { }
         }
 
+        /// <summary>
+        /// The preset index to display
+        /// </summary>
         private int presetIndex;
         public int PresetIndex 
         {
@@ -69,6 +88,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Determines whether or not the preset control should be enabled
+        /// </summary>
         private bool presetIsEnabled;
         public bool PresetIsEnabled
         {
@@ -76,7 +98,9 @@ namespace RITS.StrymonEditor.ViewModels
             set { presetIsEnabled = value; OnPropertyChanged("PresetIsEnabled"); }
         }
 
-
+        /// <summary>
+        /// Command that executes the fethc / push dependent on the current mode
+        /// </summary>
         private RelayCommand execute;
         public RelayCommand Execute 
         {
@@ -105,7 +129,7 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
-        public string GetPresetCode(int i)
+        private string GetPresetCode(int i)
         {
             int div = (pedal.PresetCount == 300) ? 3 : 2;
             int bank = i / div;

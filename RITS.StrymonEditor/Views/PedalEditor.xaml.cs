@@ -17,7 +17,7 @@ using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
-    /// Interaction logic for TimelineEditor.xaml
+    /// The editor window - hosting modal window for the <see cref="EditorView"/>
     /// </summary>
     public partial class PedalEditor : Window, INotifyPropertyChanged
     {
@@ -40,6 +40,9 @@ namespace RITS.StrymonEditor.Views
         }
         #endregion
 
+        /// <summary>
+        /// Exposes the main <see cref="StrymonPedalViewModel"/> viewmodel for databinding
+        /// </summary>
         private StrymonPedalViewModel _pedalViewModel;
         public StrymonPedalViewModel PedalViewModel
         {

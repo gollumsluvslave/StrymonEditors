@@ -10,6 +10,9 @@ using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
 namespace RITS.StrymonEditor
 {
+    /// <summary>
+    /// Synhronization modes for how the editor and pedal are synced
+    /// </summary>
     public enum SyncMode
     {
         TwoWay = 0,
@@ -23,38 +26,64 @@ namespace RITS.StrymonEditor
     /// </summary>
     public static class Globals
     {
+        /// <summary>
+        /// Sysex Offset for the Presetname
+        /// </summary>
         public const int PresetNameOffset = 623;
+
+        /// <summary>
+        /// Length of the preset  name
+        /// </summary>
         public const int PresetNameLen = 16;
         public const int PresetLength = 650;
+
+        /// <summary>
+        /// Sysex offset for the actual Data
+        /// </summary>
         public const int PresetDataOffset = 9;
+
+        /// <summary>
+        /// The length of the data portion of the sysex preset
+        /// </summary>
         public const int PresetDataLength = 639;
+
+        /// <summary>
+        /// SysEx offset for the checksum
+        /// </summary>
         public const int PresetChecksumOffset = 648;
-        public static bool SynchInProgress;
+
+        /// <summary>
+        /// List of supported pedals based on xml definition load
+        /// </summary>
         public static List<StrymonPedal> SupportedPedals { get; set; }
 
-        //private static StrymonPreset _activePreset; 
-        //public static StrymonPreset ActivePreset 
-        //{
-        //    get { return _activePreset; }
-        //    set 
-        //    { 
-        //        _activePreset = value;
-        //    }
-        //}
-
+        /// <summary>
+        /// <see cref="FineCoarseSynchroniser"/> to be used for fine / coasre synchonisation opeartions
+        /// 
+        /// TODO remove from globals
+        /// 
+        /// </summary>
         public static FineCoarseSynchroniser FineCoarseSynchroniser
         {
             get;
             set;
         }
 
-
+        /// <summary>
+        /// <see cref="PotValueMap"/> set of data used to drive pot curves
+        /// 
+        /// TODO remove from Globals
+        /// 
+        /// </summary>
         public static PotValueMap PotValueMap 
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Global flag on that indicates BPMmode is active
+        /// </summary>
         public static bool IsBPMModeActive 
         {
             get { return Properties.Settings.Default.BPMMode; }
@@ -101,6 +130,15 @@ namespace RITS.StrymonEditor
         }
 
         #region IEnumerable<T> Extenions
+
+        /// <summary>
+        /// Chunks the supplied generic IEnumerable into chunks
+        /// NB the chunksize should be an exact match
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <param name="chunkSize"></param>
+        /// <returns></returns>
         public static IEnumerable<IEnumerable<T>> Chunkify<T>(this IEnumerable<T> enumerable,
                                                       int chunkSize)
         {
@@ -111,6 +149,7 @@ namespace RITS.StrymonEditor
                     yield return enumerator.GetChunk(chunkSize);
         }
 
+        /// helper that retrieves a chunk
         private static IEnumerable<T> GetChunk<T>(this IEnumerator<T> enumerator,
                                                   int chunkSize)
         {

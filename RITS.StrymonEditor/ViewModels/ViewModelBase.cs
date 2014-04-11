@@ -43,7 +43,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         } // Should be private set, but leave as public to allow testing with Mock
 
-        // Property to allow IO mocks to be injected in
+        /// <summary>
+        /// Property to allow IO mocks to be injected in
+        /// </summary>
         public IFileIOService FileIOService
         {
             get
@@ -59,7 +61,10 @@ namespace RITS.StrymonEditor.ViewModels
                 fileIOService = value;
             }
         }
-
+        
+        /// <summary>
+        /// Property to allow dialog mocks to be injected in
+        /// </summary>
         public IMessageDialog MessageDialog
         {
             get
@@ -112,6 +117,12 @@ namespace RITS.StrymonEditor.ViewModels
                 work();
             }
         }
+
+
+        /// <summary>
+        /// Helper method for all ViewModels to delegate any kind of work that requires UI time, with a parameter
+        /// </summary>
+        /// <param name="work"></param>
         public void DoWork(Action<object> work, object arg)
         {
             if (!Thread.CurrentThread.IsBackground)
@@ -126,6 +137,11 @@ namespace RITS.StrymonEditor.ViewModels
                 work(arg);
             }
         }
+
+        /// <summary>
+        /// Helper method for all ViewModels to delegate any kind of work that requires UI time but must be executed synchronously
+        /// </summary>
+        /// <param name="work"></param>
         public void DoWorkSync(Action work)
         {
             Mouse.OverrideCursor = Cursors.Wait;
@@ -133,19 +149,25 @@ namespace RITS.StrymonEditor.ViewModels
             Mouse.OverrideCursor = null;
         }
 
+        /// <inheritdoc/>
         public virtual void RegisterWithMediator()
         {
             
         }
+        /// <inheritdoc/>
         public virtual void DeRegisterFromMediator()
         {
         }
 
+        /// <inheritdoc/>
         public virtual void Dispose()
         {
             DeRegisterFromMediator();
         }
 
+        /// <summary>
+        /// Complete callback for long running work
+        /// </summary>
         protected virtual void Complete()
         {
             Mouse.OverrideCursor = null;

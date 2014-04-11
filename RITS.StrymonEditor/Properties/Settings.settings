@@ -35,7 +35,10 @@
     <Setting Name="DisableBulkFetch" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="PushDelay" Type="System.Int32" Scope="Application">
+    <Setting Name="PushChunkDelay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="PushChunkSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>

@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Midi;
 using RITS.StrymonEditor.Models;
+using RITS.StrymonEditor.ViewModels;
 using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.Tests.Models
 {
@@ -12,7 +13,7 @@ namespace RITS.StrymonEditor.Tests.Models
     public class StrymonMidiManagerShould : TestContext<StrymonMidiManager>
     {
         private Parameter testParam = new Parameter { Definition = new ParameterDef { ControlChangeNo = 1 } };
-
+        private readonly object lockObject = new object();
         #region Initialisation Tests
         [TestMethod]
         public void InitialiseGracefullyWithNoMidiDevices()
@@ -653,6 +654,68 @@ namespace RITS.StrymonEditor.Tests.Models
             midiOutMock.Verify(x => x.SendSysEx(presetData), Times.Never());
         }
         #endregion
+
+        [TestMethod]
+        public void ProcessChunkedSendCorrectly()
+        {
+            // Arrange 
+            var midiInMock = Container.GetMock<IInputDevice>();
+            var midiOutMock = Container.GetMock<IOutputDevice>();
+            // Bit convoluted
+            var preset = TestHelper.TestTimelinePreset;
+            
+            // Spoof property change - threading issues here?
+            var midiVM = new MidiSetupViewModel(Sut, new Action(() => { }));
+            midiVM.PushChunkSize = 50;
+            midiVM.PushChunkDelay = 50;
+            
+            // Act
+            MidiSetupLevel(midiInMock, midiOutMock, 3);
+            Sut.PushToEdit(preset);
+            
+            // Simulate midi response callbacks
+            for (int i = 0; i < 12; i++)
+            {
+                System.Threading.Thread.Sleep(60);
+                midiInMock.Raise(x => x.SysEx += null, new SysExMessage(new DeviceBase("dummy"), new byte[]{}, new float()));
+            }
+
+            // Should be 13 chunks plus identity from setup
+            midiOutMock.Verify(x => x.SendSysEx(It.IsAny<byte[]>()), Times.Exactly(14));
+            midiVM.PushChunkSize = 0;
+            midiVM.PushChunkDelay = 0;
+
+        }
+
+        [TestMethod]
+        public void TimeoutChunkedSendCorrectly()
+        {
+                // Arrange 
+                var midiInMock = Container.GetMock<IInputDevice>();
+                var midiOutMock = Container.GetMock<IOutputDevice>();
+                var mediatorMock = Container.GetMock<IMediator>();
+                // Bit convoluted
+                var preset = TestHelper.TestTimelinePreset;
+
+                // Spoof property change
+                var midiVM = new MidiSetupViewModel(Sut, new Action(() => { }));
+                midiVM.PushChunkSize = 50;
+                midiVM.PushChunkDelay = 50;
+                Sut.Mediator = mediatorMock.Object;
+                // Act
+                MidiSetupLevel(midiInMock, midiOutMock, 3);
+                Sut.PushToEdit(preset);
+
+                // Simulate timeout
+                System.Threading.Thread.Sleep(2500);
+
+                // Should be identity send plus one chunk send then timeout and push fail
+                midiOutMock.Verify(x => x.SendSysEx(It.IsAny<byte[]>()), Times.Exactly(2));
+                mediatorMock.Verify(x => x.NotifyColleagues(ViewModelMessages.PushPresetFailed, null), Times.Once());
+                midiVM.PushChunkSize = 0;
+                midiVM.PushChunkDelay = 0;
+        }
+
 
         /// <summary>
         /// Helper method to setup the Sut at various levels of 'completeness'      

@@ -25,7 +25,6 @@ namespace RITS.StrymonEditor.ViewModels
         private int loads;
         private IStrymonMidiManager midiManager;
         private bool presetFromPedal;
-        public Action CloseWindow { get; set; }
         public StrymonPedalViewModel(StrymonPreset preset, IStrymonMidiManager midiManager)
         {
             loads = 0;
@@ -45,7 +44,7 @@ namespace RITS.StrymonEditor.ViewModels
 
 
 
-
+        /// <inheritdoc/>
         public override void RegisterWithMediator()
         {
             Mediator.Register(ViewModelMessages.MachineSelected, MachineChanged);
@@ -60,6 +59,8 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.Register(ViewModelMessages.DirectEntryValueEntered, DirectEntryValueEntered);
             Mediator.Register(ViewModelMessages.PushPresetFailed, PushPresetFailed);
         }
+
+        /// <inheritdoc/>
         public override void DeRegisterFromMediator()
         {
             Mediator.UnRegister(ViewModelMessages.MachineSelected, MachineChanged);
@@ -73,26 +74,6 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.UnRegister(ViewModelMessages.PresetRenamed, PresetRenamed);
             Mediator.UnRegister(ViewModelMessages.DirectEntryValueEntered, DirectEntryValueEntered);
             Mediator.UnRegister(ViewModelMessages.PushPresetFailed, PushPresetFailed);
-        }
-
-
-        private void SetSyncMode()
-        {
-            SyncMode test;
-            if (Enum.TryParse<SyncMode>(Properties.Settings.Default.SyncMode, out test))
-            {
-                SyncMode = test;
-            }
-            else
-            {
-                SyncMode = SyncMode.TwoWay;
-            }
-            foreach (var v in OptionsMenu[0].Children)
-            {
-                v.IsChecked =((SyncMode)v.Tag == SyncMode) ;
-                v.IsEnabled = !v.IsChecked;
-            }
-            midiManager.SyncMode = SyncMode;
         }
 
         #region MIDIConnectivity
@@ -174,6 +155,16 @@ namespace RITS.StrymonEditor.ViewModels
         #endregion
 
         #region Simple Properties
+
+        /// <summary>
+        /// Callback to close the asociated view 
+        /// 
+        /// TODO - push this to ViewModelBase?
+        /// 
+        /// </summary>
+        public Action CloseWindow { get; set; }
+
+
         private string _lcdValue;
         /// <summary>
         /// Property that determines what is displayed in the LCD display
@@ -462,6 +453,26 @@ namespace RITS.StrymonEditor.ViewModels
         #endregion
 
         #region Private Methods
+
+        // sets the sync mode
+        private void SetSyncMode()
+        {
+            SyncMode test;
+            if (Enum.TryParse<SyncMode>(Properties.Settings.Default.SyncMode, out test))
+            {
+                SyncMode = test;
+            }
+            else
+            {
+                SyncMode = SyncMode.TwoWay;
+            }
+            foreach (var v in OptionsMenu[0].Children)
+            {
+                v.IsChecked = ((SyncMode)v.Tag == SyncMode);
+                v.IsEnabled = !v.IsChecked;
+            }
+            midiManager.SyncMode = SyncMode;
+        }
 
 
         // Method that does a number of things

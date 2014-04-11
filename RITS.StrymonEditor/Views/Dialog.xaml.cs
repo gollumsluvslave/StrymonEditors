@@ -14,7 +14,7 @@ using RITS.StrymonEditor.ViewModels;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
-    /// Interaction logic for Dialog.xaml
+    /// Simple single text field data entry dialog
     /// </summary>
     public partial class Dialog : Window
     {
@@ -22,7 +22,7 @@ namespace RITS.StrymonEditor.Views
         public Dialog(DialogViewModel dataContext)
         {
             vm = dataContext;
-            vm.CloseAction = CloseWindow;
+            vm.CloseAction = this.Close;
             DataContext = dataContext;
             InitializeComponent();
             InputBox.PreviewTextInput += InputBox_PreviewTextInput;
@@ -31,14 +31,7 @@ namespace RITS.StrymonEditor.Views
 
         private void InputBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if(vm.InputInvalid(e.Text)) e.Handled=true;
-        }
-
-
-
-        private void CloseWindow()
-        {
-            this.Close();
+            if (vm.InputInvalid(e.Text)) e.Handled = true;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)

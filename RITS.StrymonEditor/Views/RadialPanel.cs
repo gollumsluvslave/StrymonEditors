@@ -6,6 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 namespace RITS.StrymonEditor.Views
 {
+    /// <summary>
+    /// Panel that displays elements in a circle - used to emulate the Machine encoder
+    /// </summary>
     public class RadialPanel : Panel
     {
         // Measure each children and give as much room as they want 

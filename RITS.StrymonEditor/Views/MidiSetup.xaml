@@ -1,31 +1,44 @@
 ﻿<Window x:Class="RITS.StrymonEditor.Views.MidiSetup"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Midi Setup" Height="306" Width="380" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+    Title="Midi Setup" Height="440" Width="380" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
         DataContext="{Binding RelativeSource={RelativeSource Self}}" >
-    <Canvas Height="277">
+    <Canvas Margin="0,3,0,0">
         <Label Content="Midi In/Out" FontStyle="Italic" FontWeight="Bold" Canvas.Left="133" Canvas.Top="0" />
         <StackPanel Canvas.Left="20" Canvas.Top="30" Orientation="Horizontal">
             <Label Content="Midi In"/>
-            <ComboBox Name="In" Width="280" Height="25" ItemsSource="{Binding InputDevices}"/>
+            <ComboBox Name="In" Width="280" Height="25" ItemsSource="{Binding ViewModel.InputDevices}" SelectedValue="{Binding ViewModel.ConfiguredInputdevice, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Canvas.Left="10"  Canvas.Top="65"   Orientation="Horizontal">
             <Label Content="Midi Out"/>
-            <ComboBox Name="Out" Canvas.Left="10" Width="280" Height="25" ItemsSource="{Binding OutputDevices}"/>
+            <ComboBox Name="Out" Canvas.Left="10" Width="280" Height="25" ItemsSource="{Binding ViewModel.OutputDevices}" SelectedValue="{Binding ViewModel.ConfiguredOutputdevice, Mode=TwoWay}"/>
         </StackPanel>
         <Label Canvas.Top="96" Content="Device Midi Channels" FontStyle="Italic" FontWeight="Bold" Canvas.Left="106" />
         <StackPanel Canvas.Left="101" Canvas.Top="129" Orientation="Horizontal">
             <Label Content="Timeline"/>
-            <ComboBox Name="TimelineMidiChannel" Width="80" Height="25" ItemsSource="{Binding MidiChannels}"/>
+            <ComboBox Name="TimelineMidiChannel" Width="80" Height="25" ItemsSource="{Binding ViewModel.MidiChannels}" SelectedValue="{Binding ViewModel.TimelineMidiChannel, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Canvas.Left="106" Canvas.Top="164" Orientation="Horizontal">
             <Label Content="Mobius"/>
-            <ComboBox Name="MobiusMidiChannel" Width="80" Height="25" ItemsSource="{Binding MidiChannels}"/>
+            <ComboBox Name="MobiusMidiChannel" Width="80" Height="25" ItemsSource="{Binding ViewModel.MidiChannels}" SelectedValue="{Binding ViewModel.MobiusMidiChannel, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Canvas.Left="111" Canvas.Top="199" Orientation="Horizontal">
             <Label Content="BigSky"/>
-            <ComboBox Name="BigSkyMidiChannel" Width="80" Height="25" ItemsSource="{Binding MidiChannels}"/>
+            <ComboBox Name="BigSkyMidiChannel" Width="80" Height="25" ItemsSource="{Binding ViewModel.MidiChannels}" SelectedValue="{Binding ViewModel.BigSkyMidiChannel, Mode=TwoWay}"/>
         </StackPanel>
-        <Button Canvas.Left="271" Canvas.Top="242" HorizontalAlignment="Right" Margin="0,0,10,8" Name="button1" Width="75" Height="23" VerticalAlignment="Bottom" IsDefault="True" Click="button1_Click">OK</Button>
+        <Label Canvas.Top="236" Content="MIDI Delays" FontStyle="Italic" FontWeight="Bold" Canvas.Left="146" />
+        <StackPanel Canvas.Left="90" Canvas.Top="260" Orientation="Horizontal">
+            <Label Content="Bulk Fetch Delay"/>
+            <ComboBox Name="BulkFetchDelay" Width="80" Height="25" ItemsSource="{Binding ViewModel.BulkFetchDelays}" SelectedValue="{Binding ViewModel.BulkFetchDelay, Mode=TwoWay}"/>
+        </StackPanel>
+        <StackPanel Canvas.Left="90" Canvas.Top="300" Orientation="Horizontal">
+            <Label Content="Push Chunk Size"/>
+            <ComboBox Name="PushChunkSize" Width="80" Height="25" ItemsSource="{Binding ViewModel.PushChunkSizes}" SelectedValue="{Binding ViewModel.PushChunkSize, Mode=TwoWay}"/>
+        </StackPanel>
+        <StackPanel Canvas.Left="82" Canvas.Top="330" Orientation="Horizontal">
+            <Label Content="Push Chunk Delay"/>
+            <ComboBox Name="PushChunkDelay" Width="80" Height="25" ItemsSource="{Binding ViewModel.PushChunkDelays}" SelectedValue="{Binding ViewModel.PushChunkDelay, Mode=TwoWay}"/>
+        </StackPanel>
+        <Button Canvas.Left="272" Canvas.Top="370" HorizontalAlignment="Right" Name="button1" Width="75" Height="23" VerticalAlignment="Bottom" IsDefault="True" Command="{Binding ViewModel.OKCommand}">OK</Button>
     </Canvas>
 </Window>

@@ -30,6 +30,7 @@ namespace RITS.StrymonEditor.Models
         //private Queue<SysExCommand> sysExQueue;
         private readonly object lockObject = new object();
         private readonly object sysExLock = new object();
+        private Queue<SysExCommand> chunkedCommand;
         #endregion
         
         public StrymonMidiManager(IInputDevice inputDevice, IOutputDevice outputDevice)
@@ -484,6 +485,54 @@ namespace RITS.StrymonEditor.Models
                 }
             }    
         }
+
+        private void ReceiveChunkAck(byte[] data)
+        {
+            // What to do with the response?
+            // What if there is no response?? queue will never complete! Will have to try
+            // Should not get into this callback without a message
+            // Process the chunked queue
+            using (RITSLogger logger = new RITSLogger())
+            {
+                logger.Debug(string.Format("Chuck Push Response: {0}", BitConverter.ToString(data)));
+                if (chunkedCommand.Count > 0)
+                {
+                    var sysEx = chunkedCommand.Dequeue();
+                    Thread.Sleep(Properties.Settings.Default.PushChunkDelay);
+                    SendSysEx(sysEx);
+                }
+            }
+        }
+
+        // Deal with a 'chunked' send mecahnism to split the preset into smaller chunks with a delay between
+        private void HandleChunkedSend(byte[] presetData)
+        {            
+            // TODO - unclear whether a straight byte split is sufficient here or whether a OxF7 start byte is needed??
+            var chunkCount = presetData.Length / Properties.Settings.Default.PushChunkSize;
+            var chunks = presetData.Chunkify(Properties.Settings.Default.PushChunkSize);
+            // Create the chunked queue
+            chunkedCommand = new Queue<SysExCommand>(chunkCount);
+            int chunkIndex = 0;
+            // Populate chunked queue
+            foreach (var chunk in chunks)
+            {
+                var chunkData = chunk.ToArray();
+                chunkIndex++;
+                if (chunkIndex == chunkCount)
+                {
+                    // terminating chunk, specify 'final nack' callbacks
+                    chunkedCommand.Enqueue(new SysExCommand("PushChunk", chunkData, 2000, ReceiveSendAck, PushPresetTimeout));
+                }
+                else
+                {
+                    // non-terminating chunk specify chunk call back
+                    chunkedCommand.Enqueue(new SysExCommand("PushChunk", chunkData, 2000, ReceiveChunkAck, PushPresetTimeout));
+                }
+            }
+            // Need to kick off queue processing, call the callback with empty byte array
+            ReceiveChunkAck(new byte[]{});
+        }
+
         private SysExCommand lastSysExCommand;
         private SysExCommand LastSysExCommand
         {
@@ -535,8 +584,23 @@ namespace RITS.StrymonEditor.Models
                 UpdatePresetReadrequestWithPresetNo(data, index);
                 var sysEx = new SysExCommand("Push", data, 2000, ReceiveSendAck, PushPresetTimeout);
                 logger.Debug(string.Format("Push Command: {0}", BitConverter.ToString(sysEx.Data)));
-                if (Properties.Settings.Default.PushDelay > 0) Thread.Sleep(Properties.Settings.Default.PushDelay);
-                SendSysEx(sysEx);
+
+                if (SendChunked)
+                {
+                    HandleChunkedSend(data);
+                }
+                else
+                {
+                    SendSysEx(sysEx);
+                }
+            }
+        }
+
+        private bool SendChunked
+        {
+            get
+            {
+                return ((Properties.Settings.Default.PushChunkDelay > 0) && (Properties.Settings.Default.PushChunkSize > 0));
             }
         }
 

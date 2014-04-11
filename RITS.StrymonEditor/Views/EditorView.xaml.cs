@@ -12,24 +12,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
-    /// Interaction logic for TimelineView.xaml
+    /// Main view for editing <see cref="StrymonPreset"/>s
     /// </summary>
     public partial class EditorView : UserControl
     {
         private Point dragStartPoint;
-        private StrymonPedalViewModel vm;
         private ParameterViewModel dragParam;
         private PotViewModel dropPot;
+
         public EditorView()
         {
             InitializeComponent();
-            vm = this.DataContext as StrymonPedalViewModel;
         }
-        
+
+        #region Drag and Drop
         private void View_PreviewDragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.None;
@@ -89,6 +90,18 @@ namespace RITS.StrymonEditor.Views
             }
         }
 
+        private void UserControl_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.None;
+            e.Handled = true;
+        }
+
+        private void UserControl_PreviewDragLeave(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.None;
+            e.Handled = true;
+        }
+
         private bool IsDragging(Point dragStartPoint, MouseEventArgs e)
         {
             var diff = e.GetPosition(null) - dragStartPoint;
@@ -106,16 +119,6 @@ namespace RITS.StrymonEditor.Views
 
             return tmp as StackPanel;
         }
-
-        private void UserControl_PreviewDragEnter(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.None;
-            e.Handled = true;
-        }
-
-        private void UserControl_PreviewDragLeave(object sender, DragEventArgs e)
-        {
-            e.Effects = DragDropEffects.None;
-            e.Handled = true;
-        }    }
+        #endregion
+    }
 }

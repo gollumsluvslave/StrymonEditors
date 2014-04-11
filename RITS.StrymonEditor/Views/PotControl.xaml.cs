@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
-    /// Interaction logic for VolumeControl.xaml
+    /// Control that represents a dial in the physical pedal
     /// </summary>
     public partial class PotControl : UserControl
     {
@@ -25,6 +25,9 @@ namespace RITS.StrymonEditor.Views
         public static readonly DependencyProperty AngleProperty =
             DependencyProperty.Register("Angle", typeof(double), typeof(PotControl), new UIPropertyMetadata(0.0));
 
+        /// <summary>
+        /// The angle of the pot
+        /// </summary>
         public double Angle
         {
             get { return (double)GetValue(AngleProperty); }

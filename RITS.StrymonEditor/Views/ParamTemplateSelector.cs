@@ -8,6 +8,11 @@ using System.Windows.Controls;
 using RITS.StrymonEditor.ViewModels;
 namespace RITS.StrymonEditor.Views
 {
+    /// <summary>
+    /// <see cref="DataTemplateSelector"/> that selects different data templates dependent on the type of parameter
+    /// Used for hidden parameters
+    /// NB the 'OnOff' template is no longer used, using instead an OptionList with On|Off choices
+    /// </summary>
     public class ParameterTemplateSelector : DataTemplateSelector
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)

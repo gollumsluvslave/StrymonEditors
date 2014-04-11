@@ -15,7 +15,8 @@ using System.Windows.Shapes;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
-    /// Interaction logic for StrymonSlider.xaml
+    /// Experimental Slider control customised to be more relevant for Strymon pedals
+    /// NOT CURRENTLY USED
     /// </summary>
     public partial class StrymonSlider : UserControl
     {

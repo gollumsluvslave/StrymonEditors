@@ -16,7 +16,7 @@ using RITS.StrymonEditor.ViewModels;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
-    /// Interaction logic for VolumeControl.xaml
+    /// Control used to be functionally similar to the fine value encoder
     /// </summary>
     public partial class EncoderControl : UserControl
     {
@@ -24,61 +24,65 @@ namespace RITS.StrymonEditor.Views
         public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register("Data", typeof(int), typeof(EncoderControl), new UIPropertyMetadata(0));
         private bool handleKeyboard=false;
-    public int Data
-    {
-        get { return (int)GetValue(DataProperty); }
-        set { SetValue(DataProperty, value); }
-    }
-
-    public EncoderControl()
-    {
-        InitializeComponent();
-        this.PreviewMouseWheel += Zoom_MouseWheel;
-        this.PreviewKeyUp += new KeyEventHandler(PotControl_KeyUp);
-
-    }
-
-    private void PotControl_KeyUp(object sender, KeyEventArgs e)
-    {
-        if (handleKeyboard)
+        public EncoderControl()
         {
-            var vm = DataContext as PotViewModel;
-            int inc = vm.ContextPedal.FineIncrement(Data);
-            if (e.Key == Key.PageUp)
-            {
-                // This data needs to be dynamic by pedal
+            InitializeComponent();
+            this.PreviewMouseWheel += Zoom_MouseWheel;
+            this.PreviewKeyUp += new KeyEventHandler(PotControl_KeyUp);
 
-                this.Data += inc;
-            }
-            else if (e.Key == Key.PageDown)
+        }
+
+        /// <summary>
+        /// The data / value of the underlying fine parameter
+        /// </summary>
+        public int Data
+        {
+            get { return (int)GetValue(DataProperty); }
+            set { SetValue(DataProperty, value); }
+        }
+
+        #region Private Event Handlers
+
+        private void PotControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (handleKeyboard)
             {
-                this.Data -= inc;
+                var vm = DataContext as PotViewModel;
+                int inc = vm.ContextPedal.FineIncrement(Data);
+                if (e.Key == Key.PageUp)
+                {
+                    // This data needs to be dynamic by pedal
+
+                    this.Data += inc;
+                }
+                else if (e.Key == Key.PageDown)
+                {
+                    this.Data -= inc;
+                }
             }
         }
-    }
 
+        private void UserControl_GotFocus(object sender, RoutedEventArgs e)
+        {
+            handleKeyboard = true;
+        }
 
-    private void UserControl_GotFocus(object sender, RoutedEventArgs e)
-    {
-        handleKeyboard = true;
-    }
+        private void UserControl_LostFocus(object sender, RoutedEventArgs e)
+        {
+            handleKeyboard = false;
+        }
 
-    private void UserControl_LostFocus(object sender, RoutedEventArgs e)
-    {
-        handleKeyboard = false;
-    }
+        private void Zoom_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            bool handle = (Keyboard.Modifiers & ModifierKeys.Control) > 0;
 
-    private void Zoom_MouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        bool handle = (Keyboard.Modifiers & ModifierKeys.Control) > 0;
+            var vm = DataContext as PotViewModel;
+            int inc = vm.ContextPedal.FineIncrement(Data);
+            if (e.Delta < 0) inc = -inc;
+            this.Data += inc;
 
-        var vm = DataContext as PotViewModel;
-        int inc = vm.ContextPedal.FineIncrement(Data);
-        if (e.Delta < 0) inc = -inc;
-        this.Data += inc;
+        }
 
-    }
-
-
+        #endregion
     }
 }

@@ -15,7 +15,9 @@ using System.Windows.Shapes;
 namespace RITS.StrymonEditor.Views
 {
     /// <summary>
-    /// Interaction logic for PresetControl.xaml
+    /// PresetControl that represents a view into a pedal in terms of the presets
+    /// Displays the name of the preset with buttons to cycle through the list
+    /// and scroll-wheel behaviour also
     /// </summary>
     public partial class PresetControl : UserControl
     {
@@ -39,12 +41,18 @@ namespace RITS.StrymonEditor.Views
             
         }
 
+        /// <summary>
+        /// Mode of operation
+        /// </summary>
         public string Mode
         {
             get { return (string)GetValue(ModeProperty); }
             set { SetValue(ModeProperty, value); }
         }
 
+        /// <summary>
+        /// Current preset name
+        /// </summary>
         public string PresetName
         {
             get { return (string)GetValue(PresetNameProperty); }
@@ -54,6 +62,9 @@ namespace RITS.StrymonEditor.Views
             }
         }
 
+        /// <summary>
+        /// Current preset index
+        /// </summary>
         public int PresetIndex
         {
             get { return (int)GetValue(PresetIndexProperty); }
@@ -63,6 +74,9 @@ namespace RITS.StrymonEditor.Views
             }
         }
 
+        /// <summary>
+        /// Whether preset is enabled
+        /// </summary>
         public bool PresetIsEnabled
         {
             get { return (bool)GetValue(PresetIsEnabledProperty); }
