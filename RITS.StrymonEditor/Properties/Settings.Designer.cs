@@ -151,5 +151,14 @@ namespace RITS.StrymonEditor.Properties {
                 this["DisableBulkFetch"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int PushDelay {
+            get {
+                return ((int)(this["PushDelay"]));
+            }
+        }
     }
 }

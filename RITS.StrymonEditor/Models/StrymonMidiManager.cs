@@ -395,17 +395,28 @@ namespace RITS.StrymonEditor.Models
         {
             using (RITSLogger logger = new RITSLogger())
             {
+                logger.Debug(string.Format("Push Response: {0}", BitConverter.ToString(data)));
                 try
-                {                    
+                {
                     if (data.Reverse().Skip(1).First() != 69)
                     {
-                        //ThreadPool.QueueUserWorkItem(QueuePushPresetFailed, null);
+                        logger.Debug("Push NACK received - device rejected write.");
+                        ThreadPool.QueueUserWorkItem(QueuePushPresetFailed, null);
                     }
+                    else
+                    {
+                        logger.Debug("Push ACK received - device write success.");
+                    }
+
                 }
                 catch (Exception ex)
                 {
                     logger.Error(ex);
                     ThreadPool.QueueUserWorkItem(QueuePushPresetFailed, null);
+                }
+                finally
+                {
+                    LastSysExCommand.Completed();
                 }
             }
         }
@@ -457,8 +468,7 @@ namespace RITS.StrymonEditor.Models
                         BulkPedal.UpdatePresetInfo(preset);
                         BulkPedal.UpdatePresetRawData(preset.SourceIndex, data);
                         ThreadPool.QueueUserWorkItem(QueueBulkPresetUpdate, preset);
-                    }
-                    LastSysExCommand.Completed();
+                    }                    
                 }
                 catch (Exception ex)
                 {
@@ -467,6 +477,10 @@ namespace RITS.StrymonEditor.Models
                     {
                         ThreadPool.QueueUserWorkItem(QueueBulkPresetUpdate, null);
                     }
+                }
+                finally
+                {
+                    LastSysExCommand.Completed();
                 }
             }    
         }
@@ -519,12 +533,20 @@ namespace RITS.StrymonEditor.Models
             {
                 var data = StrymonSysExUtils.ToSysExData(preset);
                 UpdatePresetReadrequestWithPresetNo(data, index);
-                var sysEx = new SysExCommand("Push", data, 2000, ReceiveSendAck, null);
+                var sysEx = new SysExCommand("Push", data, 2000, ReceiveSendAck, PushPresetTimeout);
                 logger.Debug(string.Format("Push Command: {0}", BitConverter.ToString(sysEx.Data)));
+                if (Properties.Settings.Default.PushDelay > 0) Thread.Sleep(Properties.Settings.Default.PushDelay);
                 SendSysEx(sysEx);
             }
         }
 
+        private void PushPresetTimeout()
+        {
+            using (RITSLogger logger = new RITSLogger())
+            {
+                ThreadPool.QueueUserWorkItem(QueuePushPresetFailed, null);
+            }
+        }
 
         private void SendFetchPresetRequest(int presetIndex)
         {
@@ -701,13 +723,41 @@ namespace RITS.StrymonEditor.Models
                 }
             }
             private System.Timers.Timer timer;
+
+            /// <summary>
+            /// Callback to invoke when the SysEx response is received
+            /// </summary>
             public Action<byte[]> ResponseCallback { get; private set; }
+
+            /// <summary>
+            /// Callback to invoke when the SysEx response has timed out
+            /// </summary>
             public Action TimeoutCallback { get; private set; }
+
+            /// <summary>
+            /// The naem of this command
+            /// </summary>
             public string Name { get; private set; }
+
+            /// <summary>
+            ///  A flag that indicates the command has timed out
+            /// </summary>
             public bool TimedOut { get; private set; }
+
+            /// <summary>
+            /// The sysex payload / data
+            /// </summary>
             public byte[] Data { get; private set; }
+
+            /// <summary>
+            /// Flag that indicates whether this command is complete
+            /// </summary>
             public bool Complete { get; set; }
             public bool IsBulkFetch { get; set; }
+
+            /// <summary>
+            /// Returns whether or not the command is currently processing
+            /// </summary>
             public bool IsProcessing
             {
                 get 
@@ -724,12 +774,20 @@ namespace RITS.StrymonEditor.Models
                 if (TimeoutCallback != null) TimeoutCallback();
             }
 
+            /// <summary>
+            /// Indicates that this command has been sent and 
+            /// to start the callback timer if applicable
+            /// </summary>
             public void Dispatched()
             {
                 if (ResponseCallback == null) return;
                 StartTimer();
             }
 
+            /// <summary>
+            /// For multiple messages (e.g. identity) this will 
+            /// stop and start the timer
+            /// </summary>
             public void Retrigger()
             {
                 if (ResponseCallback == null) return;
@@ -737,6 +795,10 @@ namespace RITS.StrymonEditor.Models
                 StartTimer();
             }
 
+            /// <summary>
+            /// Indicates the response was recieved successfully 
+            /// and the command is complete
+            /// </summary>
             public void Completed()
             {
                 Complete = true;
@@ -748,6 +810,7 @@ namespace RITS.StrymonEditor.Models
                 timer.Elapsed += Timer_Elapsed;
                 timer.Start();
             }
+
             private void StopTimer()
             {
                 timer.Stop();
