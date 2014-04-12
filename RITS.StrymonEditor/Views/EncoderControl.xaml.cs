@@ -20,10 +20,16 @@ namespace RITS.StrymonEditor.Views
     /// </summary>
     public partial class EncoderControl : UserControl
     {
-        // Using a DependencyProperty backing store for Angle.
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register("Data", typeof(int), typeof(EncoderControl), new UIPropertyMetadata(0));
         private bool handleKeyboard=false;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public EncoderControl()
         {
             InitializeComponent();

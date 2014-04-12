@@ -11,7 +11,6 @@ namespace RITS.StrymonEditor.AutoUpdate
     [Serializable]
     public class VersionConfig
     {
-        private string _applicationName;
         private string _version;
         private string _updateCheckTarget;
         private string _updateZipTarget;

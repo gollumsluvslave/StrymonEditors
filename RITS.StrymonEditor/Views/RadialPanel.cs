@@ -11,7 +11,11 @@ namespace RITS.StrymonEditor.Views
     /// </summary>
     public class RadialPanel : Panel
     {
-        // Measure each children and give as much room as they want 
+        /// <summary>
+        /// Measure each children and give as much room as they want 
+        /// </summary>
+        /// <param name="availableSize"></param>
+        /// <returns></returns> 
         protected override Size MeasureOverride(Size availableSize)
         {
             foreach (UIElement elem in Children)
@@ -22,7 +26,11 @@ namespace RITS.StrymonEditor.Views
             return base.MeasureOverride(availableSize);
         }
 
-        //Arrange all children based on the geometric equations for the circle.
+        /// <summary>
+        /// Arrange all children based on the geometric equations for the circle.
+        /// </summary>
+        /// <param name="finalSize"></param>
+        /// <returns></returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
             if (Children.Count == 0)

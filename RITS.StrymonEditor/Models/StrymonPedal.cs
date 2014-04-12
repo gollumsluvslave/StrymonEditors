@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -168,7 +169,7 @@ namespace RITS.StrymonEditor.Models
         /// <summary>
         /// Returns an instance of <see cref="StrymonPedal"/> by device id
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         public static StrymonPedal GetPedalById(int id)
         {
@@ -206,56 +207,31 @@ namespace RITS.StrymonEditor.Models
         public const int LooperPrePost = 96;
         #endregion
 
-        /// <summary>
-        /// Dictionary of preset names for this pedal by index position
-        /// </summary>
-        private Dictionary<int, string> presetInfo = new Dictionary<int, string>();
+        private Dictionary<int, StrymonRawPreset> rawPresetData = new Dictionary<int, StrymonRawPreset>();
         [XmlIgnore]
-        public Dictionary<int, string> PresetInfo
+        public Dictionary<int, StrymonRawPreset> RawPresetData
         {
-            get { return presetInfo; }
+            get
+            {
+                return rawPresetData;
+            }
         }
 
         /// <summary>
-        /// Dictionary of raw preset data for this pedal by index position
-        /// </summary>
-        private Dictionary<int, byte[]> presetRawData = new Dictionary<int, byte[]>();
-        [XmlIgnore]
-        public Dictionary<int, byte[]> PresetRawData
-        {
-            get { return presetRawData; }
-        }
-
-        /// <summary>
-        /// Updates the preset name info for the supplied <see cref="StrymonPreset"/>
+        /// Updates the preset raw data for the specified preset / byte array
         /// </summary>
         /// <param name="preset"></param>
-        public void UpdatePresetInfo(StrymonPreset preset)
-        {
-            if (PresetInfo.ContainsKey(preset.SourceIndex))
-            {
-                PresetInfo[preset.SourceIndex] = preset.Name;
-            }
-            else
-            {
-                PresetInfo.Add(preset.SourceIndex, preset.Name);
-            }
-        }
-
-        /// <summary>
-        /// Updates the preset raw data for the specified index and byte array
-        /// </summary>
-        /// <param name="index"></param>
         /// <param name="data"></param>
-        public void UpdatePresetRawData(int index, byte[] data)
+        public void UpdatePresetRawData(StrymonPreset preset, byte[] data)
         {
-            if (PresetRawData.ContainsKey(index))
+            var rp = new StrymonRawPreset { Index = preset.SourceIndex, Data = data, Name = preset.Name, Machine = preset.Machine.Value };
+            if (RawPresetData.ContainsKey(rp.Index))
             {
-                PresetRawData[index] = data;
+                RawPresetData[rp.Index] = rp;
             }
             else
             {
-                PresetRawData.Add(index, data);
+                RawPresetData.Add(rp.Index, rp);
             }
         }
 
@@ -266,9 +242,9 @@ namespace RITS.StrymonEditor.Models
         /// <returns></returns>
         public string GetPresetName(int index)
         {
-            if (PresetInfo.ContainsKey(index))
+            if (RawPresetData.ContainsKey(index))
             {
-                return PresetInfo[index];
+                return RawPresetData[index].Name;
             }
             else
             {
@@ -276,16 +252,36 @@ namespace RITS.StrymonEditor.Models
             }
         }
 
+        public List<StrymonRawPreset> LockedMachineSpecificPresets()
+        {
+            return RawPresetData.Values.Where(x => x.Machine == Globals.LockedMachine).ToList();
+        }
+        
+
         /// <summary>
         /// Helper method that returns the raw preset data as a sequential byte array
         /// </summary>
+        [XmlIgnore]
         public byte[] GetBackupData
         {
             get
             {
-                return PresetRawData.OrderBy(x => x.Key).SelectMany(x => x.Value).ToArray();
+                return rawPresetData.OrderBy(x => x.Key).SelectMany(x => x.Value.Data).ToArray();
             }
         }
+
+        
     }
 
+
+    /// <summary>
+    /// Lightweighet type to cache bulk fetch preset data
+    /// </summary>
+    public class StrymonRawPreset
+    {
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public int Machine { get; set; }
+        public byte[] Data { get; set; }
+    }
 }

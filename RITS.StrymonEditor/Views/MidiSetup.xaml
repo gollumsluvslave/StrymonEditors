@@ -7,11 +7,11 @@
         <Label Content="Midi In/Out" FontStyle="Italic" FontWeight="Bold" Canvas.Left="133" Canvas.Top="0" />
         <StackPanel Canvas.Left="20" Canvas.Top="30" Orientation="Horizontal">
             <Label Content="Midi In"/>
-            <ComboBox Name="In" Width="280" Height="25" ItemsSource="{Binding ViewModel.InputDevices}" SelectedValue="{Binding ViewModel.ConfiguredInputdevice, Mode=TwoWay}"/>
+            <ComboBox Name="In" Width="280" Height="25" ItemsSource="{Binding ViewModel.InputDevices}" SelectedItem="{Binding ViewModel.ConfiguredInputDevice, Mode=TwoWay}"/>
         </StackPanel>
         <StackPanel Canvas.Left="10"  Canvas.Top="65"   Orientation="Horizontal">
             <Label Content="Midi Out"/>
-            <ComboBox Name="Out" Canvas.Left="10" Width="280" Height="25" ItemsSource="{Binding ViewModel.OutputDevices}" SelectedValue="{Binding ViewModel.ConfiguredOutputdevice, Mode=TwoWay}"/>
+            <ComboBox Name="Out" Canvas.Left="10" Width="280" Height="25" ItemsSource="{Binding ViewModel.OutputDevices}" SelectedItem="{Binding ViewModel.ConfiguredOutputDevice, Mode=TwoWay}"/>
         </StackPanel>
         <Label Canvas.Top="96" Content="Device Midi Channels" FontStyle="Italic" FontWeight="Bold" Canvas.Left="106" />
         <StackPanel Canvas.Left="101" Canvas.Top="129" Orientation="Horizontal">

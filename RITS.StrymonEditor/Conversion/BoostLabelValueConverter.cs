@@ -14,6 +14,10 @@ namespace RITS.StrymonEditor.Conversion
     {
         double min = -3.0;
         double max = 3.0;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public BoostValueLabelConverter()
         {
         }

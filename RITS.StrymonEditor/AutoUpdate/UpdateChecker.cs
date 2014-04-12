@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading;
 using System.IO;
 using System.Net;
 using RITS.StrymonEditor.Serialization;
@@ -18,7 +19,6 @@ namespace RITS.StrymonEditor.AutoUpdate
     public class UpdateChecker
     {
         // private vars
-        private string _currentVersion;
         private VersionConfig _currentVersionConfig;
         private VersionConfig _newVersionConfig;
         private string _newVersionConfigLocalPath;
@@ -49,28 +49,7 @@ namespace RITS.StrymonEditor.AutoUpdate
             {
                 if (Properties.Settings.Default.UpgradeRequired)
                 {
-                    logger.Debug("Upgrade required...");
-                    var autoUpdateLockedFiles = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AutoUpdateFiles");
-                    System.Threading.Thread.Sleep(1000);
-                    // Handle previous upgrade files
-                    if (Directory.Exists(autoUpdateLockedFiles))
-                    {
-                        foreach (var s in Directory.EnumerateFiles(autoUpdateLockedFiles))
-                        {
-                            var realPath = s.Replace(@"AutoUpdateFiles\", "");
-                            logger.Debug(string.Format("Checking locked AutoUpdateFile : {0}", realPath));
-                            if (File.Exists(realPath))
-                            {
-                                logger.Debug(string.Format("Deleting AutoUpdateFile : {0}", realPath));
-                                File.Delete(realPath);
-                            }
-                            logger.Debug(string.Format("Moving {0} to {1}",s,realPath));
-                            File.Move(s, realPath);
-                        }
-                    }
-                    Properties.Settings.Default.Upgrade();
-                    Properties.Settings.Default.UpgradeRequired = false;
-                    Properties.Settings.Default.Save();
+                    HandlePostUpdateTasks(logger);
                 }
                 // Try and get current version info
                 _newVersionConfigLocalPath = Path.GetTempFileName();
@@ -119,7 +98,54 @@ namespace RITS.StrymonEditor.AutoUpdate
         }
 
 
+        private void HandlePostUpdateTasks(RITSLogger logger)
+        {
+            EnsureUpdaterProcessCompleted();
+            logger.Debug("Upgrade required...");
+            var autoUpdateLockedFiles = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AutoUpdateFiles");            
+            // Handle previous upgrade files
+            if (Directory.Exists(autoUpdateLockedFiles))
+            {
+                foreach (var s in Directory.EnumerateFiles(autoUpdateLockedFiles))
+                {
+                    var realPath = s.Replace(@"AutoUpdateFiles\", "");
+                    logger.Debug(string.Format("Checking locked AutoUpdateFile : {0}", realPath));
+                    if (File.Exists(realPath))
+                    {
+                        logger.Debug(string.Format("Deleting AutoUpdateFile : {0}", realPath));
+                        File.Delete(realPath);
+                    }
+                    logger.Debug(string.Format("Moving {0} to {1}", s, realPath));
+                    File.Move(s, realPath);
+                }
+            }
+            Properties.Settings.Default.Upgrade();
+            Properties.Settings.Default.UpgradeRequired = false;
+            Properties.Settings.Default.Save();
+        }
 
+        private void EnsureUpdaterProcessCompleted()
+        {
+            int timeoutCount = 0;
+            int sleepPeriod = 500;
+            while (true)
+            {
+                if (Process.GetProcessesByName("RITS.StrymonEditor.Updater").Length > 0)
+                {
+                    Thread.Sleep(sleepPeriod);
+                }
+                else
+                {
+                    return;
+                }
+                timeoutCount += sleepPeriod;
+                if (timeoutCount > 10000)
+                {
+                    StaticLogger.Debug("Timeout waiting for Update process to exit. Abandoning AutoUpdate.");
+                    return;
+                }
+            }
+        }
     }
 
 }

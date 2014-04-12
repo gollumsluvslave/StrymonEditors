@@ -23,6 +23,12 @@ namespace RITS.StrymonEditor.Views
     {
         private StrymonPreset editingPreset;
         private IStrymonMidiManager midiManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="preset"></param>
+        /// <param name="midiManager"></param>
         public PedalEditor(StrymonPreset preset, IStrymonMidiManager midiManager)
         {
             editingPreset = preset;
@@ -31,8 +37,15 @@ namespace RITS.StrymonEditor.Views
         }
 
         #region INotify
+        /// <summary>
+        /// 
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyName"></param>
         protected void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -40,10 +53,10 @@ namespace RITS.StrymonEditor.Views
         }
         #endregion
 
+        private StrymonPedalViewModel _pedalViewModel;
         /// <summary>
         /// Exposes the main <see cref="StrymonPedalViewModel"/> viewmodel for databinding
         /// </summary>
-        private StrymonPedalViewModel _pedalViewModel;
         public StrymonPedalViewModel PedalViewModel
         {
             get

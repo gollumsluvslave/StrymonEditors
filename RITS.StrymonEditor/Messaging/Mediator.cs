@@ -9,7 +9,7 @@ namespace RITS.StrymonEditor.Messaging
     /// <summary>
     /// Mediator for all view models
     /// Credit to Marlon Grech for the initial implementation and idea 
-    /// - made some tweaks here and there, mostly around more regimented reg and dereg <see cref="ViewModelBase"/>
+    /// - made some tweaks here and there, mostly around more regimented reg and dereg <see cref="ViewModels.ViewModelBase"/>
     /// http://marlongrech.wordpress.com/2008/03/20/more-than-just-mvc-for-wpf/
     /// </summary>
     public class Mediator : IMediator
@@ -24,8 +24,8 @@ namespace RITS.StrymonEditor.Messaging
         /// http://marlongrech.wordpress.com/2008/03/20/more-than-just-mvc-for-wpf/
         /// Look at updating to v2 with WeakAction etc
         /// </summary>
-        /// <param name="colleague">The colleague to register</param>
-        /// <param name="messages">The message to register to</param>
+        /// <param name="message">The message to register</param>
+        /// <param name="callback">The callback to invoke</param>
         public void Register(ViewModelMessages message, Action<object> callback)
         {
             internalList.AddValue(message, callback);

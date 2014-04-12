@@ -435,6 +435,7 @@ namespace RITS.StrymonEditor.ViewModels
             UpdateChecker checker = new AutoUpdate.UpdateChecker(MessageDialog);
             if (checker.CheckForUpdate())
             {
+                MessageDialog.ShowInfo("A new version of Strymon Editors is available. The Editor will now exit and install the new version.", "New Version Available");
                 checker.RunUpdate();
                 CloseWindow();
                 return false;

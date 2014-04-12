@@ -4,7 +4,7 @@ namespace RITS.StrymonEditor.Messaging
     /// <summary>
     /// Medaitor that will dispatch messages to subscribers
     /// Credit to Marlon Grech for the initial implementation and idea 
-    /// - made some tweaks here and there, mostly around more regimented reg and dereg <see cref="ViewModelBase"/>
+    /// - made some tweaks here and there, mostly around more regimented reg and dereg <see cref="ViewModels.ViewModelBase"/>
     /// http://marlongrech.wordpress.com/2008/03/20/more-than-just-mvc-for-wpf/
     /// Look at updating to v2 with WeakAction etc
     /// </summary>

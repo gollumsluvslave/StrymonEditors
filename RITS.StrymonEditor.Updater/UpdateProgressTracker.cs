@@ -53,6 +53,7 @@ namespace RITS.StrymonEditor.Updater
         /// </summary>
         private void RunUpdate()
         {
+            EnsureEditorProcessCompleted();
             StaticLogger.Debug("Processing Command Line..."); 
             ProcessCommandLine();
             StaticLogger.Debug("Configuring form...");
@@ -63,11 +64,35 @@ namespace RITS.StrymonEditor.Updater
             StaticLogger.Debug("Backing up previous version...");
             BackupCurrentVersion();
             StaticLogger.Debug("Installing new version...");
-            // Restart the editor                
-            
             ExtractZip();
+            // Restart the editor  
+            MessageBox.Show(string.Format("Update to {0} applied succesfully", newVersionConfig.Version), "", MessageBoxButtons.OK, MessageBoxIcon.Information);                         
             Process.Start(editorExe);
             Application.Exit();
+        }
+
+        private void EnsureEditorProcessCompleted()
+        {
+            lblFileCounters.Text = "Ensuring Editor process has exited...";
+            int timeoutCount = 0;
+            int sleepPeriod = 500;
+            while (true)
+            {
+                if (Process.GetProcessesByName("RITS.StrymonEditor").Length > 0)
+                {
+                    Thread.Sleep(sleepPeriod);
+                }
+                else
+                {
+                    return;
+                }
+                timeoutCount += sleepPeriod;
+                if (timeoutCount > 10000)
+                {
+                    StaticLogger.Debug("Timeout waiting for Editor process to exit. Abandoning AutoUpdate.");
+                    TerminateWithMessage("Main Editor process did not exit in a timely fashion.");
+                }
+            }
         }
 
         private void ConfigureForm(int fileCount,string stage)
@@ -153,7 +178,7 @@ namespace RITS.StrymonEditor.Updater
         private void TerminateWithMessage(string message)
         {
             // inform user of error
-            MessageBox.Show("There was a problem runing the Auto Updater.\n" + message + "\nPlease contact your system administrator.", "Error occured.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("There was a problem runing the Auto Update.\n" + message + "\nPlease raise an error report.", "Error occured.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             // terminate application
             Environment.Exit(1);

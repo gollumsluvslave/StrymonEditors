@@ -62,7 +62,10 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand<object>(new Action<object>(x =>
                 {
-                    Mediator.NotifyColleagues(ViewModelMessages.MachineSelected, this);
+                    if (!Globals.MachineLocked)
+                    {
+                        Mediator.NotifyColleagues(ViewModelMessages.MachineSelected, this);
+                    }
                 }));
             }
         }

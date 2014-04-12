@@ -436,7 +436,7 @@ namespace Midi
 
         #region SysEx
 
-        /// <summa>
+        /// <summary>
         /// Send a buffer to and input device in order to receive SysEx messages.
         /// </summary>
         /// Win32 docs: http://msdn.microsoft.com/en-us/library/dd798450(VS.85).aspx

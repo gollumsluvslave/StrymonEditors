@@ -19,6 +19,10 @@ namespace RITS.StrymonEditor.ViewModels
     {
         private IFileIOService fileIOService;
         private IMessageDialog messageDialog;
+
+        /// <summary>
+        /// Singleton Mediator
+        /// </summary>
         protected static IMediator mediatorInstance = new Mediator();
         /// <summary>
         /// Default constructor
@@ -27,11 +31,11 @@ namespace RITS.StrymonEditor.ViewModels
         {
             Mediator = mediatorInstance;
         }
-        
+
+        private IMediator mediator;
         /// <summary>
         /// Changed mediator pattern to follow a more flexible method to aid testing, and allow resetting
         /// </summary>
-        private IMediator mediator;
         public IMediator Mediator 
         {
             get { return mediator; }
@@ -122,7 +126,6 @@ namespace RITS.StrymonEditor.ViewModels
         /// <summary>
         /// Helper method for all ViewModels to delegate any kind of work that requires UI time, with a parameter
         /// </summary>
-        /// <param name="work"></param>
         public void DoWork(Action<object> work, object arg)
         {
             if (!Thread.CurrentThread.IsBackground)

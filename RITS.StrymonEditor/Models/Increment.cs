@@ -29,7 +29,7 @@ namespace RITS.StrymonEditor.Models
         /// Handles returning increment value 
         /// - this needs to support some string parsing for alternating increments
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="index"></param>
         /// <returns></returns>
         public int GetIncrementValue(ref int index)
         {

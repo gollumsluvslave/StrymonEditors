@@ -15,6 +15,12 @@ namespace RITS.StrymonEditor.Views
     /// </summary>
     public class ParameterTemplateSelector : DataTemplateSelector
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="container"></param>
+        /// <returns></returns>
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var vm = item as ParameterViewModel;

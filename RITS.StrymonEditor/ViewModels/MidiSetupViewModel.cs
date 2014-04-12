@@ -226,9 +226,10 @@ namespace RITS.StrymonEditor.ViewModels
                 var bc = new BindableCollection<int>();
                 bc.Add(0);
                 bc.Add(1);
+                bc.Add(5);
                 bc.Add(10);
-                bc.Add(20);
                 bc.Add(50);
+                bc.Add(65);
                 bc.Add(130);
                 bc.Add(325);
 
@@ -244,15 +245,10 @@ namespace RITS.StrymonEditor.ViewModels
             get
             {
                 var bc = new BindableCollection<int>();
-                bc.Add(0);
-                bc.Add(5);
-                bc.Add(10);
-                bc.Add(20);
-                bc.Add(30);
-                bc.Add(40);
-                bc.Add(50);
-                bc.Add(70);
-                bc.Add(100);
+                for (int i = 0; i < 50; i++)
+                {
+                    bc.Add(i);
+                }
                 return bc;
             }
         }

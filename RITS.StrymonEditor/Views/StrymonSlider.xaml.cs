@@ -20,7 +20,9 @@ namespace RITS.StrymonEditor.Views
     /// </summary>
     public partial class StrymonSlider : UserControl
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
         public StrymonSlider()
         {
             InitializeComponent();
@@ -34,6 +36,10 @@ namespace RITS.StrymonEditor.Views
         }
 
         private static readonly DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(double), typeof(StrymonSlider), new PropertyMetadata(100d, OnMaximumChanged));
+
+        /// <summary>
+        /// 
+        /// </summary>
         public double Maximum
         {
             get { return (double)GetValue(MaximumProperty); }
@@ -42,6 +48,9 @@ namespace RITS.StrymonEditor.Views
 
 
         private static readonly DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(double), typeof(StrymonSlider), new PropertyMetadata(0d, OnMinimumChanged));
+        /// <summary>
+        /// 
+        /// </summary>
         public double Minimum
         {
             get { return (double)GetValue(MinimumProperty); }
@@ -49,6 +58,9 @@ namespace RITS.StrymonEditor.Views
         }
 
         private static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(StrymonSlider), new PropertyMetadata(50d, OnValueChanged));
+        /// <summary>
+        /// 
+        /// </summary>
         public double Value
         {
             get { return (double)GetValue(ValueProperty); }
@@ -58,6 +70,9 @@ namespace RITS.StrymonEditor.Views
 
 
         private static readonly DependencyProperty ProgressBarWidthProperty = DependencyProperty.Register("ProgressBarWidth", typeof(double), typeof(StrymonSlider), null);
+        /// <summary>
+        /// 
+        /// </summary>
         private double ProgressBarWidth
         {
             get { return (double)GetValue(ProgressBarWidthProperty); }

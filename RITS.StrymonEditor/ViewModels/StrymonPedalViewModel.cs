@@ -301,6 +301,17 @@ namespace RITS.StrymonEditor.ViewModels
             get { return preset; }
             set
             {
+                if (Globals.MachineLocked && value.Machine.Value != Globals.LockedMachine)
+                {
+                    if (MessageDialog.ShowYesNo("The loaded preset has a different machine to the current (locked) machine. Do you wish to unlock the machine and load the preset?", "Machine Different"))
+                    {
+                        LockMachine(null);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
                 preset = value;
                 if (preset.Name == null) preset.Name = "NEW";
                 // Rather than doing a ton of CC messages if the preset was not sourced from the pedal, then send to edit buffer?
@@ -345,6 +356,11 @@ namespace RITS.StrymonEditor.ViewModels
             }
             set
             {
+                if (Globals.MachineLocked)
+                {
+                    OnPropertyChanged("ActiveMachine"); //  Reset combo
+                    return;
+                }
                 using (RITSLogger logger = new RITSLogger())
                 {
                     activeMachine = value;
@@ -369,7 +385,7 @@ namespace RITS.StrymonEditor.ViewModels
         #region Bindable Collections
         /// <summary>
         /// Returns a 'bindable' collection of view models that allow the View to interpret 
-        /// the available <see cref="StrymomMachine"/>
+        /// the available <see cref="StrymonMachine"/>
         /// </summary>
         private BindableCollection<StrymonMachineViewModel> _machines;
         public BindableCollection<StrymonMachineViewModel> Machines
@@ -675,10 +691,14 @@ namespace RITS.StrymonEditor.ViewModels
                     syncMode.Children.Add(new MenuItemViewModel { MenuText = "Pedal Master", IsCheckable = true, Command = SyncModeChanged, Tag = SyncMode.PedalMaster });
                     optionsMenu.Add(syncMode);
 
+                    var lockMachine = new MenuItemViewModel { MenuText = "Lock Machine", IsCheckable = true, Command = LockMachineCommand};
+                    optionsMenu.Add(lockMachine);
                 }
                 return optionsMenu;
             }
         }
+
+        
 
 
         private BindableCollection<MenuItemViewModel> epSetMenu;
@@ -1426,13 +1446,13 @@ namespace RITS.StrymonEditor.ViewModels
         }
         private bool BackupOk()
         {
-            return ActivePedal.PresetRawData.Count == ActivePedal.PresetCount;
+            return ActivePedal.RawPresetData.Count == ActivePedal.PresetCount;
         }
 
+        private RelayCommand restorePedalBackup;
         /// <summary>
         /// Command to restore all presets on the pedal from .syx backup
         /// </summary>
-        private RelayCommand restorePedalBackup;
         public RelayCommand RestorePedalBackup
         {
             get
@@ -1491,6 +1511,32 @@ namespace RITS.StrymonEditor.ViewModels
                 if (v.MenuText != vm.MenuText) v.IsChecked = !vm.IsChecked;
                 v.IsEnabled = !v.IsChecked;
             }            
+        }
+
+        /// <summary>
+        /// ICommand to change the BPM / Millisecond mode
+        /// </summary>
+        public RelayCommand<MenuItemViewModel> LockMachineCommand
+        {
+            get
+            {
+                return new RelayCommand<MenuItemViewModel>(new Action<MenuItemViewModel>(x =>
+                {
+                    LockMachine(x);
+                }));
+            }
+        }
+        private void LockMachine(MenuItemViewModel vm)
+        {
+            if (vm == null)
+            {
+                vm = OptionsMenu[1];
+                vm.IsChecked = !vm.IsChecked;
+            }
+            Globals.MachineLocked = vm.IsChecked;
+            Globals.LockedMachine = ActiveMachine.Value;
+            // Refresh Fetch Preset
+            FetchPreset.PresetIndex = FetchPreset.PresetIndex;
         }
         #endregion
     }

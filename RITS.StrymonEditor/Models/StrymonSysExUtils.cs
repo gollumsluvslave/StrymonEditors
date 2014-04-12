@@ -107,13 +107,19 @@ namespace RITS.StrymonEditor.Models
         {
             private byte[] _data;
 
-            // .ctor for byte array
+            /// <summary>
+            ///  .ctor for byte array
+            /// </summary>
+            /// <param name="data"></param>
             public StrymonSysExMessage(byte[] data)
             {
                 Init(data);
             }
 
-            // .ctor for a pedal, using embedded template
+            /// <summary>
+            /// .ctor for a pedal, using embedded template
+            /// </summary>
+            /// <param name="pedal"></param> 
             public StrymonSysExMessage(StrymonPedal pedal)
             {
                 var resourceName = string.Format("RITS.StrymonEditor.Base_{0}.syx",pedal.Name);

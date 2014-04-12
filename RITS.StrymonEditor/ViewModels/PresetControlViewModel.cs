@@ -8,7 +8,7 @@ using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.ViewModels
 {
     /// <summary>
-    /// ViewModel reponsible for the <see cref="PresetControl"/> view
+    /// ViewModel reponsible for the <see cref="Views.PresetControl"/> view
     /// </summary>
     public class PresetControlViewModel: ViewModelBase, IDisposable
 
@@ -46,7 +46,7 @@ namespace RITS.StrymonEditor.ViewModels
         #endregion
 
         /// <inheritdoc/>
-        public void Dispose()
+        public override void Dispose()
         {
             base.Dispose();
         }
@@ -79,10 +79,36 @@ namespace RITS.StrymonEditor.ViewModels
             get { return presetIndex; }
             set 
             {
-                if (value < 0) value = pedal.PresetCount - 1;
-                if (value > (pedal.PresetCount - 1)) value = 0;
+                if (Globals.MachineLocked && Mode=="Fetch")
+                {
+                    bool dec = (presetIndex > value);
+                    var list = pedal.LockedMachineSpecificPresets();
+                    if (list.Count == 0) return;
+                    var first = list.FirstOrDefault();
+                    
+                    var last = list.LastOrDefault();
+                    if (value < first.Index)
+                    {
+                        presetIndex = last.Index;
+                    }
+                    else if (value > last.Index)
+                    {
+                        presetIndex = first.Index;
+                    }
+                    else
+                    {
+                        var preset = dec ? list.OrderByDescending(x => x.Index).FirstOrDefault(x => x.Index <= value) : list.FirstOrDefault(x => x.Index >= value);
+                        presetIndex = preset.Index;
+                    }
+                }
+                else
+                {
+                    // TODO : Lock Machine effect
+                    if (value < 0) value = pedal.PresetCount - 1;
+                    if (value > (pedal.PresetCount - 1)) value = 0;
 
-                presetIndex = value; 
+                    presetIndex = value;
+                }
                 OnPropertyChanged("PresetIndex");
                 OnPropertyChanged("PresetName");
             }

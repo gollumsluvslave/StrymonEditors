@@ -20,6 +20,11 @@ namespace RITS.StrymonEditor.Views
     public partial class MidiSetup : Window
     {
         private IStrymonMidiManager midiManager;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="midiManager"></param>
         public MidiSetup(IStrymonMidiManager midiManager)
         {
             this.midiManager = midiManager;

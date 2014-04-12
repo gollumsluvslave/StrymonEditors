@@ -17,6 +17,10 @@ namespace RITS.StrymonEditor.Conversion
     public class FineValueLabelConverter:IValueLabelConverter
     {
         private Parameter _parameter;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
         public FineValueLabelConverter(Parameter parameter)
         {
             _parameter = parameter;

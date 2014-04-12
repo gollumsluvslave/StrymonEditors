@@ -48,7 +48,7 @@ namespace RITS.StrymonEditor.IO
         /// <summary>
         /// Backup all presets of the supplied <see cref="StrymonPedal"/> to a single .syx file
         /// </summary>
-        /// <param name="preset"></param>
+        /// <param name="pedal"></param>
         /// <returns></returns>
         void PedalBackupToSyx(StrymonPedal pedal);
 

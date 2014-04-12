@@ -24,6 +24,11 @@ namespace RITS.StrymonEditor.Views
     public class DirectEntryDialog : IInputDialog 
     {
         private Dialog dlg;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fineValue"></param>
         public DirectEntryDialog(string fineValue)
         {
             dlg = new Dialog(new DirectEntryViewModel(fineValue));
@@ -42,6 +47,10 @@ namespace RITS.StrymonEditor.Views
     public class PresetRenameDialog : IInputDialog
     {
         private Dialog dlg;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
         public PresetRenameDialog(string name)
         {
             dlg = new Dialog(new PresetRenameViewModel(name));

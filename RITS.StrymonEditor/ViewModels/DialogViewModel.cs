@@ -11,7 +11,7 @@ namespace RITS.StrymonEditor.ViewModels
     /// An absract viewmodel that defines a type of text input operation
     /// Used in conjunction with the following
     /// The <see cref="Views.Dialog"/> control / window
-    /// The <see cref="IInputDialog"/> interface
+    /// The <see cref="Views.IInputDialog"/> interface
     /// </summary>
     public abstract class DialogViewModel:ViewModelBase
     {

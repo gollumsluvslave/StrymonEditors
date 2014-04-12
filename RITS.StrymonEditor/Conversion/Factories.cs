@@ -47,6 +47,11 @@ namespace RITS.StrymonEditor.Conversion
     /// </summary>
     public static class FineCoarseValueConverterFactory
     {
+        /// <summary>
+        /// Factory create method
+        /// </summary>
+        /// <param name="definition"></param>
+        /// <returns></returns>
         public static IFineCoarseValueConverter Create(ParameterDef definition)
         {
             return new DefaultFineCoarseValueConverter(definition);

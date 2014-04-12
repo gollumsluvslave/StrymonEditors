@@ -11,7 +11,6 @@ namespace RITS.StrymonEditor.AutoUpdate
     [Serializable]
     public class VersionConfig
     {
-        private string _applicationName;
         private string _version;
         private string _updateCheckTarget;
         private string _updateZipTarget;
@@ -35,6 +34,9 @@ namespace RITS.StrymonEditor.AutoUpdate
             set { _version = value; }
         }
 
+        /// <summary>
+        /// Version Number as integer
+        /// </summary>
         [XmlIgnore]
         public int VersionNo
         {

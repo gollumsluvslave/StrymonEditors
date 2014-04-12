@@ -20,7 +20,7 @@ namespace RITS.StrymonEditor.Conversion
         /// <summary>
         /// Defines the 'coarse' (typically 0-127) to 'fine' (e.g. 60-2500ms) conversion
         /// </summary>
-        /// <param name="fineValue">the fine value to convert into coarse</param>
+        /// <param name="coarseValue">the fine value to convert into coarse</param>
         /// <returns></returns>
         int CoarseToFine(int coarseValue);
 

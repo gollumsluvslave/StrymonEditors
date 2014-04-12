@@ -128,8 +128,6 @@ namespace RITS.StrymonEditor.Logging
         /// <summary>
         /// Output an exception as an error message.
         /// </summary>
-        /// <param name="ex">The message to output.</param>
-        /// <param name="ex">The exception to output.</param>
         public static void Error(string message, Exception ex)
         {
             if (IsValidLogLevel(LogLevel.Debug))

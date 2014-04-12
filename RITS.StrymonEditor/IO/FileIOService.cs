@@ -11,7 +11,7 @@ using RITS.StrymonEditor.Models;
 namespace RITS.StrymonEditor.IO
 {
     /// <summary>
-    /// Implementation of <see cref="IFileIOService" to allow for greater unit test coverage/>
+    /// Implementation of <see cref="IFileIOService"/> to allow for greater unit test coverage/>
     /// </summary>
     public class FileIOService:IFileIOService
     {
@@ -184,7 +184,7 @@ namespace RITS.StrymonEditor.IO
         /// <summary>
         /// Backup all presets of the supplied <see cref="StrymonPedal"/> to a single .syx file
         /// </summary>
-        /// <param name="preset"></param>
+        /// <param name="pedal"></param>
         /// <returns></returns>
         public void PedalBackupToSyx(StrymonPedal pedal)
         {

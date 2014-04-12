@@ -122,7 +122,7 @@ namespace RITS.StrymonEditor.Models
         }
 
         /// <summary>
-        /// Based on the <see cref="ParamaterDef"/>, returns whether or not this parameter has a fine control element
+        /// Based on the <see cref="ParameterDef"/>, returns whether or not this parameter has a fine control element
         /// </summary>
         public bool HasFineControl
         {

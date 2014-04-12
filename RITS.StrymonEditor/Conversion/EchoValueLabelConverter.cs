@@ -11,6 +11,9 @@ namespace RITS.StrymonEditor.Conversion
     /// </summary>
     public class EchoValueLabelConverter : IValueLabelConverter
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public EchoValueLabelConverter()
         {
         }

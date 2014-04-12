@@ -25,6 +25,9 @@ namespace RITS.StrymonEditor.Views
         private ParameterViewModel dragParam;
         private PotViewModel dropPot;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public EditorView()
         {
             InitializeComponent();

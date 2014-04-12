@@ -91,6 +91,26 @@ namespace RITS.StrymonEditor
         }
 
         /// <summary>
+        /// Global flag on that indicates BPMmode is active
+        /// </summary>
+        private static bool machineLocked;
+        public static bool MachineLocked
+        {
+            get { return machineLocked; }
+            set { machineLocked = value; }
+        }
+
+        /// <summary>
+        /// Global flag on that indicates BPMmode is active
+        /// </summary>
+        private static int lockedMachine;
+        public static int LockedMachine
+        {
+            get { return lockedMachine; }
+            set { lockedMachine = value; }
+        }
+
+        /// <summary>
         /// Main initilisation method - loads all definition xmls, and sets the list of SupportedPedals
         /// </summary>
         public static void Init()

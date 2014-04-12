@@ -21,7 +21,10 @@ namespace RITS.StrymonEditor.Views
     {
         bool handleKeyboard;
         Point captureLocation;
-        // Using a DependencyProperty backing store for Angle.
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly DependencyProperty AngleProperty =
             DependencyProperty.Register("Angle", typeof(double), typeof(PotControl), new UIPropertyMetadata(0.0));
 
@@ -39,6 +42,9 @@ namespace RITS.StrymonEditor.Views
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PotControl()
         {
             InitializeComponent();

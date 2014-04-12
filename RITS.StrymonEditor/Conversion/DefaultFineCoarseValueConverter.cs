@@ -15,6 +15,11 @@ namespace RITS.StrymonEditor.Conversion
         private ParameterDef paramDef;
         private Range coarseRange;
         private Range fineRange;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="definition"></param>
         public DefaultFineCoarseValueConverter(ParameterDef definition)
         {
             paramDef = definition;

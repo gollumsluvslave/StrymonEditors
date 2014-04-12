@@ -49,7 +49,7 @@ namespace RITS.StrymonEditor.Updater
                     }
                     catch (IOException ex)
                     {
-                        
+                        RITS.StrymonEditor.Logging.StaticLogger.Error(ex);
                         Directory.CreateDirectory(tmpFolder);
                         string tempPath = Path.Combine(tmpFolder, Path.GetFileName(fullZipToPath));
                         using (FileStream streamWriter = File.Create(tempPath))
@@ -83,6 +83,27 @@ namespace RITS.StrymonEditor.Updater
         }
 
 
+        public static void ExtractFile(string zipPath, string sourceFileName, string targetPath)
+        {
+            using (var fs = new FileStream(zipPath, FileMode.Open, FileAccess.Read))
+            {
+                using (var zf = new ZipFile(fs))
+                {
+                    var ze = zf.GetEntry(sourceFileName);
+                    if (ze == null)
+                    {
+                        throw new ArgumentException(sourceFileName, "not found in Zip");
+                    }
+                    byte[] buffer = new byte[4096];
+                    using (var s = zf.GetInputStream(ze))
+                    {
+                        using (FileStream streamWriter = File.Create(targetPath))
+                        {
+                            StreamUtils.Copy(s, streamWriter, buffer);
+                        }
+                    }
+                }
+}        }
 
         // Recurses down the folder structure
         //

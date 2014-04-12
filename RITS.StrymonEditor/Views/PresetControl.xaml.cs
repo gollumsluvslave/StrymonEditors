@@ -21,18 +21,33 @@ namespace RITS.StrymonEditor.Views
     /// </summary>
     public partial class PresetControl : UserControl
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly DependencyProperty ModeProperty =
             DependencyProperty.Register("Mode", typeof(string), typeof(PresetControl), new UIPropertyMetadata("Fetch"));
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly DependencyProperty PresetIndexProperty =
             DependencyProperty.Register("PresetIndex", typeof(int), typeof(PresetControl), new UIPropertyMetadata(0));
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly DependencyProperty PresetNameProperty =
             DependencyProperty.Register("PresetName", typeof(string), typeof(PresetControl), new UIPropertyMetadata("New"));
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly DependencyProperty PresetIsEnabledProperty =
             DependencyProperty.Register("PresetIsEnabled", typeof(bool), typeof(PresetControl), new UIPropertyMetadata(false));
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PresetControl()
         {
             InitializeComponent();

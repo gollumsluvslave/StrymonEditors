@@ -30,7 +30,6 @@ namespace RITS.StrymonEditor.Models
         //private Queue<SysExCommand> sysExQueue;
         private readonly object lockObject = new object();
         private readonly object sysExLock = new object();
-        private Queue<SysExCommand> chunkedCommand;
         #endregion
         
         public StrymonMidiManager(IInputDevice inputDevice, IOutputDevice outputDevice)
@@ -321,7 +320,6 @@ namespace RITS.StrymonEditor.Models
         /// <summary>
         /// Sends the current preset in the editor to the Edit buffer to allow saving
         /// </summary>
-        /// <param name="preset"></param>
         public void PushToIndex(StrymonPreset preset, int index)
         {
             if (!IsConnected) return;
@@ -466,8 +464,7 @@ namespace RITS.StrymonEditor.Models
                     else
                     {
                         // Assumption is responses will come in order!
-                        BulkPedal.UpdatePresetInfo(preset);
-                        BulkPedal.UpdatePresetRawData(preset.SourceIndex, data);
+                        BulkPedal.UpdatePresetRawData(preset, data);
                         ThreadPool.QueueUserWorkItem(QueueBulkPresetUpdate, preset);
                     }                    
                 }
@@ -486,23 +483,6 @@ namespace RITS.StrymonEditor.Models
             }    
         }
 
-        private void ReceiveChunkAck(byte[] data)
-        {
-            // What to do with the response?
-            // What if there is no response?? queue will never complete! Will have to try
-            // Should not get into this callback without a message
-            // Process the chunked queue
-            using (RITSLogger logger = new RITSLogger())
-            {
-                logger.Debug(string.Format("Chuck Push Response: {0}", BitConverter.ToString(data)));
-                if (chunkedCommand.Count > 0)
-                {
-                    var sysEx = chunkedCommand.Dequeue();
-                    Thread.Sleep(Properties.Settings.Default.PushChunkDelay);
-                    SendSysEx(sysEx);
-                }
-            }
-        }
 
         // Deal with a 'chunked' send mecahnism to split the preset into smaller chunks with a delay between
         private void HandleChunkedSend(byte[] presetData)
@@ -511,26 +491,25 @@ namespace RITS.StrymonEditor.Models
             var chunkCount = presetData.Length / Properties.Settings.Default.PushChunkSize;
             var chunks = presetData.Chunkify(Properties.Settings.Default.PushChunkSize);
             // Create the chunked queue
-            chunkedCommand = new Queue<SysExCommand>(chunkCount);
             int chunkIndex = 0;
             // Populate chunked queue
             foreach (var chunk in chunks)
             {
+                // Add SysEx continuation marker
+                //var chunkData = new byte[] { 0xF7 }.Union(chunk).ToArray();
                 var chunkData = chunk.ToArray();
                 chunkIndex++;
                 if (chunkIndex == chunkCount)
                 {
                     // terminating chunk, specify 'final nack' callbacks
-                    chunkedCommand.Enqueue(new SysExCommand("PushChunk", chunkData, 2000, ReceiveSendAck, PushPresetTimeout));
+                    SendSysEx(new SysExCommand("PushChunk", chunkData, 2000, ReceiveSendAck, PushPresetTimeout));
                 }
                 else
                 {
-                    // non-terminating chunk specify chunk call back
-                    chunkedCommand.Enqueue(new SysExCommand("PushChunk", chunkData, 2000, ReceiveChunkAck, PushPresetTimeout));
+                    midiOut.SendSysEx(chunkData);
                 }
+                Thread.Sleep(Properties.Settings.Default.PushChunkDelay);
             }
-            // Need to kick off queue processing, call the callback with empty byte array
-            ReceiveChunkAck(new byte[]{});
         }
 
         private SysExCommand lastSysExCommand;
