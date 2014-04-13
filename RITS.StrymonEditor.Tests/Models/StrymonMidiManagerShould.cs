@@ -559,7 +559,9 @@ namespace RITS.StrymonEditor.Tests.Models
         [TestMethod]
         public void PushToEditWhenConnected()
         {
+
             // Arrange 
+            ClearContainer();
             var midiInMock = Container.GetMock<IInputDevice>();
             var midiOutMock = Container.GetMock<IOutputDevice>();
             // Act
@@ -567,9 +569,9 @@ namespace RITS.StrymonEditor.Tests.Models
             // Bit convoluted
             var presetData =new StrymonSysExUtils.StrymonSysExMessage(Sut.ConnectedPedals.First()).FullMessageData;
             var preset = StrymonSysExUtils.FromSysExData(presetData);
-            SetPresetIndex(presetData, 0x01, 0x48);
             Sut.PushToEdit(preset);
-            midiOutMock.Verify(x => x.SendSysEx(presetData), Times.Once()); 
+            midiOutMock.Verify(x => x.SendSysEx(It.Is<byte[]>(d => d.Length == 650)), Times.Once());
+            Sut.Dispose();
         }
 
         [TestMethod]
@@ -583,9 +585,8 @@ namespace RITS.StrymonEditor.Tests.Models
             // Bit convoluted
             var presetData = new StrymonSysExUtils.StrymonSysExMessage(Sut.ConnectedPedals.First()).FullMessageData;
             var preset = StrymonSysExUtils.FromSysExData(presetData);
-            SetPresetIndex(presetData, 0x01, 0x48);
             Sut.PushToEdit(preset);
-            midiOutMock.Verify(x => x.SendSysEx(presetData), Times.Never());
+            midiOutMock.Verify(x => x.SendSysEx(It.Is<byte[]>(d => d.Length == 650)), Times.Never());
         }
 
         [TestMethod]
@@ -599,16 +600,16 @@ namespace RITS.StrymonEditor.Tests.Models
             // Bit convoluted
             var presetData = new StrymonSysExUtils.StrymonSysExMessage(Sut.ConnectedPedals.First()).FullMessageData;
             var preset = StrymonSysExUtils.FromSysExData(presetData);
-            SetPresetIndex(presetData, 0x01, 0x48);
             Sut.BulkPedal = Sut.ConnectedPedals.First();
             Sut.PushToEdit(preset);
-            midiOutMock.Verify(x => x.SendSysEx(presetData), Times.Never());
+            midiOutMock.Verify(x => x.SendSysEx(It.Is<byte[]>(d => d.Length == 650)), Times.Never());
         }
 
         [TestMethod]
         public void PushToIndexWhenConnected()
         {
             // Arrange 
+            ClearContainer();
             var midiInMock = Container.GetMock<IInputDevice>();
             var midiOutMock = Container.GetMock<IOutputDevice>();
             // Act
@@ -616,9 +617,9 @@ namespace RITS.StrymonEditor.Tests.Models
             // Bit convoluted
             var presetData = new StrymonSysExUtils.StrymonSysExMessage(Sut.ConnectedPedals.First()).FullMessageData;
             var preset = StrymonSysExUtils.FromSysExData(presetData);
-            SetPresetIndex(presetData, 0x00, 0x00);
             Sut.PushToIndex(preset,0);
-            midiOutMock.Verify(x => x.SendSysEx(presetData), Times.Once());
+            midiOutMock.Verify(x => x.SendSysEx(It.Is<byte[]>(d=>d.Length==650)), Times.Once());
+            Sut.Dispose();
         }
 
         [TestMethod]
@@ -632,9 +633,8 @@ namespace RITS.StrymonEditor.Tests.Models
             // Bit convoluted
             var presetData = new StrymonSysExUtils.StrymonSysExMessage(Sut.ConnectedPedals.First()).FullMessageData;
             var preset = StrymonSysExUtils.FromSysExData(presetData);
-            SetPresetIndex(presetData, 0x00, 0x00);
             Sut.PushToIndex(preset, 0);
-            midiOutMock.Verify(x => x.SendSysEx(presetData), Times.Never());
+            midiOutMock.Verify(x => x.SendSysEx(It.Is<byte[]>(d => d.Length == 650)), Times.Never());
         }
 
         [TestMethod]
@@ -651,7 +651,7 @@ namespace RITS.StrymonEditor.Tests.Models
             SetPresetIndex(presetData, 0x00, 0x00);
             Sut.BulkPedal = Sut.ConnectedPedals.First();
             Sut.PushToIndex(preset, 0);
-            midiOutMock.Verify(x => x.SendSysEx(presetData), Times.Never());
+            midiOutMock.Verify(x => x.SendSysEx(It.Is<byte[]>(d=>d.Length==650)), Times.Never());
         }
         #endregion
 
@@ -673,47 +673,11 @@ namespace RITS.StrymonEditor.Tests.Models
             MidiSetupLevel(midiInMock, midiOutMock, 3);
             Sut.PushToEdit(preset);
             
-            // Simulate midi response callbacks
-            for (int i = 0; i < 12; i++)
-            {
-                System.Threading.Thread.Sleep(60);
-                midiInMock.Raise(x => x.SysEx += null, new SysExMessage(new DeviceBase("dummy"), new byte[]{}, new float()));
-            }
-
-            // Should be 13 chunks plus identity from setup
-            midiOutMock.Verify(x => x.SendSysEx(It.IsAny<byte[]>()), Times.Exactly(14));
+            // Should be 13 chunks 
+            midiOutMock.Verify(x => x.SendSysEx(It.Is<byte[]>(d=>d.Length==50)), Times.Exactly(13));
             midiVM.PushChunkSize = 0;
             midiVM.PushChunkDelay = 0;
 
-        }
-
-        [TestMethod]
-        public void TimeoutChunkedSendCorrectly()
-        {
-                // Arrange 
-                var midiInMock = Container.GetMock<IInputDevice>();
-                var midiOutMock = Container.GetMock<IOutputDevice>();
-                var mediatorMock = Container.GetMock<IMediator>();
-                // Bit convoluted
-                var preset = TestHelper.TestTimelinePreset;
-
-                // Spoof property change
-                var midiVM = new MidiSetupViewModel(Sut, new Action(() => { }));
-                midiVM.PushChunkSize = 50;
-                midiVM.PushChunkDelay = 50;
-                Sut.Mediator = mediatorMock.Object;
-                // Act
-                MidiSetupLevel(midiInMock, midiOutMock, 3);
-                Sut.PushToEdit(preset);
-
-                // Simulate timeout
-                System.Threading.Thread.Sleep(2500);
-
-                // Should be identity send plus one chunk send then timeout and push fail
-                midiOutMock.Verify(x => x.SendSysEx(It.IsAny<byte[]>()), Times.Exactly(2));
-                mediatorMock.Verify(x => x.NotifyColleagues(ViewModelMessages.PushPresetFailed, null), Times.Once());
-                midiVM.PushChunkSize = 0;
-                midiVM.PushChunkDelay = 0;
         }
 
 

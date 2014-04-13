@@ -20,6 +20,13 @@
                 <Function>^RITS\.StrymonEditor\.Logging\..*</Function>
                 <Function>^RITS\.StrymonEditor\.Serialization\..*</Function>
                 <Function>^RITS\.StrymonEditor\.AutoUpdate\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.EditorView\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.StrymonSlider\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.RadialPanel\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.PedalEditor\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.Dialog\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.ModalProgressDialog\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.ParameterTemplateSelector\..*</Function>
               </Exclude>
             </Functions>
 

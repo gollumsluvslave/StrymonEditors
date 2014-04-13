@@ -71,7 +71,10 @@
     <Compile Include="Conversion\OptionListPotValueConverterShould.cs" />
     <Compile Include="Conversion\BoostValueLabelConverterShould.cs" />
     <Compile Include="Conversion\OptionValueLabelConverterShould.cs" />
+    <Compile Include="DispatcherUtil.cs" />
     <Compile Include="Integration\FileIOServiceShould.cs" />
+    <Compile Include="ViewModels\MidiSetupViewModelShould.cs" />
+    <Compile Include="ViewModels\PresetControlViewModelShould.cs" />
     <Compile Include="Views\EncoderControlShould.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="MockPresentationSource.cs" />
@@ -80,6 +83,7 @@
     <Compile Include="Conversion\PotValueMapShould.cs" />
     <Compile Include="Models\StrymonMidiManagerShould.cs" />
     <Compile Include="Models\StymonSysExUtilsShould.cs" />
+    <Compile Include="Views\BooleanToVisibilityConverterShould.cs" />
     <Compile Include="Views\PresetControlShould.cs" />
     <Compile Include="Views\PotControlShould.cs" />
     <Compile Include="TestContext.cs" />

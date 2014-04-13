@@ -33,6 +33,11 @@ namespace RITS.StrymonEditor.Tests
                 this.Container = new AutoMockContainer( this._repository );
         }
 
+        protected void ClearContainer()
+        {
+            this.Container = new AutoMockContainer(this._repository);
+        }
+
         /// <summary>
         /// Forces factory verification.
         /// </summary>
@@ -55,8 +60,11 @@ namespace RITS.StrymonEditor.Tests
         /// <summary>
         /// Gets or sets the auto mocking container.
         /// </summary>
-        /// <value>The auto mocking container.</value>
-        protected AutoMockContainer Container { get; private set; }
+        /// <value>The auto mocking container.</value>        
+        protected AutoMockContainer Container 
+        {
+            get; private set; 
+        }
 
         /// <summary>
         /// Creates an object of the specified type.

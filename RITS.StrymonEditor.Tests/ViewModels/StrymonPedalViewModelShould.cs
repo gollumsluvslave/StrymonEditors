@@ -768,7 +768,7 @@ namespace RITS.StrymonEditor.Tests
             // Act
             Sut.Mediator.NotifyColleagues(ViewModelMessages.MachineSelected, newmachine);
             // Assert
-            Assert.AreEqual(newmachine.Value,Sut.ActiveMachine.Value);
+            Assert.AreEqual(newmachine.Value, Sut.ActiveMachine.Value);
             Sut.Dispose();
         }
 
@@ -830,5 +830,19 @@ namespace RITS.StrymonEditor.Tests
             Sut.Dispose();
         }
 
+        [TestMethod]
+        public void ExecuteLockMachineCommandCorrectly()
+        {
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            Assert.IsFalse(Globals.MachineLocked);
+            // Act
+            Sut.LockMachineCommand.Execute(null);
+            // Assert
+            Assert.IsTrue(Globals.MachineLocked);
+            Assert.AreEqual(Sut.ActiveMachine.Value,Globals.LockedMachine);
+            // Unlock to avoid contaminating other tests
+            Sut.LockMachineCommand.Execute(null);
+            Sut.Dispose();
+        }
     }
 }
