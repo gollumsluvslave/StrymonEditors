@@ -183,6 +183,7 @@ namespace RITS.StrymonEditor.Tests
 
             Assert.AreEqual(5, Sut.EditorMenu.Count);
             Assert.AreEqual(2, Sut.LCDMenu.Count);
+            Sut.Dispose();
         }
 
 
@@ -506,7 +507,7 @@ namespace RITS.StrymonEditor.Tests
         public void ExecuteRenameCommand()
         {
             // Arrange
-            var mockDialog = Container.GetMock<IInputDialog>();
+            var mockDialog = Container.GetMock<IModalDialog>();
             
             Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
             var dialogMock = Container.GetMock<IMessageDialog>();
@@ -523,7 +524,7 @@ namespace RITS.StrymonEditor.Tests
         public void ExecuteDirectEntryCommand()
         {
             // Arrange
-            var mockDialog = Container.GetMock<IInputDialog>();
+            var mockDialog = Container.GetMock<IModalDialog>();
 
             Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
             var dialogMock = Container.GetMock<IMessageDialog>();
@@ -614,6 +615,48 @@ namespace RITS.StrymonEditor.Tests
             Sut.Dispose();
 
         }
+
+        [TestMethod]
+        public void HandleDirectEntryMessage_BPM()
+        {
+
+            Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);
+            var dialogMock = Container.GetMock<IMessageDialog>();
+            Sut.MessageDialog = dialogMock.Object;
+            // Need to force some get behaviour here - WPF would execute these gets after onpropertychanged events
+            Globals.IsBPMModeActive = true;
+            Sut.HiddenParameters.First();
+            Sut.PotControls.First();
+            // Act
+            Sut.Mediator.NotifyColleagues(ViewModelMessages.DirectEntryValueEntered, 120);
+            // Assert
+            Assert.AreEqual(500, Sut.Encoder.LinkedParameter.FineValue);
+            Globals.IsBPMModeActive = false;
+            Sut.Dispose();
+
+        }
+
+        [TestMethod]
+        public void HandleDirectEntryMessage_BPM_Mobius()
+        {
+
+            Container.Register<StrymonPreset>(TestHelper.TestMobiusPreset);
+            var dialogMock = Container.GetMock<IMessageDialog>();
+            Sut.MessageDialog = dialogMock.Object;
+            // Need to force some get behaviour here - WPF would execute these gets after onpropertychanged events
+            Globals.IsBPMModeActive = true;
+            Sut.HiddenParameters.First();
+            Sut.PotControls.First();
+            // Act
+            Sut.Mediator.NotifyColleagues(ViewModelMessages.DirectEntryValueEntered, 120);
+            // Assert
+            Assert.AreEqual(2000, Sut.Encoder.LinkedParameter.FineValue);
+
+            Globals.IsBPMModeActive = false;
+            Sut.Dispose();
+
+        }
+
 
         [TestMethod]
         public void HandleFetchPresetRequestMessageWhenDirty()
@@ -717,6 +760,7 @@ namespace RITS.StrymonEditor.Tests
             Sut.PedalBackup.Execute(null);
             // Assert
             mockFileService.Verify(x => x.PedalBackupToSyx(pedal), Times.Once());
+            Sut.Dispose();
         }
 
         [TestMethod]
@@ -726,7 +770,7 @@ namespace RITS.StrymonEditor.Tests
             var pedal = TestHelper.TimelinePedal;
             var midiManagerMock = Container.GetMock<IStrymonMidiManager>();
             var mockFileService = Container.GetMock<IFileIOService>();
-            var mockProgessBar = Container.GetMock<IInputDialog>();
+            var mockProgessBar = Container.GetMock<IModalDialog>();
             var presetList = new StrymonPreset[] { TestHelper.TestTimelinePreset, TestHelper.TestTimelinePreset }.ToList();
             mockFileService.Setup(x => x.GetPresetBackupDataFromSyx(pedal)).Returns(presetList);
             Container.Register<StrymonPreset>(TestHelper.TestTimelinePreset);

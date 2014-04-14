@@ -51,25 +51,18 @@ namespace RITS.StrymonEditor.Models
         /// </summary>
         public List<HeelToeSetting> EPSetValues { get; set; }
 
+
         /// <summary>
         /// The index of the parameter currently assigned to the dynamic 'Param1' <see cref="Pot"/>
         /// Only relevant for Mobius and BigSky presets
         /// </summary>
-        public int Param1ParameterIndex 
-        { 
-            get; 
-            set; 
-        }
+        public int Param1ParameterIndex { get; set; }
 
         /// <summary>
         /// The index of the parameter currently assigned to the dynamic 'Param2' <see cref="Pot"/>
         /// Only relevant for Mobius and BigSky presets
         /// </summary>
-        public int Param2ParameterIndex 
-        { 
-            get; 
-            set; 
-        }
+        public int Param2ParameterIndex { get; set; }
         
         /// <summary>
         /// The machine the preset uses
@@ -132,6 +125,7 @@ namespace RITS.StrymonEditor.Models
 
         /// <summary>
         /// Returns the current 'fine' value for this preset - it is unique at any given time
+        /// Currently only used to populate the DirecTEntry dialog
         /// </summary>
         public string FineValue
         {
@@ -255,6 +249,12 @@ namespace RITS.StrymonEditor.Models
                         offset += p.PostOffset;
                         offset++;
                     }
+
+                    // Set the DynamicPotId - VM will overwrite this
+                    var param1 = HiddenParameters[Param1ParameterIndex];
+                    param1.DynamicPotIdAssigned = 5;
+                    var param2 = HiddenParameters[Param2ParameterIndex];
+                    param2.DynamicPotIdAssigned = 6;
 
                 }
             }

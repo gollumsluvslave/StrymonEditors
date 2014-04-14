@@ -14,6 +14,10 @@ namespace RITS.StrymonEditor.ViewModels
     {
         public StrymonMachine _machine;
 
+        /// <summary>
+        /// Default .ctor
+        /// </summary>
+        /// <param name="machine"></param>
         public StrymonMachineViewModel(StrymonMachine machine)
         {
             _machine = machine;
@@ -35,10 +39,10 @@ namespace RITS.StrymonEditor.ViewModels
             get { return _machine.Value; }
         }
 
+        private bool _isActive;
         /// <summary>
         /// Determines whether the underlying <see cref="StrymonMachine"/> is currently active in the active <see cref="StrymonPreset"/>
         /// </summary>
-        private bool _isActive;
         public bool IsActive
         {
             get

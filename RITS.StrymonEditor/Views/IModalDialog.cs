@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
 
 namespace RITS.StrymonEditor.Views
@@ -10,7 +11,7 @@ namespace RITS.StrymonEditor.Views
     /// <summary>
     /// Very simple interface to allow mocks for the various 'input' dialogs based on the <see cref="Dialog"/> view
     /// </summary>
-    public interface IInputDialog
+    public interface IModalDialog
     {
         /// <summary>
         /// Shows the dialog modally
@@ -19,9 +20,9 @@ namespace RITS.StrymonEditor.Views
     }
 
     /// <summary>
-    /// Implementation of <see cref="IInputDialog"/> for DirectEntry operations
+    /// Implementation of <see cref="IModalDialog"/> for DirectEntry operations
     /// </summary>
-    public class DirectEntryDialog : IInputDialog 
+    public class DirectEntryDialog : IModalDialog 
     {
         private Dialog dlg;
 
@@ -42,9 +43,9 @@ namespace RITS.StrymonEditor.Views
     }
 
     /// <summary>
-    /// Implementation of <see cref="IInputDialog"/> for Preset rename operations
+    /// Implementation of <see cref="IModalDialog"/> for Preset rename operations
     /// </summary>
-    public class PresetRenameDialog : IInputDialog
+    public class PresetRenameDialog : IModalDialog
     {
         private Dialog dlg;
         /// <summary>
@@ -63,9 +64,9 @@ namespace RITS.StrymonEditor.Views
     }
 
     /// <summary>
-    /// Implementation of <see cref="IInputDialog"/> for Modal Progress operations
+    /// Implementation of <see cref="IModalDialog"/> for Modal Progress operations
     /// </summary>
-    public class ModalProgressBar : IInputDialog
+    public class ModalProgressBar : IModalDialog
     {
         private ModalProgressDialog dlg;
         public ModalProgressBar(ModalProgressDialogViewModel vm)
@@ -77,6 +78,30 @@ namespace RITS.StrymonEditor.Views
         public void ShowModal()
         {
             dlg.ShowDialog();
+        }
+    }
+
+    /// <summary>
+    /// Wrapper around the <see cref="PedalEditor"/> window to allow unit testing
+    /// </summary>
+    public class PedalEditorWindow : IModalDialog
+    {
+        private PedalEditor editor;
+
+        /// <summary>
+        /// .ctor
+        /// </summary>
+        /// <param name="preset"></param>
+        /// <param name="midiManager"></param>
+        public PedalEditorWindow(StrymonPreset preset,IStrymonMidiManager midiManager)
+        {
+            editor = new PedalEditor(preset,midiManager);
+        }
+        
+        /// <inheritdoc/>
+        public void ShowModal()
+        {
+            editor.ShowDialog();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.AutoUpdate;
 using RITS.StrymonEditor.Commands;
 using RITS.StrymonEditor.Models;
@@ -25,15 +26,20 @@ namespace RITS.StrymonEditor.ViewModels
 
         public MainWindowViewModel(IStrymonMidiManager midiManager)
         {
-            this.midiManager = midiManager;
-            if (HandleAutoUpdateUpdate())
+            using (RITSLogger logger = new RITSLogger())
             {
-                Globals.Init();
-                StatusText = "Initialising Midi...";
-                this.midiManager.InitMidi();
-                StatusText = "Ready. No Pedals Connected.";
+                logger.Debug("Setting midi manager...");
+                this.midiManager = midiManager;
+                if (HandleAutoUpdateUpdate())
+                {
+                    Globals.Init();
+                    StatusText = "Initialising Midi...";
+                    logger.Debug(string.Format("Initialising midi : configured InputDevice={0}, configured OutputDevice={1}", 
+                                    Properties.Settings.Default.MidiInDevice,Properties.Settings.Default.MidiOutDevice));
+                    this.midiManager.InitMidi();
+                    StatusText = "Ready. No Pedals Connected.";
+                }
             }
-
         }
 
         #region Public Properties
@@ -159,6 +165,22 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private IModalDialog editorWindow;
+        /// <summary>
+        /// Seam to allow testing of functions that open the <see cref="PedalEditor"/>
+        /// </summary>
+        public IModalDialog EditorWindow
+        {
+            get
+            {
+                return editorWindow;
+            }
+            set
+            {
+                editorWindow = value;
+            }
+        }
+
         // Helper that setups the menu
         private void SetupMenu()
         {
@@ -205,13 +227,6 @@ namespace RITS.StrymonEditor.ViewModels
             editorMenu.Add(aboutMenu);
         }
 
-        // Helper that opens the editor window based on the supplied MenuItemViewModel
-        private void OpenEditor(MenuItemViewModel menuItem)
-        {
-            StrymonPedal pedal = menuItem.Tag as StrymonPedal;
-            OpenEditor(new StrymonPreset(pedal, true));
-        }
-
         // Helper that opens the editor window based on the supplied StrymonPedal
         private void OpenEditor(StrymonPedal pedal)
         {
@@ -221,8 +236,8 @@ namespace RITS.StrymonEditor.ViewModels
         // Helper that opens the editor window using the supplied StrymonPreset
         private void OpenEditor(StrymonPreset preset)
         {
-            PedalEditor editor = new PedalEditor(preset, midiManager);
-            editor.ShowDialog();
+            if(EditorWindow ==null){ EditorWindow = new PedalEditorWindow(preset, midiManager);}
+            EditorWindow.ShowModal();
         }
 
         // Helper that loads an xml file preset

@@ -44,5 +44,17 @@ namespace RITS.StrymonEditor.Tests
             retval = Sut.AngleToValue(-14);
             Assert.AreEqual(0, retval);
         }
+
+        [TestMethod]
+        public void ReturnCorrectAngleForNormalCase()
+        {
+            // Arrange
+            Container.Register<int>(12); // register max
+            // Act
+            var retval = Sut.ValueToAngle(6);
+            Assert.AreEqual(145, retval);
+            retval = Sut.AngleToValue(90);
+            Assert.AreEqual(4, retval);
+        }
     }
 }

@@ -25,6 +25,12 @@ namespace RITS.StrymonEditor.ViewModels
         private int loads;
         private IStrymonMidiManager midiManager;
         private bool presetFromPedal;
+
+        /// <summary>
+        /// Default .ctor
+        /// </summary>
+        /// <param name="preset"></param>
+        /// <param name="midiManager"></param>
         public StrymonPedalViewModel(StrymonPreset preset, IStrymonMidiManager midiManager)
         {
             loads = 0;
@@ -77,10 +83,18 @@ namespace RITS.StrymonEditor.ViewModels
         }
 
         #region MIDIConnectivity
+
+        /// <summary>
+        /// Whether the preset is connected to a pedal in 'real-time' midi mode
+        /// </summary>
         public bool IsConnected
         {
             get { return midiManager.IsConnected; }
         }
+
+        /// <summary>
+        /// Whether the preset is connected to a pedal in 'real-time' midi mode, obvious inverse of IsConnected
+        /// </summary>
         public bool IsNotConnected
         {
             get { return !IsConnected; }
@@ -116,6 +130,10 @@ namespace RITS.StrymonEditor.ViewModels
         #endregion
 
         #region IDisposable
+
+        /// <summary>
+        /// Dispose, base handles dereg, call to other VMs
+        /// </summary>
         public override void Dispose()
         {
             base.Dispose();
@@ -383,11 +401,11 @@ namespace RITS.StrymonEditor.ViewModels
         #endregion
 
         #region Bindable Collections
+        private BindableCollection<StrymonMachineViewModel> _machines;
         /// <summary>
         /// Returns a 'bindable' collection of view models that allow the View to interpret 
         /// the available <see cref="StrymonMachine"/>
         /// </summary>
-        private BindableCollection<StrymonMachineViewModel> _machines;
         public BindableCollection<StrymonMachineViewModel> Machines
         {
             get
@@ -410,11 +428,11 @@ namespace RITS.StrymonEditor.ViewModels
         }
 
 
+        private BindableCollection<ParameterViewModel> _hiddenParameters;
         /// <summary>
         /// Returns a 'bindable' collection of view models that allow the View to interpret 
         /// the available 'hidden' <see cref="Parameter"/>
         /// </summary>
-        private BindableCollection<ParameterViewModel> _hiddenParameters;
         public BindableCollection<ParameterViewModel> HiddenParameters
         {
             get
@@ -800,7 +818,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         private void PresetRenamed(object newName)
         {
-            ActivePreset.Name = newName.ToString();
+            ActivePreset.Name = newName.ToString().ToUpperInvariant(); // Fix for caps
             LCDValue = ActivePreset.Name;
         }
 
@@ -1222,6 +1240,9 @@ namespace RITS.StrymonEditor.ViewModels
             LCDValue = ActivePreset.Name;
         }
 
+        /// <summary>
+        /// Trigger the fine entry function
+        /// </summary>
         public RelayCommand DirectFineEntryCommand
         {
             get
@@ -1238,8 +1259,12 @@ namespace RITS.StrymonEditor.ViewModels
             DirectEntryDialog.ShowModal();
         }
 
-        private IInputDialog directEntryDialog;
-        public IInputDialog DirectEntryDialog
+        private IModalDialog directEntryDialog;
+        
+        /// <summary>
+        /// Return the IModalDialog implementation for Direct Entry function
+        /// </summary>
+        public IModalDialog DirectEntryDialog
         {
             get 
             {
@@ -1249,8 +1274,11 @@ namespace RITS.StrymonEditor.ViewModels
             set { directEntryDialog = value; }
         }
 
-        private IInputDialog renameDialog;
-        public IInputDialog RenameDialog
+        private IModalDialog renameDialog;
+        /// <summary>
+        /// Return the IModalDialog implementation for rename function
+        /// </summary>
+        public IModalDialog RenameDialog
         {
             get
             {
@@ -1260,8 +1288,11 @@ namespace RITS.StrymonEditor.ViewModels
             set { renameDialog = value; }
         }
 
-        private IInputDialog progressDialog;
-        public IInputDialog ProgressDialog
+        private IModalDialog progressDialog;
+        /// <summary>
+        /// Return the IModalDialog implementation for progress function
+        /// </summary>
+        public IModalDialog ProgressDialog
         {
             get
             {
@@ -1278,6 +1309,9 @@ namespace RITS.StrymonEditor.ViewModels
         }
 
         private ModalProgressDialogViewModel modalProgressVM;
+        /// <summary>
+        /// Return the Modal dialog Vm
+        /// </summary>
         public ModalProgressDialogViewModel ModalProgressVM
         {
             get
@@ -1287,6 +1321,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Looper Record command
+        /// </summary>
         public RelayCommand LoopRecord
         {
             get
@@ -1298,6 +1335,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Looper Play command
+        /// </summary>
         public RelayCommand LoopPlay
         {
             get
@@ -1309,6 +1349,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Looper Stop command
+        /// </summary>
         public RelayCommand LoopStop
         {
             get
@@ -1320,6 +1363,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Looper Undo command
+        /// </summary>
         public RelayCommand LoopUndo
         {
             get
@@ -1331,6 +1377,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Looper Redo command
+        /// </summary>
         public RelayCommand LoopRedo
         {
             get
@@ -1342,6 +1391,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Looper Reverse command
+        /// </summary>
         public RelayCommand LoopReverse
         {
             get
@@ -1353,6 +1405,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Looper FullHalf command
+        /// </summary>
         public RelayCommand LoopFullHalf
         {
             get
@@ -1364,6 +1419,9 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        /// <summary>
+        /// Looper PrePost command
+        /// </summary>
         public RelayCommand LoopPrePost
         {
             get
@@ -1376,6 +1434,9 @@ namespace RITS.StrymonEditor.ViewModels
         }
 
         private int infValue = 127;
+        /// <summary>
+        /// Looper Toggle Infinite command
+        /// </summary>
         public RelayCommand ToggleInfinite
         {
             get
@@ -1423,10 +1484,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private RelayCommand pedalBackup;
         /// <summary>
         /// Command to create .syx backup of all presets
         /// </summary>
-        private RelayCommand pedalBackup;
         public RelayCommand PedalBackup
         {
             get

@@ -17,10 +17,10 @@ namespace RITS.StrymonEditor.ViewModels
             Children = new BindableCollection<MenuItemViewModel>();
         }
 
+        private bool isSeparator;
         /// <summary>
         /// Indicates this item should be a separator
         /// </summary>
-        private bool isSeparator;
         public bool IsSeparator
         {
 
@@ -33,10 +33,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private string _menuText;
         /// <summary>
         /// The text for the menu item
         /// </summary>
-        private string _menuText;
         public string MenuText
         {
 
@@ -49,10 +49,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private string _inputgestureText;
         /// <summary>
         /// The input gesture text for the menu item
         /// </summary>
-        private string _inputgestureText;
         public string InputGestureText
         {
 
@@ -65,10 +65,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private object tag;
         /// <summary>
         /// The tag for this menu item
         /// </summary>
-        private object tag;
         public object Tag
         {
 
@@ -81,10 +81,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private bool _isEnabled = true;
         /// <summary>
         /// Whether this menu item is enabled
         /// </summary>
-        private bool _isEnabled = true;
         public bool IsEnabled
         {
             get { return _isEnabled; }
@@ -96,10 +96,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private bool _isChecked;
         /// <summary>
         /// Whether this menu item is checked
         /// </summary>
-        private bool _isChecked;
         public bool IsChecked
         {
             get { return _isChecked; }
@@ -111,10 +111,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private bool _isCheckable;
         /// <summary>
         /// Whether this menu item can be checked
         /// </summary>
-        private bool _isCheckable;
         public bool IsCheckable
         {
             get { return _isCheckable; }
@@ -126,10 +126,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private ICommand command;
         /// <summary>
         /// The ICommand for this menu item
         /// </summary>
-        private ICommand command;
         public ICommand Command
         {
             get { return command; }
@@ -141,10 +141,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private ICommand checkedCommand;
         /// <summary>
         /// ICommand to be executed whether the checkable menu item is set to checked
         /// </summary>
-        private ICommand checkedCommand;
         public ICommand CheckedCommand
         {
             get { return checkedCommand; }
@@ -156,10 +156,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private ICommand uncheckedCommand;
         /// <summary>
         /// ICommand to be executed whether the checkable menu item is set to unchecked
         /// </summary>
-        private ICommand uncheckedCommand;
         public ICommand UncheckedCommand
         {
             get { return uncheckedCommand; }
@@ -171,10 +171,10 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private BindableCollection<MenuItemViewModel> _children;
         /// <summary>
         /// The collection of child menu items
         /// </summary>
-        private BindableCollection<MenuItemViewModel> _children;
         public BindableCollection<MenuItemViewModel> Children
         {
             get { return _children; }

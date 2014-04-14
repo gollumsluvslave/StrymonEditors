@@ -73,6 +73,8 @@
     <Compile Include="Conversion\OptionValueLabelConverterShould.cs" />
     <Compile Include="DispatcherUtil.cs" />
     <Compile Include="Integration\FileIOServiceShould.cs" />
+    <Compile Include="Models\StrymonPresetShould.cs" />
+    <Compile Include="Models\StrymonPedalShould.cs" />
     <Compile Include="ViewModels\MidiSetupViewModelShould.cs" />
     <Compile Include="ViewModels\PresetControlViewModelShould.cs" />
     <Compile Include="Views\EncoderControlShould.cs" />

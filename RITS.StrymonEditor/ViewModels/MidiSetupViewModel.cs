@@ -16,6 +16,12 @@ namespace RITS.StrymonEditor.ViewModels
         private IStrymonMidiManager midiManager;
         private bool midiInitRequired;
         private Action closeAction;
+
+        /// <summary>
+        /// Default .ctor
+        /// </summary>
+        /// <param name="midiManager"></param>
+        /// <param name="close"></param>
         public MidiSetupViewModel(IStrymonMidiManager midiManager, Action close)
         {
             this.midiManager = midiManager;

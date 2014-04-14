@@ -95,5 +95,25 @@ namespace RITS.StrymonEditor.Tests
             retval = Sut.FineToCoarse(fineMax + 10);
             Assert.AreEqual(coarseMax, retval);
         }
+
+        [TestMethod]
+        public void ReturnCorrectFineToCoarseForEdgeCaseFineBreach_Mobius()
+        {
+            // Arrange
+            var paramDef = TestHelper.MobiusPedal.ControlParameters.FirstOrDefault(x => x.PotId == 1);
+            // Need to force a coarse range override here
+            paramDef.CoarseRange = new Range { MinValue = paramDef.FineRange.MinValue + 100, MaxValue = paramDef.FineRange.MaxValue - 100 };
+            var fineMin = paramDef.FineRange.MinValue;
+            var fineMax = paramDef.FineRange.MaxValue;
+            var coarseMin = paramDef.Range.MinValue;
+            var coarseMax = paramDef.Range.MaxValue;
+            Container.Register<ParameterDef>(paramDef);
+            // Act
+            var retval = Sut.FineToCoarse(fineMin + 10); // Greater than fine min, but less than than coarse min.
+            Assert.AreEqual(coarseMin, retval);
+            retval = Sut.FineToCoarse(fineMax - 10); // Less than fine max, but greater than coarse max.
+            Assert.AreEqual(coarseMax, retval);
+        }
+
     }
 }

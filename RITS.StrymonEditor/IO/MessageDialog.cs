@@ -7,7 +7,7 @@ using System.Windows;
 namespace RITS.StrymonEditor.IO
 {
     /// <summary>
-    /// Basic wrapper implementation of <see cref="IMessageDialog"/> around MessageBox to allow testing
+    /// Basic wrapper implementation of <see cref="IMessageDialog"/> around MessageBox to allow testing of viewmodel oeprations that need dialogs
     /// </summary>
     public class MessageDialog : IMessageDialog 
     {        

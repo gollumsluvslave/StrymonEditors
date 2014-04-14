@@ -11,7 +11,7 @@ namespace RITS.StrymonEditor.ViewModels
     public class PresetRenameViewModel:DialogViewModel
     {
         /// <summary>
-        /// .ctir passing in the current preset name
+        /// .ctor passing in the current preset name
         /// </summary>
         /// <param name="name"></param>
         public PresetRenameViewModel(string name)

@@ -22,40 +22,40 @@ namespace RITS.StrymonEditor.ViewModels
         /// </summary>
         public Action Close { get; set; }
 
+        private bool showProgressBar = true;
         /// <summary>
         /// Whether or not the progressbar should be displayed
         /// </summary>
-        private bool showProgressBar=true;
         public bool ShowProgressBar
         {
             get { return showProgressBar; }
             set { showProgressBar = value; OnPropertyChanged("ShowProgressBar"); }
         }
 
+        private string pbStatus;
         /// <summary>
         /// The current status text for operation
         /// </summary>
-        private string pbStatus;
         public string PBStatus
         {
             get { return pbStatus; }
             set { pbStatus = value; OnPropertyChanged("PBStatus"); }
         }
 
+        private int pbMax;
         /// <summary>
         /// The max for the operation
         /// </summary>
-        private int pbMax;
         public int PBMax
         {
             get { return pbMax; }
             set { pbMax = value; OnPropertyChanged("PBMax"); }
         }
 
+        private int pbValue;
         /// <summary>
         /// The current value / position of the operation
         /// </summary>
-        private int pbValue;
         public int PBValue
         {
             get { return pbValue; }

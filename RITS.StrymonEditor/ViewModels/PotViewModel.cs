@@ -43,6 +43,11 @@ namespace RITS.StrymonEditor.ViewModels
     {
         protected Pot _pot;
         protected IPotValueConverter _potValueConverter; 
+        /// <summary>
+        /// Default .ctor
+        /// </summary>
+        /// <param name="pot"></param>
+        /// <param name="linkedParameter"></param>
         public PotViewModel(Pot pot, Parameter linkedParameter)
         {
             _pot = pot;
@@ -93,11 +98,11 @@ namespace RITS.StrymonEditor.ViewModels
         /// </summary>
         public bool Hide { get { return _pot.Hide; } }
 
+        protected double _angle;
+        protected int _value;
         /// <summary>
         /// The angle of the <see cref="Pot"/>
         /// </summary>
-        protected double _angle;
-        protected int _value;
         public virtual double Angle
         {
             get 
@@ -133,11 +138,11 @@ namespace RITS.StrymonEditor.ViewModels
                 Angle = _potValueConverter.ValueToAngle(value);
             }
         }
-        
+
+        protected Parameter _linkedParameter;
         /// <summary>
         /// The <see cref="Parameter"/> linked to the underlying <see cref="Pot"/>
         /// </summary>
-        protected Parameter _linkedParameter;
         public Parameter LinkedParameter
         {
             get { return _linkedParameter; }
@@ -185,13 +190,6 @@ namespace RITS.StrymonEditor.ViewModels
             get { return this is DynamicPotViewModel; }
         }
 
-        /// <summary>
-        /// returns whether the underlying <see cref="Pot"/> is a standard pot
-        /// </summary>
-        public bool IsNormalControlPot
-        {
-            get { return !IsFineControlPot && !IsCoarseControlPot && !IsDynamicControlPot; }
-        }
 
     }
 

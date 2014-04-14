@@ -41,6 +41,13 @@ namespace RITS.StrymonEditor.Tests
             Visibility retval = (Visibility)Sut.Convert(false, null, null, null);
             Assert.AreEqual(Visibility.Hidden, retval);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(NotImplementedException))]
+        public void ThrowNotImplementedOnConvertBack()
+        {
+            Sut.ConvertBack(false, null, null, null);
+        }
     }
 
     

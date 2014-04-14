@@ -151,7 +151,7 @@
     <Compile Include="ViewModels\StrymonMachineViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Views\IInputDialog.cs" />
+    <Compile Include="Views\IModalDialog.cs" />
     <Compile Include="Views\MidiSetup.xaml.cs">
       <DependentUpon>MidiSetup.xaml</DependentUpon>
     </Compile>

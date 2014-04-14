@@ -25,8 +25,20 @@
                 <Function>^RITS\.StrymonEditor\.Views\.RadialPanel\..*</Function>
                 <Function>^RITS\.StrymonEditor\.Views\.PedalEditor\..*</Function>
                 <Function>^RITS\.StrymonEditor\.Views\.Dialog\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.DirectEntryDialog\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.PresetRenameDialog\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.PedalEditorWindow\..*</Function>
                 <Function>^RITS\.StrymonEditor\.Views\.ModalProgressDialog\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Views\.MidiSetup\..*</Function>
                 <Function>^RITS\.StrymonEditor\.Views\.ParameterTemplateSelector\..*</Function>
+                <Function>^RITS\.StrymonEditor\.IO\.MessageDialog\..*</Function>
+                <Function>^RITS\.StrymonEditor\.IO\.FileDialogOpen\..*</Function>
+                <Function>^RITS\.StrymonEditor\.IO\.FileDialogSave\..*</Function>
+                <Function>^RITS\.StrymonEditor\.Properties\..*</Function>
+                <Function>^RITS\.StrymonEditor\.MainWindow\..*</Function>
+                <Function>^RITS\.StrymonEditor\.App\..*</Function>
+                <Function>^RITS\.StrymonEditor\.WPFUtils\..*</Function>
+                <Function>^XamlGeneratedNamespace\..*</Function>
               </Exclude>
             </Functions>
 

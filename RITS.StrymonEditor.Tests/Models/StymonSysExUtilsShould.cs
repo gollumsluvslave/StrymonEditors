@@ -17,9 +17,8 @@ namespace RITS.StrymonEditor.Tests.Models
         [TestMethod]
         public void ReturnCorrectTimelinePresetFromBase()
         {
-            var pedal = Globals.SupportedPedals.FirstOrDefault(x=>x.Name == StrymonPedal.Timeline_Name);
-            var sysEx = new StrymonSysExUtils.StrymonSysExMessage(pedal);
-            var preset = StrymonSysExUtils.FromSysExData(sysEx.FullMessageData);
+            var pedal = TestHelper.TimelinePedal;
+            var preset = TestHelper.TestTimelinePreset;
 
             Assert.AreEqual(StrymonPedal.Timeline_Name, preset.Pedal.Name);
             Assert.AreEqual("BASE", preset.Name);
@@ -46,9 +45,8 @@ namespace RITS.StrymonEditor.Tests.Models
         [TestMethod]
         public void ReturnCorrectMobiusPresetFromBase()
         {
-            var pedal = Globals.SupportedPedals.FirstOrDefault(x => x.Name == StrymonPedal.Mobius_Name);
-            var sysEx = new StrymonSysExUtils.StrymonSysExMessage(pedal);
-            var preset = StrymonSysExUtils.FromSysExData(sysEx.FullMessageData);
+            var pedal = TestHelper.MobiusPedal;
+            var preset = TestHelper.TestMobiusPreset;
 
             Assert.AreEqual(StrymonPedal.Mobius_Name, preset.Pedal.Name);
             Assert.AreEqual("CALL THE COPS", preset.Name);
@@ -63,9 +61,8 @@ namespace RITS.StrymonEditor.Tests.Models
         [TestMethod]
         public void ReturnCorrectBigSkyPresetFromBase()
         {
-            var pedal = Globals.SupportedPedals.FirstOrDefault(x => x.Name == StrymonPedal.BigSky_Name);
-            var sysEx = new StrymonSysExUtils.StrymonSysExMessage(pedal);
-            var preset = StrymonSysExUtils.FromSysExData(sysEx.FullMessageData);
+            var pedal = TestHelper.BigSkyPedal;
+            var preset = TestHelper.TestBigSkyPreset;
 
             Assert.AreEqual(StrymonPedal.BigSky_Name, preset.Pedal.Name);
             Assert.AreEqual("LIL RINGY", preset.Name);
@@ -82,5 +79,17 @@ namespace RITS.StrymonEditor.Tests.Models
         // Various hidden parameters
         // Dynamic Params
         // Hidden pots etc
+
+        [TestMethod]
+        public void ReturnCorrectMobiusByteArrayFromPresetBase()
+        {
+            var pedal = TestHelper.MobiusPedal;
+            var preset = TestHelper.TestMobiusPreset;
+            
+            var bytes = StrymonSysExUtils.ToSysExData(preset);
+
+            Assert.AreEqual(650, bytes.Length);
+        }
+
     }
 }

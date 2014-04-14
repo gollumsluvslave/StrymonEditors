@@ -64,7 +64,7 @@ namespace RITS.StrymonEditor.Views
                 if (_pedalViewModel == null) 
                 {
                     _pedalViewModel = new StrymonPedalViewModel(editingPreset, midiManager);
-                    _pedalViewModel.CloseWindow = CloseMe;
+                    _pedalViewModel.CloseWindow = this.Close;
                 }
                 
                 return _pedalViewModel;
@@ -80,10 +80,6 @@ namespace RITS.StrymonEditor.Views
             }
         }
 
-        private void CloseMe()
-        {
-            this.Close();
-        }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {

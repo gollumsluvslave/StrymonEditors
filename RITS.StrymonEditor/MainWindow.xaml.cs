@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using RITS.StrymonEditor.AutoUpdate;
+using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.Views;
 using RITS.StrymonEditor.ViewModels;
 using RITS.StrymonEditor.Models;
@@ -56,6 +57,10 @@ namespace RITS.StrymonEditor
 
             if (e.Exception != null)
             {
+                using (RITSLogger logger = new RITSLogger())
+                {
+                    logger.Error(e.Exception);
+                }
                 MessageBox.Show("Unhandled Exception: " + e.Exception.Message);
             }
             e.Handled = true;

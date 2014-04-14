@@ -15,6 +15,12 @@ namespace RITS.StrymonEditor.ViewModels
     {
         StrymonPedal pedal;
         IStrymonMidiManager midiManager;
+        /// <summary>
+        /// Default .ctor
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="contextPedal"></param>
+        /// <param name="midiManager"></param>
         public PresetControlViewModel(string mode, StrymonPedal contextPedal, IStrymonMidiManager midiManager)
         {
             pedal = contextPedal;
@@ -70,10 +76,10 @@ namespace RITS.StrymonEditor.ViewModels
             set { }
         }
 
+        private int presetIndex;
         /// <summary>
         /// The preset index to display
         /// </summary>
-        private int presetIndex;
         public int PresetIndex 
         {
             get { return presetIndex; }
@@ -114,20 +120,20 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private bool presetIsEnabled;
         /// <summary>
         /// Determines whether or not the preset control should be enabled
         /// </summary>
-        private bool presetIsEnabled;
         public bool PresetIsEnabled
         {
             get { return presetIsEnabled; }
             set { presetIsEnabled = value; OnPropertyChanged("PresetIsEnabled"); }
         }
 
+        private RelayCommand execute;
         /// <summary>
         /// Command that executes the fethc / push dependent on the current mode
         /// </summary>
-        private RelayCommand execute;
         public RelayCommand Execute 
         {
             get 

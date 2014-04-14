@@ -34,8 +34,13 @@ namespace RITS.StrymonEditor.Models
         
         public StrymonMidiManager(IInputDevice inputDevice, IOutputDevice outputDevice)
         {
-            midiIn = inputDevice;
-            midiOut = outputDevice;            
+            using (RITSLogger logger = new RITSLogger())
+            {
+                logger.Debug(string.Format("Setting midiIn device *{0}*", midiIn));
+                midiIn = inputDevice;
+                logger.Debug(string.Format("Setting midiOut device *{0}*", midiOut));
+                midiOut = outputDevice;
+            }
         }
 
         #region Connectivity
@@ -45,9 +50,13 @@ namespace RITS.StrymonEditor.Models
         /// </summary>
         public void InitMidi()
         {
-            if (midiIn == null || midiOut == null) return;
             using (RITSLogger logger = new RITSLogger())
             {
+                if (midiIn == null || midiOut == null)
+                {
+                    logger.Debug("No midi devices supplied. Midi cannot initialise.");
+                    return;
+                }
                 midiOut.Open();
                 logger.Debug(string.Format("MIDI Out opened on {0}", Properties.Settings.Default.MidiOutDevice));
                 midiIn.Open();

@@ -38,7 +38,7 @@ namespace RITS.StrymonEditor.Conversion
         /// <returns></returns>
         public static double ConvertMilliHzToBPM(int mhz)
         {
-            double hz = (mhz / 1000);
+            double hz = (mhz / 1000.0);
             double bpm = hz * 60;
             return Math.Round(bpm, 1);
         }

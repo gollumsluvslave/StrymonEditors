@@ -27,7 +27,7 @@ namespace RITS.StrymonEditor.Views
         /// <param name="vm"></param>
         public ModalProgressDialog(ModalProgressDialogViewModel vm)
         {
-            vm.Close = CloseMe;
+            vm.Close = this.Close;
             ViewModel = vm;
             InitializeComponent();
 
@@ -40,11 +40,6 @@ namespace RITS.StrymonEditor.Views
         {
             get;
             private set;
-        }
-
-        private void CloseMe()
-        {
-            this.Close();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

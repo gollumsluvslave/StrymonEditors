@@ -129,6 +129,9 @@ namespace RITS.StrymonEditor.Models
         /// <summary>
         /// Returns what increment to use for the fine encoder across all pedals
         /// There is logic based on the value of milliseconds/ millihz in Mobius and BigSky
+        /// 
+        /// TODO - possible issues with BPM??
+        /// 
         /// </summary>
         /// <param name="fineValue"></param>
         /// <returns></returns>

@@ -13,6 +13,7 @@ namespace RITS.StrymonEditor.Models
     public class PotValueMap : List<PotValueItem>
     {
         private List<PotValueItem> expanded;
+        
 
         /// <summary>
         /// Exposes the expanded list for Lookup purposes
@@ -33,10 +34,9 @@ namespace RITS.StrymonEditor.Models
         /// <returns></returns>
         public int GetValueForAngle(double angle)
         {
-            if (expanded == null) ExpandList();
-            var map = expanded.FirstOrDefault(x => x.Angle > angle);
+            var map = LookupMap.FirstOrDefault(x => x.Angle > angle);
             if (map.Value == 0) return map.Value;
-            var prev = expanded.FirstOrDefault(x => x.Value == map.Value - 1);
+            var prev = LookupMap.FirstOrDefault(x => x.Value == map.Value - 1);
             return prev.Value;
 
         }
@@ -48,8 +48,7 @@ namespace RITS.StrymonEditor.Models
         /// <returns></returns>
         public double GetAngleForValue(int value)
         {
-            if (expanded == null) ExpandList();
-            var map = expanded.FirstOrDefault(x => x.Value == value);
+            var map = LookupMap.FirstOrDefault(x => x.Value == value);
             if (map != null)
             {
                 return map.Angle;
@@ -77,14 +76,13 @@ namespace RITS.StrymonEditor.Models
         /// <param name="definition"></param>
         public void ApplyFineValueIncrementMap(List<Increment> incrementMap, ParameterDef definition)
         {
-            if (expanded == null) ExpandList();
             var range = definition.CoarseRange == null ? definition.FineRange : definition.CoarseRange;
 
             int iAltIndex = 0;
             int fineValueAccum = range.MinValue;
             var incItem = incrementMap[0];
-            
-            foreach (var pvi in expanded)
+
+            foreach (var pvi in LookupMap)
             {
                 if (pvi.Value == 0) { pvi.FineValue = range.MinValue; }
                 else
