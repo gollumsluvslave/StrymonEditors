@@ -104,4 +104,19 @@ namespace RITS.StrymonEditor.Views
             editor.ShowDialog();
         }
     }
+
+    public class PresetStoreDialog : IModalDialog
+    {
+        private PresetStoreWindow window;
+        public PresetStoreDialog(StrymonPreset preset)
+        {
+            window = new PresetStoreWindow(preset);
+        }
+
+        public void ShowModal()
+        {
+            window.ShowDialog();
+        }
+
+    }
 }

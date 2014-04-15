@@ -30,11 +30,11 @@ namespace RITS.StrymonEditor.Views
             this.midiManager = midiManager;
             InitializeComponent();
         }
-
+        
+        private MidiSetupViewModel viewModel;
         /// <summary>
         /// Exposes the <see cref="MidiSetupViewModel"/> viewmodel for databinding
         /// </summary>
-        private MidiSetupViewModel viewModel;
         public MidiSetupViewModel ViewModel
         {
             get

@@ -165,6 +165,23 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+
+        private IModalDialog downloadWindow;
+        /// <summary>
+        /// Seam to allow testing of functions that open the <see cref="PedalEditor"/>
+        /// </summary>
+        public IModalDialog DownloadWindow
+        {
+            get
+            {
+                return downloadWindow;
+            }
+            set
+            {
+                downloadWindow = value;
+            }
+        }
+
         private IModalDialog editorWindow;
         /// <summary>
         /// Seam to allow testing of functions that open the <see cref="PedalEditor"/>
@@ -201,6 +218,8 @@ namespace RITS.StrymonEditor.ViewModels
             fileMenu.Children.Add(loadXml);
             var loadSysEx = new MenuItemViewModel { MenuText = "Load .SYX Preset", Command = LoadSyxCommand, InputGestureText = "ALT+L" };
             fileMenu.Children.Add(loadSysEx);
+            var download = new MenuItemViewModel { MenuText = "Search Online", Command = DownloadCommand};
+            fileMenu.Children.Add(download);
 
             var exit = new MenuItemViewModel { MenuText = "Exit", Command = ExitCommand, InputGestureText = "CTRL+X" };
             fileMenu.Children.Add(new MenuItemViewModel { IsSeparator = true });
@@ -281,6 +300,21 @@ namespace RITS.StrymonEditor.ViewModels
                     {
                         OpenEditor(preset);
                     }
+                }));
+            }
+        }
+
+        /// <summary>
+        /// ICommand that handles loading a .syx file preset
+        /// </summary>
+        public RelayCommand DownloadCommand
+        {
+            get
+            {
+                return new RelayCommand(new Action(() =>
+                {
+                    if (DownloadWindow == null) { DownloadWindow = new PresetStoreDialog(null); }
+                    DownloadWindow.ShowModal();
                 }));
             }
         }
