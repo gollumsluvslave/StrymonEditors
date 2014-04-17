@@ -3,12 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:RITS.StrymonEditor.Views"
         Title="PresetStoreWindow" Height="300" Width="600"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}" >
+        Background="#FFC5C5C5"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" >
     <Window.Resources>
         <v:BooleanToVisibilityConverter x:Key="VisibilityOfBool"/>
     </Window.Resources>
-    <Canvas>
-        <v:DownloadView DataContext="{Binding ViewModel}" Visibility="{Binding ViewModel.IsDownloadMode, Converter={StaticResource VisibilityOfBool}}"/>
-        <v:UploadView DataContext="{Binding ViewModel}" Visibility="{Binding ViewModel.IsUploadMode, Converter={StaticResource VisibilityOfBool}}"/>
-    </Canvas>
+    <DockPanel>
+        <v:DownloadView DataContext="{Binding ViewModel}" Visibility="{Binding IsDownloadMode, Converter={StaticResource VisibilityOfBool}}" Padding="5,5,5,5"/>
+        <v:UploadView DataContext="{Binding ViewModel}" Visibility="{Binding IsUploadMode, Converter={StaticResource VisibilityOfBool}}" Padding="5,5,5,5"/>
+    </DockPanel>
 </Window>
