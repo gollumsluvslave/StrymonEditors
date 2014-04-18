@@ -255,7 +255,7 @@ namespace RITS.StrymonEditor.ViewModels
         // Helper that opens the editor window using the supplied StrymonPreset
         private void OpenEditor(StrymonPreset preset)
         {
-            if(EditorWindow ==null){ EditorWindow = new PedalEditorWindow(preset, midiManager);}
+            if (EditorWindow is PedalEditorWindow || EditorWindow == null) { EditorWindow = new PedalEditorWindow(preset, midiManager); }
             EditorWindow.ShowModal();
         }
 
