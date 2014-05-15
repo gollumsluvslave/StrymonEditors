@@ -34,16 +34,16 @@
         <Option Name="Sixteenths" Value="6" />
       </OptionList>
     </ParameterDef>
-    <ParameterDef Name="EP" PostOffset="1" ControlChangeNo="60">
-      <OptionList>
-        <Option Name="Off" Value="0" />
-        <Option Name="On" Value="1" />
-      </OptionList>
-    </ParameterDef>
     <ParameterDef Name="PrePost" PostOffset="1" ControlChangeNo="22">
       <OptionList>
         <Option Name="Pre" Value="0" />
         <Option Name="Post" Value="1" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="EP" PostOffset="1" ControlChangeNo="60">
+      <OptionList>
+        <Option Name="Off" Value="0" />
+        <Option Name="On" Value="1" />
       </OptionList>
     </ParameterDef>
   </CommonParameters>
