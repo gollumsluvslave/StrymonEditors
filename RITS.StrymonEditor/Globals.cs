@@ -110,6 +110,16 @@ namespace RITS.StrymonEditor
             set { lockedMachine = value; }
         }
 
+        private static StrymonPresetStoreClient.StrymonStoreClient _client;
+        public static StrymonPresetStoreClient.StrymonStoreClient OnlineClient
+        {
+            get
+            {
+                if (_client == null) _client = new StrymonPresetStoreClient.StrymonStoreClient();
+                return _client;
+            }
+        }
+
         /// <summary>
         /// Main initilisation method - loads all definition xmls, and sets the list of SupportedPedals
         /// </summary>

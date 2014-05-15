@@ -146,7 +146,7 @@ namespace RITS.StrymonEditor.Models
         /// <returns></returns>
         public StrymonXmlPreset ToXmlPreset()
         {
-            var retval = new StrymonXmlPreset { Name = this.Name, Pedal=this.Pedal.Name, Machine=this.Machine.Value, Parameters=new List<XmlParameter>() };
+            var retval = new StrymonXmlPreset { Name = this.Name, Pedal=this.Pedal.Id, Machine=this.Machine.Value, Parameters=new List<XmlParameter>() };
             foreach (var p in AllParameters)
             {
                 retval.Parameters.Add(p.ToXmlParameter());
@@ -158,6 +158,37 @@ namespace RITS.StrymonEditor.Models
                 retval.EPSet.Add(xmlHt);
             }
             return retval;
+        }
+
+        /// <summary>
+        /// Helper method that converts the xml representation into a usable <see cref="StrymonPreset"/>
+        /// </summary>
+        /// <param name="xmlPreset"></param>
+        /// <returns></returns>
+        public static StrymonPreset FromXmlPreset(StrymonXmlPreset xmlPreset)
+        {
+            var pedal = StrymonPedal.GetPedalById(xmlPreset.Pedal);
+            StrymonPreset preset = new StrymonPreset(pedal, false);
+            // Set Machine
+            preset.Name = xmlPreset.Name;
+            preset.Machine = pedal.Machines.FirstOrDefault(x => x.Value == xmlPreset.Machine);
+            // Single Byte Params
+            foreach (var p in preset.AllParameters.Where(x => x.SysExOffset != 0))
+            {
+                // get parameter from preset 1st
+                var xmlParameter = xmlPreset.Parameters.FirstOrDefault(x => x.Name == p.Name);
+                if (xmlParameter != null)
+                {
+                    p.Value = xmlParameter.Value;
+                }
+            }
+            preset.EPSetValues = new List<HeelToeSetting>();
+            foreach (var ht in xmlPreset.EPSet)
+            {
+                var xmlHt = new HeelToeSetting { PotId = ht.PotId, HeelValue = ht.HeelValue, ToeValue = ht.ToeValue };
+                preset.EPSetValues.Add(xmlHt);
+            }
+            return preset;
         }
 
         /// <summary>

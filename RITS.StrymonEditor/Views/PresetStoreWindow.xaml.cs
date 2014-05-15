@@ -21,9 +21,11 @@ namespace RITS.StrymonEditor.Views
     public partial class PresetStoreWindow : Window
     {
         private StrymonPreset uploadPreset;
-        public PresetStoreWindow(StrymonPreset preset)
+        private bool fromMainWindow;
+        public PresetStoreWindow(StrymonPreset preset, bool fromMainWindow)
         {
             this.uploadPreset=preset;
+            this.fromMainWindow = fromMainWindow;
             InitializeComponent();
         }
 
@@ -37,8 +39,9 @@ namespace RITS.StrymonEditor.Views
             {
                 if (viewModel == null)
                 {
-                    viewModel = uploadPreset == null ? new PresetStoreViewModel() : new PresetStoreViewModel(uploadPreset);
+                    viewModel = uploadPreset == null ? new PresetStoreViewModel(fromMainWindow) : new PresetStoreViewModel(uploadPreset);
                     viewModel.OnlineService = new IO.StubOnlineService(); // TODO swap out later
+                    viewModel.Close = this.Close;
                 }
                 return viewModel;
             }

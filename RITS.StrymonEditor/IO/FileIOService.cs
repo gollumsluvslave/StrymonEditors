@@ -42,7 +42,7 @@ namespace RITS.StrymonEditor.IO
                         using (XmlSerializer<StrymonXmlPreset> xs = new XmlSerializer<StrymonXmlPreset>())
                         {
                             var xmlPreset = xs.DeserializeFile(openDialog.FileName);
-                            var ps = StrymonXmlPreset.FromXmlPreset(xmlPreset);
+                            var ps = StrymonPreset.FromXmlPreset(xmlPreset);
                             ps.Filename = openDialog.FileName;
                             return ps;
                         }

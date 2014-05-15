@@ -10,7 +10,7 @@
             <Label  HorizontalAlignment="Center"  Content="Add Tags" FontStyle="Italic" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Tag" Width="60" HorizontalContentAlignment="Right"/>
-                <ComboBox x:Name="Tags" Height="23" Width="160" ItemsSource="{Binding AvailableTags, Mode=TwoWay}" SelectedItem="{Binding TagToAdd, Mode=TwoWay}"/>
+                <ComboBox x:Name="Tags" Height="23" Width="160" ItemsSource="{Binding AvailableTags, Mode=TwoWay}" Text="{Binding TagToAdd, Mode=TwoWay}" IsEditable="True"/>
                 <Button Content="Add" Canvas.Left="195" Canvas.Top="120" Height="20" Margin="5,0,0,0" Command="{Binding AddTagCommand}"/>
             </StackPanel>
             <ItemsControl  x:Name="CustomTags" ItemsSource="{Binding CustomTags, Mode=TwoWay}">
@@ -18,7 +18,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="{Binding TagName}"  Width="60" HorizontalContentAlignment="Right"/>
-                            <ComboBox x:Name="Machine" Height="23" Width="160" ItemsSource="{Binding AvailableValues}" SelectedItem="{Binding Value, Mode=TwoWay}"/>
+                            <ComboBox x:Name="Machine" Height="23" Width="160" ItemsSource="{Binding AvailableValues}" Text="{Binding Value, Mode=TwoWay}" IsEditable="True"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:RITS.StrymonEditor.Views"
         Title="Preset Online Share" Height="300" Width="600"
-        Background="#FFC5C5C5"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" >
+        Background="White"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="Images/Strymon.ico" >
     <Window.Resources>
         <v:BooleanToVisibilityConverter x:Key="VisibilityOfBool"/>
     </Window.Resources>

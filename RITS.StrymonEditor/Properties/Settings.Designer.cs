@@ -175,5 +175,17 @@ namespace RITS.StrymonEditor.Properties {
                 this["PushChunkSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("RCK")]
+        public string OnlineHandle {
+            get {
+                return ((string)(this["OnlineHandle"]));
+            }
+            set {
+                this["OnlineHandle"] = value;
+            }
+        }
     }
 }

@@ -313,7 +313,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    if (DownloadWindow == null) { DownloadWindow = new PresetStoreDialog(null); }
+                    DownloadWindow = new PresetStoreDialog(null,true); 
                     DownloadWindow.ShowModal();
                 }));
             }
@@ -383,6 +383,7 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.Register(ViewModelMessages.PedalConnected, PedalConnected);
             Mediator.Register(ViewModelMessages.BulkPresetRead, BulkPresetRead);
             Mediator.Register(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
+            Mediator.Register(ViewModelMessages.ReceivedPresetFromOnlineMainWindow, PedalDownloaded);
         }
 
         /// <inheritdoc/>
@@ -391,11 +392,17 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.UnRegister(ViewModelMessages.PedalConnected, PedalConnected);
             Mediator.UnRegister(ViewModelMessages.BulkPresetRead, BulkPresetRead);
             Mediator.UnRegister(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
+            Mediator.UnRegister(ViewModelMessages.ReceivedPresetFromOnlineMainWindow, PedalDownloaded);
         }
         #endregion
 
         #region Mediator Callbacks
 
+        private void PedalDownloaded(object o)
+        {
+            var preset = o as StrymonPreset;
+            OpenEditor(preset);
+        }
         // Handle the MIDIConnection complete notification
         private void MIDIConnectionComplete(object o)
         {

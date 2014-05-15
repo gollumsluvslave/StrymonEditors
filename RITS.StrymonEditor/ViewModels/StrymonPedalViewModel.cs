@@ -749,8 +749,10 @@ namespace RITS.StrymonEditor.ViewModels
             // TODO - what about previus values? cache and reload??
             // Reseting parameters, need to refresh pot assignments!
             //CachePreviousParameters();
+            _encoder = null;
             _hiddenParameters = null;
             _potControls = null;
+            OnPropertyChanged("Encoder");
             OnPropertyChanged("HiddenParameters");
             OnPropertyChanged("PotControls");
 
@@ -866,7 +868,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 if (originalState.Name != ActivePreset.Name) return true;
                 if (originalState.Machine != ActivePreset.Machine.Value) return true;
-                if (originalState.Pedal != ActivePreset.Pedal.Name) return true;
+                if (originalState.Pedal != ActivePreset.Pedal.Id) return true;
                 foreach (var p in originalState.Parameters)
                 {
                     var ep = ActivePreset.AllParameters.FirstOrDefault(x => x.Name == p.Name);
@@ -1646,7 +1648,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    if (UploadWindow == null) { UploadWindow = new PresetStoreDialog(ActivePreset); }
+                    UploadWindow = new PresetStoreDialog(ActivePreset,false);
                     UploadWindow.ShowModal();
                 }));
             }
@@ -1662,7 +1664,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    if (DownloadWindow == null) { DownloadWindow = new PresetStoreDialog(null); }
+                    DownloadWindow = new PresetStoreDialog(null,false); 
                     DownloadWindow.ShowModal();
                 }));
             }

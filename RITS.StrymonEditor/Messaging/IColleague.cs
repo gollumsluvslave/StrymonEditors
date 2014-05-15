@@ -31,7 +31,8 @@ namespace RITS.StrymonEditor.Messaging
         BulkLoadComplete,
         PresetRenamed,
         DirectEntryValueEntered,
-        PushPresetFailed
+        PushPresetFailed,
+        ReceivedPresetFromOnlineMainWindow,
     }
 
     /// <summary>

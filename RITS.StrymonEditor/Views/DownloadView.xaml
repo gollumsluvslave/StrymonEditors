@@ -49,8 +49,10 @@
             <ListView  x:Name="SearchResults" ItemsSource="{Binding Presets, Mode=TwoWay}" SelectedItem="{Binding SelectedPreset}" >
                 <ListView.View>
                     <GridView ColumnHeaderToolTip="Preset Search Results">
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=PresetName}" Header="PresetName" Width="100"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Author}" Header="Author" Width="100"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=PedalName}" Header="Pedal" Width="120"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=MachineName}" Header="Machine" Width="120"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=PresetName}" Header="Name" Width="120"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Author}" Header="Author" Width="120"/>
                     </GridView>
                 </ListView.View>
                 <ListView.ItemContainerStyle>
@@ -62,9 +64,9 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                <Label Content="{Binding TagName}"  Width="60" HorizontalContentAlignment="Right"/>
-                                        <Label Content=" : "/>
-                                        <Label Content="{Binding Value}"  Width="60" HorizontalContentAlignment="Right"/>
+                                                <Label Content="{Binding TagName}" Width="60" HorizontalContentAlignment="Right"/>
+                                                <Label Content=" : "/>
+                                                <Label Content="{Binding Value}"  HorizontalContentAlignment="Left"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
