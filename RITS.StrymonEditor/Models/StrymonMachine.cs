@@ -50,5 +50,18 @@ namespace RITS.StrymonEditor.Models
                 }
             }
         }
+
+        public static int GetForName(string name, int pedalid)
+        {
+            var allmachines = Globals.SupportedPedals.Single(x => x.Id == pedalid).Machines;
+            var sel = allmachines.Single(x => x.Name == name);
+            return sel.Value;
+        }
+        public static string GetNameForId(int machineId, int pedalid)
+        {
+            var allmachines = Globals.SupportedPedals.Single(x => x.Id == pedalid).Machines;
+            var sel = allmachines.Single(x => x.Value == machineId);
+            return sel.Name;
+        }
     }
 }

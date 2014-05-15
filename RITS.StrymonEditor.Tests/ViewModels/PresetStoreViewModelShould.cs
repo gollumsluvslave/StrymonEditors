@@ -61,11 +61,11 @@ namespace RITS.StrymonEditor.Tests
             // Arrange
             var onlineMock = Container.GetMock<IOnlinePresetService>();
             Sut.OnlineService = onlineMock.Object;
-            onlineMock.Setup(x => x.Search(It.IsAny<List<Tag>>())).Returns(new List<PresetMetadata>());
+            onlineMock.Setup(x => x.Search(It.IsAny<PresetSearch>())).Returns(new List<PresetMetadata>());
             // Act
             Sut.SearchCommand.Execute(null);
             // Assert
-            onlineMock.Verify(x => x.Search(It.IsAny<List<Tag>>()), Times.Once());
+            onlineMock.Verify(x => x.Search(It.IsAny<PresetSearch>()), Times.Once());
         }
 
         [TestMethod]

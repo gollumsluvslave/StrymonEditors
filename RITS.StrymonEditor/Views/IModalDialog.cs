@@ -108,9 +108,9 @@ namespace RITS.StrymonEditor.Views
     public class PresetStoreDialog : IModalDialog
     {
         private PresetStoreWindow window;
-        public PresetStoreDialog(StrymonPreset preset)
+        public PresetStoreDialog(StrymonPreset preset, bool fromMainWindow)
         {
-            window = new PresetStoreWindow(preset);
+            window = new PresetStoreWindow(preset, fromMainWindow);
         }
 
         public void ShowModal()

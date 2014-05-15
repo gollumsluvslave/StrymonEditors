@@ -646,6 +646,8 @@ namespace RITS.StrymonEditor.ViewModels
                     fileMenu.Add(loadXml);
                     var loadSysEx = new MenuItemViewModel { MenuText = "Load .SYX Preset", Command = LoadSyxCommand, InputGestureText = "ALT+L" };
                     fileMenu.Add(loadSysEx);
+                    var download = new MenuItemViewModel { MenuText = "Download", Command = DownloadCommand };
+                    fileMenu.Add(download);
                     fileMenu.Add(new MenuItemViewModel { IsSeparator = true });
                     var save = new MenuItemViewModel { MenuText = "Save", Command = SaveCommand, InputGestureText = "CTRL+S" };
                     fileMenu.Add(save);
@@ -653,6 +655,8 @@ namespace RITS.StrymonEditor.ViewModels
                     fileMenu.Add(saveXml);
                     var saveSyx = new MenuItemViewModel { MenuText = "Save As .SYX", Command = SaveSyxCommand, InputGestureText = "ALT+N" };
                     fileMenu.Add(saveSyx);
+                    var upload = new MenuItemViewModel { MenuText = "Upload", Command = UploadCommand};
+                    fileMenu.Add(upload);
                     fileMenu.Add(new MenuItemViewModel { IsSeparator = true });
                     var exit = new MenuItemViewModel { MenuText = "Close", Command = CloseCommand, InputGestureText = "CTRL+X" };
                     fileMenu.Add(exit);
@@ -745,8 +749,10 @@ namespace RITS.StrymonEditor.ViewModels
             // TODO - what about previus values? cache and reload??
             // Reseting parameters, need to refresh pot assignments!
             //CachePreviousParameters();
+            _encoder = null;
             _hiddenParameters = null;
             _potControls = null;
+            OnPropertyChanged("Encoder");
             OnPropertyChanged("HiddenParameters");
             OnPropertyChanged("PotControls");
 
@@ -862,7 +868,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 if (originalState.Name != ActivePreset.Name) return true;
                 if (originalState.Machine != ActivePreset.Machine.Value) return true;
-                if (originalState.Pedal != ActivePreset.Pedal.Name) return true;
+                if (originalState.Pedal != ActivePreset.Pedal.Id) return true;
                 foreach (var p in originalState.Parameters)
                 {
                     var ep = ActivePreset.AllParameters.FirstOrDefault(x => x.Name == p.Name);
@@ -1308,6 +1314,38 @@ namespace RITS.StrymonEditor.ViewModels
             }
         }
 
+        private IModalDialog downloadWindow;
+        /// <summary>
+        /// Seam to allow testing of functions that open the <see cref="PedalEditor"/>
+        /// </summary>
+        public IModalDialog DownloadWindow
+        {
+            get
+            {
+                return downloadWindow;
+            }
+            set
+            {
+                downloadWindow = value;
+            }
+        }
+
+        private IModalDialog uploadWindow;
+        /// <summary>
+        /// Seam to allow testing of functions that open the <see cref="PedalEditor"/>
+        /// </summary>
+        public IModalDialog UploadWindow
+        {
+            get
+            {
+                return uploadWindow;
+            }
+            set
+            {
+                uploadWindow = value;
+            }
+        }
+
         private ModalProgressDialogViewModel modalProgressVM;
         /// <summary>
         /// Return the Modal dialog Vm
@@ -1599,6 +1637,39 @@ namespace RITS.StrymonEditor.ViewModels
             // Refresh Fetch Preset
             FetchPreset.PresetIndex = FetchPreset.PresetIndex;
         }
+
+
+        /// <summary>
+        /// ICommand to save the active preset to .Syx
+        /// </summary>
+        public RelayCommand UploadCommand
+        {
+            get
+            {
+                return new RelayCommand(new Action(() =>
+                {
+                    UploadWindow = new PresetStoreDialog(ActivePreset,false);
+                    UploadWindow.ShowModal();
+                }));
+            }
+        }
+
+
+        /// <summary>
+        /// ICommand that handles loading a .syx file preset
+        /// </summary>
+        public RelayCommand DownloadCommand
+        {
+            get
+            {
+                return new RelayCommand(new Action(() =>
+                {
+                    DownloadWindow = new PresetStoreDialog(null,false); 
+                    DownloadWindow.ShowModal();
+                }));
+            }
+        }
+
         #endregion
     }
 

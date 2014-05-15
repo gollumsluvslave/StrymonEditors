@@ -6,6 +6,7 @@ using System.Text;
 using RITS.StrymonEditor.Commands;
 using RITS.StrymonEditor.IO;
 using RITS.StrymonEditor.Models;
+using RITS.StrymonEditor.Messaging;
 namespace RITS.StrymonEditor.ViewModels
 {
     /// <summary>
@@ -13,9 +14,12 @@ namespace RITS.StrymonEditor.ViewModels
     /// </summary>
     public class PresetStoreViewModel:ViewModelBase
     {
+        public Action Close { get; set; }
         private StrymonPreset uploadPreset;
-        public PresetStoreViewModel()
+        bool fromMainWindow;
+        public PresetStoreViewModel(bool fromMainWindow)
         {
+            this.fromMainWindow =fromMainWindow;
             IsUploadMode = false;
         }
 
@@ -27,6 +31,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         public PresetStoreViewModel(StrymonPreset presetToUpload)
         {
+            this.fromMainWindow = false;
             uploadPreset = presetToUpload;
             IsUploadMode = true;
         }
@@ -245,9 +250,22 @@ namespace RITS.StrymonEditor.ViewModels
         {
             // TODO handle selectedpedal and selectedmachine ? add as 'special' tags??
             // Possible issues with string / int values? gotta be consistent
-            var results =OnlineService.Search(CustomTags.ToList());
+            Presets.Clear();
+            
+            int? pedalId =null;
+            int? machineId =null;
+            if (SelectedPedal != null) 
+            { 
+                pedalId = StrymonPedal.GetPedalByName(SelectedPedal).Id;
+                if (SelectedMachine != null) machineId = StrymonMachine.GetForName(SelectedMachine, pedalId.Value);
+            }
+            var search = new PresetSearch { MachineId = machineId, PedalId = pedalId };
+            search.Tags = CustomTags.Select(x=>x).ToList();
+            var results = OnlineService.Search(search);
             foreach (var r in results)
-            {
+            {                
+                r.PedalName = StrymonPedal.GetPedalById(r.PedalId).Name;
+                r.MachineName = StrymonMachine.GetNameForId(r.MachineId, r.PedalId);
                 Presets.Add(r);
             }
         }
@@ -302,6 +320,8 @@ namespace RITS.StrymonEditor.ViewModels
         private void PerformUpload()
         {
             var id=OnlineService.UploadPreset(uploadPreset.ToXmlPreset(), CustomTags.ToList());
+            // TODO - what to do with the id? Anything?
+            Close();
         }
 
 
@@ -326,6 +346,16 @@ namespace RITS.StrymonEditor.ViewModels
         private void PerformDownload()
         {
             var p = OnlineService.DownloadPreset(SelectedPreset.PresetId);
+            // TODO : Need to determine if it is opend via editor or main window!!
+            if (this.fromMainWindow)
+            {
+                Mediator.NotifyColleagues(ViewModelMessages.ReceivedPresetFromOnlineMainWindow, StrymonPreset.FromXmlPreset(p));
+            }
+            else
+            {
+                Mediator.NotifyColleagues(ViewModelMessages.ReceivedPresetFromPedal, StrymonPreset.FromXmlPreset(p));
+            }
+            Close();
         }
     }
 }
