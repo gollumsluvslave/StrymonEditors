@@ -180,6 +180,10 @@ namespace RITS.StrymonEditor.Models
                 if (xmlParameter != null)
                 {
                     p.Value = xmlParameter.Value;
+                    if (p.HasFineControl)
+                    {
+                        p.FineValue = xmlParameter.FineValue;
+                    }
                 }
             }
             preset.EPSetValues = new List<HeelToeSetting>();

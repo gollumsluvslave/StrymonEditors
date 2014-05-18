@@ -22,7 +22,6 @@ namespace RITS.StrymonEditor.ViewModels
     /// </summary>
     public class StrymonPedalViewModel : ViewModelBase, IDisposable
     {
-        private int loads;
         private IStrymonMidiManager midiManager;
         private bool presetFromPedal;
 
@@ -33,7 +32,6 @@ namespace RITS.StrymonEditor.ViewModels
         /// <param name="midiManager"></param>
         public StrymonPedalViewModel(StrymonPreset preset, IStrymonMidiManager midiManager)
         {
-            loads = 0;
             this.midiManager = midiManager;
             midiManager.ContextPedal=preset.Pedal;
             
@@ -195,7 +193,7 @@ namespace RITS.StrymonEditor.ViewModels
             }
             set
             {
-                if (!isloading)
+                if (!Globals.IsPedalViewLoading)
                 {
                     _lcdValue = value;
                 }
@@ -290,7 +288,6 @@ namespace RITS.StrymonEditor.ViewModels
         }
 
 
-        private bool isloading;
         private List<PotViewModel> _potControls;
         /// <summary>
         /// List of pot controls for the pedal.
@@ -392,7 +389,7 @@ namespace RITS.StrymonEditor.ViewModels
                     midiManager.SynchMachine(activeMachine._machine);
                     OnPropertyChanged("ActiveMachine");
                     RefreshView();
-                    LCDValue = activeMachine.Name;
+                    LCDValue = ActivePreset.Name;
                 }
             }
         }
@@ -518,7 +515,7 @@ namespace RITS.StrymonEditor.ViewModels
         {
             using (RITSLogger logger = new RITSLogger())
             {
-                isloading = true;
+                Globals.IsPedalViewLoading = true;
                 _potControls = new List<PotViewModel>();
                 foreach (var pot in ActivePedal.Pots.Where(x => x.Id != 0).OrderBy(x => x.Id))
                 {
@@ -539,13 +536,14 @@ namespace RITS.StrymonEditor.ViewModels
 
         private void PresetRefreshComplete()
         {
-            loads++;
-            midiManager.DisableControlChangeSends = false; 
             // Hack to change display to time
-            if(!presetFromPedal) midiManager.SynchParameter(Encoder.LinkedParameter);
+            if (!presetFromPedal)midiManager.PushToEdit(ActivePreset);
+            //if (!presetFromPedal) midiManager.SynchParameter(Encoder.LinkedParameter);
+            midiManager.DisableControlChangeSends = false;
+            
             IsDirty = false;
             presetFromPedal = false;
-            isloading = false;
+            Globals.IsPedalViewLoading = false;
         }
 
         private void LoadPotControl(Pot pot)
@@ -749,6 +747,7 @@ namespace RITS.StrymonEditor.ViewModels
             // TODO - what about previus values? cache and reload??
             // Reseting parameters, need to refresh pot assignments!
             //CachePreviousParameters();
+            midiManager.DisableControlChangeSends = true;
             _encoder = null;
             _hiddenParameters = null;
             _potControls = null;
@@ -764,7 +763,7 @@ namespace RITS.StrymonEditor.ViewModels
         // Delegate to determin if the parameter change is a 'trigger' and refresh the view if so
         private void HandleParameterChanged(object p)
         {
-            if (loads > 0) IsDirty = true;
+            IsDirty = true;
             Parameter param = p as Parameter;
             if (ActiveMachine._machine.Pots.Any(x => x.RangeOverrides.Any(r => r.TriggerParameter == param.Name)))
             {
@@ -804,7 +803,7 @@ namespace RITS.StrymonEditor.ViewModels
                     return;
                 }
             }
-
+            presetFromPedal = true;
             midiManager.FetchByIndex((int)index);
         }
 
@@ -839,11 +838,12 @@ namespace RITS.StrymonEditor.ViewModels
             MessageDialog.ShowError("Preset Push Failed","Push Rejected");
         }
 
+        
 
         // Delegate to update the LCD display from messaging
         private void LCDUpdate(object s)
         {
-            if (loads > 0) IsDirty = true;
+            IsDirty = true;
             string update = s.ToString();
             LCDValue = update;
         }
@@ -851,13 +851,12 @@ namespace RITS.StrymonEditor.ViewModels
         // Delegate that sets the active machine
         private void MachineChanged(object m)
         {
-            if (loads > 0) IsDirty = true;
+            IsDirty = true;
             ActiveMachine = m as StrymonMachineViewModel;
         }
 
         private void PresetReceived(object p)
         {
-            presetFromPedal = true;
             var preset = p as StrymonPreset;
             midiManager.DisableControlChangeSends=true;
             ActivePreset = preset;
@@ -1503,6 +1502,7 @@ namespace RITS.StrymonEditor.ViewModels
                             return;
                         }
                     }
+                    presetFromPedal = true;
                     midiManager.FetchCurrent();
                 }));
             }

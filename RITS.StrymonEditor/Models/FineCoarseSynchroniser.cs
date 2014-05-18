@@ -32,7 +32,7 @@ namespace RITS.StrymonEditor.Models
         public void SetCoarseValue(int value)
         {
             fineCoarseParam.Value = value;
-            if (!synchInProgress)
+            if (!synchInProgress && !Globals.IsPedalViewLoading)
             {
                 synchInProgress = true;
                 fineCoarseParam.FineEncoderLastChange = false;

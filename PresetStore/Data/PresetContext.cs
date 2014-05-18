@@ -78,26 +78,36 @@ namespace PresetStore.Data
             {
                 var dbParam = Parameters.Create();
                 dbParam.Name = p.Name;
-                dbParam.Value = p.FineValue == 0 ? p.Value : p.FineValue;
+                dbParam.Value = p.Value;
                 dbP.Parameters.Add(dbParam);
+                if (p.FineValue > 0)
+                {
+                    var dbParamFine = Parameters.Create();
+                    dbParamFine.Name = string.Format("{0}_Fine",p.Name);
+                    dbParamFine.Value = p.FineValue;
+                    dbP.Parameters.Add(dbParamFine);
+                }
             }
-            int i = 0;
             foreach (var p in uploadPreset.EPSet)
             {
                 var h = Parameters.Create();
-                h.Name = string.Format("EPSet_Heel_{0}",i);
+                h.Name = string.Format("EPSet_Heel_{0}",p.PotId);
                 h.Value = p.HeelValue;
                 dbP.Parameters.Add(h);
                 var t = Parameters.Create();
-                t.Name = string.Format("EPSet_Toe_{0}", i);
+                t.Name = string.Format("EPSet_Toe_{0}", p.PotId);
                 t.Value = p.ToeValue;
                 dbP.Parameters.Add(h);
-                i++;
             } 
             dbP.PresetTags = new List<DBPresetTag>();
             foreach (var t in uploadPreset.Tags)
             {
                 var tag = Tags.FirstOrDefault(x => x.TagName == t.TagName);
+                if (tag == null)
+                {
+                    tag = Tags.Create();
+                    tag.TagName = t.TagName;
+                }
                 var dbPresetTag = PresetTags.Create();
                 dbPresetTag.Tag = tag;
                 dbPresetTag.Value = t.Value;

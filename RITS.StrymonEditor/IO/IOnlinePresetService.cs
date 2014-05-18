@@ -69,15 +69,21 @@ namespace RITS.StrymonEditor.IO
             {
                 var xp = new XmlParameter();
                 xp.Name = p.Name;
-                if ((p.Name == "Time" || p.Name == "Speed" || p.Name == "Decay"))
+                if (p.Name.EndsWith("_Fine"))
                 {
-                    xp.FineValue = p.Value;
+                    var pname = p.Name.Substring(0, p.Name.IndexOf('_'));
+                    var xParam = retval.Parameters.FirstOrDefault(x => x.Name == pname);
+                    if (xParam != null)
+                    {
+                        xParam.FineValue = p.Value;
+                    }
                 }
                 else
                 {
                     xp.Value = p.Value;
+                    retval.Parameters.Add(xp);
                 }
-                retval.Parameters.Add(xp);
+                
             }
             retval.EPSet = new List<HeelToeSetting>();
             // Heels first
