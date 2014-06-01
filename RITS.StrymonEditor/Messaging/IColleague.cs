@@ -29,6 +29,7 @@ namespace RITS.StrymonEditor.Messaging
         MIDIConnectionComplete,
         BulkLoadStarted,
         BulkLoadComplete,
+        BulkLoadPedalComplete,
         PresetRenamed,
         DirectEntryValueEntered,
         PushPresetFailed,

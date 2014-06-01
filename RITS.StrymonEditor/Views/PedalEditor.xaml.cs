@@ -71,10 +71,11 @@ namespace RITS.StrymonEditor.Views
             }
             set
             {
-                if (value == null) return;
-                // Dereference messages etc
                 _pedalViewModel.Dispose();
                 _pedalViewModel = null;
+                if (value == null) return;
+                // Dereference messages etc                
+                
                 _pedalViewModel = value;
                 OnPropertyChanged("PedalViewModel");
             }

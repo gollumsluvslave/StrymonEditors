@@ -58,7 +58,7 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.Register(ViewModelMessages.ReceivedCC, ReceiveCCChange);
             Mediator.Register(ViewModelMessages.FetchPresetRequested, FetchPresetRequested);
             Mediator.Register(ViewModelMessages.PushPresetRequested, PushPresetRequested);
-            Mediator.Register(ViewModelMessages.BulkLoadComplete, BulkLoadComplete);
+            Mediator.Register(ViewModelMessages.BulkLoadPedalComplete, BulkLoadComplete);
             Mediator.Register(ViewModelMessages.PresetRenamed, PresetRenamed);
             Mediator.Register(ViewModelMessages.DirectEntryValueEntered, DirectEntryValueEntered);
             Mediator.Register(ViewModelMessages.PushPresetFailed, PushPresetFailed);
@@ -74,7 +74,7 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.UnRegister(ViewModelMessages.ReceivedCC, ReceiveCCChange);
             Mediator.UnRegister(ViewModelMessages.FetchPresetRequested, FetchPresetRequested);
             Mediator.UnRegister(ViewModelMessages.PushPresetRequested, PushPresetRequested);
-            Mediator.UnRegister(ViewModelMessages.BulkLoadComplete, BulkLoadComplete);
+            Mediator.UnRegister(ViewModelMessages.BulkLoadPedalComplete, BulkLoadComplete);
             Mediator.UnRegister(ViewModelMessages.PresetRenamed, PresetRenamed);
             Mediator.UnRegister(ViewModelMessages.DirectEntryValueEntered, DirectEntryValueEntered);
             Mediator.UnRegister(ViewModelMessages.PushPresetFailed, PushPresetFailed);
@@ -540,7 +540,7 @@ namespace RITS.StrymonEditor.ViewModels
             if (!presetFromPedal)midiManager.PushToEdit(ActivePreset);
             //if (!presetFromPedal) midiManager.SynchParameter(Encoder.LinkedParameter);
             midiManager.DisableControlChangeSends = false;
-            
+            midiManager.UpdateDisplay();
             IsDirty = false;
             presetFromPedal = false;
             Globals.IsPedalViewLoading = false;
