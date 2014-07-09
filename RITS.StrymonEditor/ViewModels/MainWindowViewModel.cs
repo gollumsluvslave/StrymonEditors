@@ -250,12 +250,14 @@ namespace RITS.StrymonEditor.ViewModels
         // Helper that opens the editor window based on the supplied StrymonPedal
         private void OpenEditor(StrymonPedal pedal)
         {
-            OpenEditor(new StrymonPreset(pedal, true));
+            midiManager.ContextPedal = pedal;
+            OpenEditor(null as StrymonPreset);
         }
 
         // Helper that opens the editor window using the supplied StrymonPreset
         private void OpenEditor(StrymonPreset preset)
         {
+            SetBusy();
             if (EditorWindow is PedalEditorWindow || EditorWindow == null) { EditorWindow = new PedalEditorWindow(preset, midiManager); }
             EditorWindow.ShowModal();
         }
@@ -283,7 +285,7 @@ namespace RITS.StrymonEditor.ViewModels
                 return new RelayCommand(new Action(() =>
                 {
                     LoadXml();
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
 
@@ -301,7 +303,7 @@ namespace RITS.StrymonEditor.ViewModels
                     {
                         OpenEditor(preset);
                     }
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
 
@@ -316,7 +318,7 @@ namespace RITS.StrymonEditor.ViewModels
                 {
                     DownloadWindow = new PresetStoreDialog(null,true); 
                     DownloadWindow.ShowModal();
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
 
@@ -344,10 +346,13 @@ namespace RITS.StrymonEditor.ViewModels
                 return new RelayCommand(new Action(() =>
                 {
                     OpenEditor(StrymonPedal.GetPedalByName(StrymonPedal.Timeline_Name));
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
-
+        private bool BulkFetchDone()
+        {
+            return !midiManager.IsBulkFetching;
+        }
         /// <summary>
         /// ICommand that handles creating a new Mobius preset
         /// </summary>
@@ -358,7 +363,7 @@ namespace RITS.StrymonEditor.ViewModels
                 return new RelayCommand(new Action(() =>
                 {
                     OpenEditor(StrymonPedal.GetPedalByName(StrymonPedal.Mobius_Name));
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
 
@@ -372,7 +377,7 @@ namespace RITS.StrymonEditor.ViewModels
                 return new RelayCommand(new Action(() =>
                 {
                     OpenEditor(StrymonPedal.GetPedalByName(StrymonPedal.BigSky_Name));
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
         #endregion

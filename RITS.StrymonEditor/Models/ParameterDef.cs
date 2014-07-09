@@ -62,8 +62,24 @@ namespace RITS.StrymonEditor.Models
         [XmlIgnore]
         public int SysExOffset
         {
-            get { return _sysExOffset; }
-            set { _sysExOffset = value; }
+            get 
+            {
+                if (PotId > 5) return PotId + 1;
+                else if (PotId == 2) return 3;
+                else if (PotId == 3) return  2;
+                else if(PotId > 0)return PotId;
+                else
+                {
+                    return _sysExOffset;
+                }
+            }
+            set 
+            {
+                if (PotId == 0)
+                {
+                    _sysExOffset = value;
+                }
+            }
         }
 
         /// <summary>

@@ -73,7 +73,7 @@ namespace RITS.StrymonEditor.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
         public int BulkFetchDelay {
             get {
                 return ((int)(this["BulkFetchDelay"]));

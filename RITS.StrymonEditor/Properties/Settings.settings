@@ -15,7 +15,7 @@
       <Value Profile="(Default)">UA-1000</Value>
     </Setting>
     <Setting Name="BulkFetchDelay" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">300</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="BigSkyMidiChannel" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4</Value>

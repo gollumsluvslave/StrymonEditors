@@ -298,7 +298,7 @@ namespace RITS.StrymonEditor.Models
         {
             if (!IsConnected) return;
             if (IsBulkFetching) return;
-            Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
+            //Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
             SendFetchPresetRequest(ContextPedal.PresetCount);
         }
 
@@ -384,8 +384,9 @@ namespace RITS.StrymonEditor.Models
         private void ReceiveCC(ControlChangeMessage msg)
         {
             if (!IsConnected) return;
+            if (msg.Channel != ContextMidiChannel) return;
             if (SyncMode == SyncMode.EditorMaster) return;
-            if (ReceivedCCIsEchoOfLastSent(msg)) return;            
+            if (ReceivedCCIsEchoOfLastSent(msg)) return;
             // Temporarily disable control change sends to avoid infinite loop
             DisableControlChangeSends = true;
             Mediator.NotifyColleagues(ViewModelMessages.ReceivedCC, new ControlChangeMsg { ControlChangeNo = msg.Control, Value = msg.Value });
@@ -396,10 +397,11 @@ namespace RITS.StrymonEditor.Models
         private void ReceivePC(ProgramChangeMessage msg)
         {
             // TODO
+            
             if (!IsConnected) return;
+            if (msg.Channel != ContextMidiChannel) return;
             if (IsBulkFetching) return;
             if (SyncMode ==SyncMode.EditorMaster) return;
-
             // Need to fetch current buffer
             FetchCurrent();
         }
@@ -653,9 +655,8 @@ namespace RITS.StrymonEditor.Models
                 if (SyncMode == SyncMode.PedalMaster) return;
                 if (DisableControlChangeSends) return;
                 logger.Debug(string.Format("Sending CC{0}, Value{1}, Channel{2}",ccNo,value,ContextPedal.MidiChannel));
-                Channel chan = FromInt(ContextPedal.MidiChannel - 1);
                 lastSentCC = new ControlChangeMsg { ControlChangeNo = ccNo, Value = value };
-                midiOut.SendControlChange(chan, ccNo, value);
+                midiOut.SendControlChange(ContextMidiChannel, ccNo, value);
             }
         }
 
@@ -910,5 +911,12 @@ namespace RITS.StrymonEditor.Models
         }
         #endregion
 
+        private Channel ContextMidiChannel
+        {
+            get
+            {
+                return FromInt(ContextPedal.MidiChannel - 1);
+            }
+        }
     }
 }

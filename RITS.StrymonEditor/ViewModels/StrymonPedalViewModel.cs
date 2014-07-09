@@ -4,6 +4,7 @@ using System.Linq;
 using System.ComponentModel;
 using System.Text;
 using System.Windows;
+
 using System.Windows.Media;
 
 using RITS.StrymonEditor.Logging;
@@ -33,6 +34,17 @@ namespace RITS.StrymonEditor.ViewModels
         public StrymonPedalViewModel(StrymonPreset preset, IStrymonMidiManager midiManager)
         {
             this.midiManager = midiManager;
+            if (preset == null)
+            {
+                if (midiManager.IsConnected)
+                {                    
+                    midiManager.FetchCurrent();
+                    ActivePedal = midiManager.ContextPedal;                    
+                    return;
+                }
+                preset = new StrymonPreset(midiManager.ContextPedal,true);
+            }
+            
             midiManager.ContextPedal=preset.Pedal;
             
             using (RITSLogger logger = new RITSLogger())
@@ -328,6 +340,7 @@ namespace RITS.StrymonEditor.ViewModels
                     }
                 }
                 preset = value;
+                ActivePedal = preset.Pedal;
                 if (preset.Name == null) preset.Name = "NEW";
                 // Rather than doing a ton of CC messages if the preset was not sourced from the pedal, then send to edit buffer?
                 Globals.PotValueMap = preset.PotValueMap;
@@ -352,9 +365,11 @@ namespace RITS.StrymonEditor.ViewModels
         /// <summary>
         /// The currently active <see cref="StrymonPedal"/>
         /// </summary>
+        private StrymonPedal activePedal;
         public StrymonPedal ActivePedal
         {
-            get { return ActivePreset.Pedal; }
+            get { return activePedal; }
+            set { activePedal = value; }
         }
 
         private StrymonMachineViewModel activeMachine;
@@ -544,6 +559,7 @@ namespace RITS.StrymonEditor.ViewModels
             IsDirty = false;
             presetFromPedal = false;
             Globals.IsPedalViewLoading = false;
+            Complete();
         }
 
         private void LoadPotControl(Pot pot)
@@ -1502,6 +1518,7 @@ namespace RITS.StrymonEditor.ViewModels
                             return;
                         }
                     }
+                    SetBusy();
                     presetFromPedal = true;
                     midiManager.FetchCurrent();
                 }));
