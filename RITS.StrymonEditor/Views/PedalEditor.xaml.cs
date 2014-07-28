@@ -81,6 +81,18 @@ namespace RITS.StrymonEditor.Views
             }
         }
 
+        public int StartupTop
+        {
+            get { return Properties.Settings.Default.StartupTop; }
+            set { Properties.Settings.Default.StartupTop = value; }
+        }
+
+        public int StartupLeft
+        {
+            get { return Properties.Settings.Default.StartupLeft; }
+            set { Properties.Settings.Default.StartupLeft = value; }
+        }
+
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {

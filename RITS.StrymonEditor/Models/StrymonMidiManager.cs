@@ -36,10 +36,10 @@ namespace RITS.StrymonEditor.Models
         {
             using (RITSLogger logger = new RITSLogger())
             {
-                logger.Debug(string.Format("Setting midiIn device *{0}*", midiIn));
                 midiIn = inputDevice;
-                logger.Debug(string.Format("Setting midiOut device *{0}*", midiOut));
+                logger.Debug(string.Format("Setting midiIn device *{0}*", midiIn));
                 midiOut = outputDevice;
+                logger.Debug(string.Format("Setting midiOut device *{0}*", midiOut));
             }
         }
 

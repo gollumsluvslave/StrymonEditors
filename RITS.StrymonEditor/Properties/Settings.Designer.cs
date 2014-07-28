@@ -196,5 +196,29 @@ namespace RITS.StrymonEditor.Properties {
                 return ((string)(this["OnlineService"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int StartupLeft {
+            get {
+                return ((int)(this["StartupLeft"]));
+            }
+            set {
+                this["StartupLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int StartupTop {
+            get {
+                return ((int)(this["StartupTop"]));
+            }
+            set {
+                this["StartupTop"] = value;
+            }
+        }
     }
 }

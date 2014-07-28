@@ -97,7 +97,7 @@ namespace PresetStore.Data
                 var t = Parameters.Create();
                 t.Name = string.Format("EPSet_Toe_{0}", p.PotId);
                 t.Value = p.ToeValue;
-                dbP.Parameters.Add(h);
+                dbP.Parameters.Add(t);
             } 
             dbP.PresetTags = new List<DBPresetTag>();
             foreach (var t in uploadPreset.Tags)
