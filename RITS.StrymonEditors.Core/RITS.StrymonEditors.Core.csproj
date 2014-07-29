@@ -5,15 +5,15 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{b39fb3a9-6cce-49ee-96ff-5c30454ac6c4}</ProjectGuid>
+    <ProjectGuid>{B39FB3A9-6CCE-49EE-96FF-5C30454AC6C4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RITS.StrymonEditors.Core</RootNamespace>
+    <RootNamespace>RITS.StrymonEditor</RootNamespace>
     <AssemblyName>RITS.StrymonEditors.Core</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile344</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile47</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -37,8 +37,79 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="AutoUpdate\IAutoUpdater.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Conversion\BoostLabelValueConverter.cs" />
+    <Compile Include="Conversion\ConversionUtils.cs" />
+    <Compile Include="Conversion\DefaultFineCoarseValueConverter.cs" />
+    <Compile Include="Conversion\DefaultPotValueConverter.cs" />
+    <Compile Include="Conversion\EchoValueLabelConverter.cs" />
+    <Compile Include="Conversion\Factories.cs" />
+    <Compile Include="Conversion\FineValueLabelConverter.cs" />
+    <Compile Include="Conversion\IFineCoarseValueConverter.cs" />
+    <Compile Include="Conversion\ILabelValueConverter.cs" />
+    <Compile Include="Conversion\IPotValueConverter.cs" />
+    <Compile Include="Conversion\OptionLabelValueConverter.cs" />
+    <Compile Include="Conversion\OptionListPotValueConverter.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="IO\IFileDialog.cs" />
+    <Compile Include="IO\IFileIOService.cs" />
+    <Compile Include="IO\IMessageDialog.cs" />
+    <Compile Include="IO\IModalDialog.cs" />
+    <Compile Include="IO\IOnlinePresetService.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Messaging\IColleague.cs" />
+    <Compile Include="Messaging\IMediator.cs" />
+    <Compile Include="Messaging\Mediator.cs" />
+    <Compile Include="Messaging\MultiDictionary.cs" />
+    <Compile Include="MIDI\IStrymonMidiManager.cs" />
+    <Compile Include="Models\ControlChangeMsg.cs" />
+    <Compile Include="Models\FineCoarseSynchroniser.cs" />
+    <Compile Include="Models\HeelToeSetting.cs" />
+    <Compile Include="Models\Increment.cs" />
+    <Compile Include="Models\NameBase.cs" />
+    <Compile Include="Models\Option.cs" />
+    <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\ParameterDef.cs" />
+    <Compile Include="Models\Pot.cs" />
+    <Compile Include="Models\PotValueItem.cs" />
+    <Compile Include="Models\PotValueMap.cs" />
+    <Compile Include="Models\PresetMetadata.cs" />
+    <Compile Include="Models\PresetSearch.cs" />
+    <Compile Include="Models\Range.cs" />
+    <Compile Include="Models\RangeOverride.cs" />
+    <Compile Include="Models\StrymonMachine.cs" />
+    <Compile Include="Models\StrymonPedal.cs" />
+    <Compile Include="Models\StrymonPreset.cs" />
+    <Compile Include="Models\StrymonSysExUtils.cs" />
+    <Compile Include="Models\StrymonXmlPreset.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\XmlParameter.cs" />
+    <Compile Include="NativeHooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\DialogViewModel.cs" />
+    <Compile Include="ViewModels\DirectEntryViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\MenuItemViewModel.cs" />
+    <Compile Include="ViewModels\MidiSetupViewModel.cs" />
+    <Compile Include="ViewModels\ModalProgressDialogViewModel.cs" />
+    <Compile Include="ViewModels\ParameterViewModel.cs" />
+    <Compile Include="ViewModels\PotViewModel.cs" />
+    <Compile Include="ViewModels\PresetControlViewModel.cs" />
+    <Compile Include="ViewModels\PresetRenameViewModel.cs" />
+    <Compile Include="ViewModels\PresetStoreViewModel.cs" />
+    <Compile Include="ViewModels\PresetViewModel.cs" />
+    <Compile Include="ViewModels\StrymonMachineViewModel.cs" />
+    <Compile Include="ViewModels\StrymonPedalViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>packages\Autofac.3.5.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -48,5 +119,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
 </Project>
