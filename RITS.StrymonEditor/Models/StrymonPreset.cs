@@ -180,6 +180,10 @@ namespace RITS.StrymonEditor.Models
                 if (xmlParameter != null)
                 {
                     p.Value = xmlParameter.Value;
+                    if (p.HasFineControl)
+                    {
+                        p.FineValue = xmlParameter.FineValue;
+                    }
                 }
             }
             preset.EPSetValues = new List<HeelToeSetting>();
@@ -236,22 +240,19 @@ namespace RITS.StrymonEditor.Models
                     PotValueMap.Reset();
                     // Tell Fine/Coarse ViewModels to refresh the IncrementMap too
 
-                    int offset = 1;
                     // Only create ControlParameters 1st time
                     if (ControlParameters == null)
                     {
                         ControlParameters = new List<Parameter>();
                         foreach (var p in Pedal.ControlParameters)
                         {
-                            p.SysExOffset = offset;
+                            
                             Parameter pv = new Parameter { Definition = p, ContextPedalName = Pedal.Name };
                             ControlParameters.Add(pv);
-                            if (offset == 5) { offset++; } // Odd offset not used
-                            offset++;
                         }
                     }
                     // Hidden & Common Parameters start at offset 17
-                    offset = 17;
+                    int offset = 17;
 
                     HiddenParameters = new List<Parameter>();
                     // Order by index? Serialized order would be best, less code, but more brittle

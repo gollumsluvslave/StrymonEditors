@@ -36,10 +36,10 @@ namespace RITS.StrymonEditor.Models
         {
             using (RITSLogger logger = new RITSLogger())
             {
-                logger.Debug(string.Format("Setting midiIn device *{0}*", midiIn));
                 midiIn = inputDevice;
-                logger.Debug(string.Format("Setting midiOut device *{0}*", midiOut));
+                logger.Debug(string.Format("Setting midiIn device *{0}*", midiIn));
                 midiOut = outputDevice;
+                logger.Debug(string.Format("Setting midiOut device *{0}*", midiOut));
             }
         }
 
@@ -298,7 +298,7 @@ namespace RITS.StrymonEditor.Models
         {
             if (!IsConnected) return;
             if (IsBulkFetching) return;
-            Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
+            //Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
             SendFetchPresetRequest(ContextPedal.PresetCount);
         }
 
@@ -335,6 +335,16 @@ namespace RITS.StrymonEditor.Models
             if (IsBulkFetching) return; // TODO make this a bit more UI responsive?
             PushPreset(preset, index);
         }
+
+        public void UpdateDisplay()
+        {
+            var request = UpdateDisplayRequest.ToArray();
+            // update with pedal id
+            request[5] = Convert.ToByte(GetPedalId);
+            var sysEx = new SysExCommand("Display", request, 2000, null, null, IsBulkFetching);
+            SendSysEx(sysEx);
+        }
+
         #endregion
 
 
@@ -374,8 +384,9 @@ namespace RITS.StrymonEditor.Models
         private void ReceiveCC(ControlChangeMessage msg)
         {
             if (!IsConnected) return;
+            if (msg.Channel != ContextMidiChannel) return;
             if (SyncMode == SyncMode.EditorMaster) return;
-            if (ReceivedCCIsEchoOfLastSent(msg)) return;            
+            if (ReceivedCCIsEchoOfLastSent(msg)) return;
             // Temporarily disable control change sends to avoid infinite loop
             DisableControlChangeSends = true;
             Mediator.NotifyColleagues(ViewModelMessages.ReceivedCC, new ControlChangeMsg { ControlChangeNo = msg.Control, Value = msg.Value });
@@ -386,10 +397,11 @@ namespace RITS.StrymonEditor.Models
         private void ReceivePC(ProgramChangeMessage msg)
         {
             // TODO
+            
             if (!IsConnected) return;
+            if (msg.Channel != ContextMidiChannel) return;
             if (IsBulkFetching) return;
             if (SyncMode ==SyncMode.EditorMaster) return;
-
             // Need to fetch current buffer
             FetchCurrent();
         }
@@ -425,6 +437,7 @@ namespace RITS.StrymonEditor.Models
                 finally
                 {
                     LastSysExCommand.Completed();
+                    UpdateDisplay();
                 }
             }
         }
@@ -642,9 +655,8 @@ namespace RITS.StrymonEditor.Models
                 if (SyncMode == SyncMode.PedalMaster) return;
                 if (DisableControlChangeSends) return;
                 logger.Debug(string.Format("Sending CC{0}, Value{1}, Channel{2}",ccNo,value,ContextPedal.MidiChannel));
-                Channel chan = FromInt(ContextPedal.MidiChannel - 1);
                 lastSentCC = new ControlChangeMsg { ControlChangeNo = ccNo, Value = value };
-                midiOut.SendControlChange(chan, ccNo, value);
+                midiOut.SendControlChange(ContextMidiChannel, ccNo, value);
             }
         }
 
@@ -657,15 +669,15 @@ namespace RITS.StrymonEditor.Models
                 Channel chan = FromInt(ContextPedal.MidiChannel - 1);
                 // TODO for prsets above 127 - need bank change cc
                 int newPC = pcNo;
-                if (pcNo >= 128 && pcBank == 0)
-                {
-                    pcBank = 1;
-                    newPC = pcNo % 128;
-                }
-                else if (pcNo >= 256 && pcBank == 1)
+                if (pcNo >= 256)
                 {
                     pcBank = 2;
                     newPC = pcNo % 256;
+                }
+                else if (pcNo >= 128)
+                {
+                    pcBank = 1;
+                    newPC = pcNo % 128;
                 }
                 else
                 {
@@ -888,7 +900,23 @@ namespace RITS.StrymonEditor.Models
                 return presetReadRequest;
             }
         }
+
+        private static byte[] updateDisplayRequest = new byte[] { 0xF0, 0x00, 0x01, 0x55, 0x12, 0x00, 0x26, 0xF7 };
+        public static byte[] UpdateDisplayRequest
+        {
+            get
+            {
+                return updateDisplayRequest;
+            }
+        }
         #endregion
 
+        private Channel ContextMidiChannel
+        {
+            get
+            {
+                return FromInt(ContextPedal.MidiChannel - 1);
+            }
+        }
     }
 }

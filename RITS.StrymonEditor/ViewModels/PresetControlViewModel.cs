@@ -34,13 +34,13 @@ namespace RITS.StrymonEditor.ViewModels
         /// <inheritdoc/>
         public override void RegisterWithMediator()
         {
-            Mediator.Register(ViewModelMessages.BulkLoadComplete, BulkLoadCompleteCallback);
+            Mediator.Register(ViewModelMessages.BulkLoadPedalComplete, BulkLoadCompleteCallback);
         }
 
         /// <inheritdoc/>
         public override void DeRegisterFromMediator()
         {
-            Mediator.UnRegister(ViewModelMessages.BulkLoadComplete, BulkLoadCompleteCallback);
+            Mediator.UnRegister(ViewModelMessages.BulkLoadPedalComplete, BulkLoadCompleteCallback);
         }
 
         // Callback for BulkLoadComplete - to update menu
@@ -143,7 +143,7 @@ namespace RITS.StrymonEditor.ViewModels
                     execute = new RelayCommand(new Action(() => 
                     {
                         ExecuteCommand();
-                    }),new Func<bool>(()=>!midiManager.IsBulkFetching));
+                    }), new Func<bool>(() => pedal.RawPresetData.Count == pedal.PresetCount));
                 }
                 return execute;
             }

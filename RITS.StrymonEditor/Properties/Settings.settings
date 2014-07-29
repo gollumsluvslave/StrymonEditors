@@ -15,7 +15,7 @@
       <Value Profile="(Default)">UA-1000</Value>
     </Setting>
     <Setting Name="BulkFetchDelay" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">300</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="BigSkyMidiChannel" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4</Value>
@@ -42,7 +42,16 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="OnlineHandle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">RCK</Value>
+      <Value Profile="(Default)">gollumsluvslave</Value>
+    </Setting>
+    <Setting Name="OnlineService" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://0925.longmusic.com/odata</Value>
+    </Setting>
+    <Setting Name="StartupLeft" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="StartupTop" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

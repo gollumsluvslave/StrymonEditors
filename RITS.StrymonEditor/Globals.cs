@@ -115,10 +115,12 @@ namespace RITS.StrymonEditor
         {
             get
             {
-                if (_client == null) _client = new StrymonPresetStoreClient.StrymonStoreClient();
+                if (_client == null) _client = new StrymonPresetStoreClient.StrymonStoreClient(Properties.Settings.Default.OnlineService);
                 return _client;
             }
         }
+
+        public static bool IsPedalViewLoading {get; set;}
 
         /// <summary>
         /// Main initilisation method - loads all definition xmls, and sets the list of SupportedPedals

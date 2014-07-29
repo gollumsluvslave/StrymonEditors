@@ -11,11 +11,11 @@ namespace StrymonPresetStoreClient
         private Default.Container dc;
         private List<DBTag> tagCache;
         private List<DBPresetTag> presetTagCache;
-        public StrymonStoreClient()
+        public StrymonStoreClient(string serviceRoot)
         {
             try
             {
-                dc = new Default.Container(new Uri("http://ukd06668/odata"));
+                dc = new Default.Container(new Uri(serviceRoot));
                 dc.MergeOption = MergeOption.NoTracking;
                 RefreshCache();
             }

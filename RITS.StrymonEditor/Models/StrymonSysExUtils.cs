@@ -305,12 +305,11 @@ namespace RITS.StrymonEditor.Models
                 set
                 {
                     int fineValue = value;
-                    int valueToUse = fineValue;
-                    if (StrymonPedal.Name == StrymonPedal.Mobius_Name)
+                    if (fineValue == 0)
                     {
-                        valueToUse = 1000000 / fineValue;
+                        TwoByteFineValue = (fineValue == 0) ? 100 : 1000000 / fineValue; // Hack to solve Divede by Zero error
                     }
-                    TwoByteFineValue = valueToUse;
+                    
                 }
             }
 

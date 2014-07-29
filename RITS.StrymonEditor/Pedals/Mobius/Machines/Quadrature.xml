@@ -65,6 +65,9 @@
       </OptionList>
     </ParameterDef>
     <ParameterDef Name="Shift" ControlChangeNo="54">
+      <Range MinValue="0" MaxValue="30"/>
+    </ParameterDef>
+    <ParameterDef Name="Mix" ControlChangeNo="55">
       <Range MinValue="0" MaxValue="18"/>
     </ParameterDef>
     <ParameterDef Name="Waveshape" ControlChangeNo="56">

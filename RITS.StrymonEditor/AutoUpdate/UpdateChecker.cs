@@ -139,7 +139,7 @@ namespace RITS.StrymonEditor.AutoUpdate
                     return;
                 }
                 timeoutCount += sleepPeriod;
-                if (timeoutCount > 10000)
+                if (timeoutCount > 20000)
                 {
                     StaticLogger.Debug("Timeout waiting for Update process to exit. Abandoning AutoUpdate.");
                     return;

@@ -147,6 +147,8 @@ namespace RITS.StrymonEditor.Models
         /// Push the supplied <see cref="StrymonPreset"/> to the specified preset index of the context <see cref="StrymonPedal"/>
         /// </summary>
         void PushToIndex(StrymonPreset preset, int index);
+
+        void UpdateDisplay();
         #endregion
     }
 }

@@ -23,6 +23,7 @@ namespace RITS.StrymonEditor.ViewModels
         private int connectedPedalCount = 0;
         private int currentBulkFetch =0;
         private int failedFetchCount = 0;
+        private bool isPedalChange;
 
         public MainWindowViewModel(IStrymonMidiManager midiManager)
         {
@@ -249,12 +250,14 @@ namespace RITS.StrymonEditor.ViewModels
         // Helper that opens the editor window based on the supplied StrymonPedal
         private void OpenEditor(StrymonPedal pedal)
         {
-            OpenEditor(new StrymonPreset(pedal, true));
+            midiManager.ContextPedal = pedal;
+            OpenEditor(null as StrymonPreset);
         }
 
         // Helper that opens the editor window using the supplied StrymonPreset
         private void OpenEditor(StrymonPreset preset)
         {
+            SetBusy();
             if (EditorWindow is PedalEditorWindow || EditorWindow == null) { EditorWindow = new PedalEditorWindow(preset, midiManager); }
             EditorWindow.ShowModal();
         }
@@ -282,7 +285,7 @@ namespace RITS.StrymonEditor.ViewModels
                 return new RelayCommand(new Action(() =>
                 {
                     LoadXml();
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
 
@@ -300,7 +303,7 @@ namespace RITS.StrymonEditor.ViewModels
                     {
                         OpenEditor(preset);
                     }
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
 
@@ -315,7 +318,7 @@ namespace RITS.StrymonEditor.ViewModels
                 {
                     DownloadWindow = new PresetStoreDialog(null,true); 
                     DownloadWindow.ShowModal();
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
 
@@ -343,10 +346,13 @@ namespace RITS.StrymonEditor.ViewModels
                 return new RelayCommand(new Action(() =>
                 {
                     OpenEditor(StrymonPedal.GetPedalByName(StrymonPedal.Timeline_Name));
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
-
+        private bool BulkFetchDone()
+        {
+            return !midiManager.IsBulkFetching;
+        }
         /// <summary>
         /// ICommand that handles creating a new Mobius preset
         /// </summary>
@@ -357,7 +363,7 @@ namespace RITS.StrymonEditor.ViewModels
                 return new RelayCommand(new Action(() =>
                 {
                     OpenEditor(StrymonPedal.GetPedalByName(StrymonPedal.Mobius_Name));
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
 
@@ -371,7 +377,7 @@ namespace RITS.StrymonEditor.ViewModels
                 return new RelayCommand(new Action(() =>
                 {
                     OpenEditor(StrymonPedal.GetPedalByName(StrymonPedal.BigSky_Name));
-                }));
+                }), new Func<bool>(BulkFetchDone));
             }
         }
         #endregion
@@ -408,11 +414,13 @@ namespace RITS.StrymonEditor.ViewModels
         {
             // Kick of preset load
             if (Properties.Settings.Default.DisableBulkFetch) return;
+            PBMax = midiManager.ConnectedPedals.Sum(x => x.PresetCount);
             ShowProgressBar = true;
 
-            if (midiManager.ConnectedPedals.Count > 0)
+            //if (midiManager.ConnectedPedals.Count > 0)
+            foreach(var p in midiManager.ConnectedPedals)
             {
-                BulkFetch(midiManager.ConnectedPedals.FirstOrDefault());
+                BulkFetch(p);
             }
 
         }
@@ -420,10 +428,10 @@ namespace RITS.StrymonEditor.ViewModels
         // Initiate a bulk fetch for the supplied pedal
         private void BulkFetch(StrymonPedal p)
         {
-            PBMax = p.PresetCount - 1;
+            
             for (int i = 0; i < p.PresetCount; i++)
             {
-                currentBulkFetch = i;
+                currentBulkFetch++;
                 System.Threading.Thread.Sleep(Properties.Settings.Default.BulkFetchDelay);
                 midiManager.BulkPedal = p;
                 midiManager.FetchByIndex(i);
@@ -437,17 +445,24 @@ namespace RITS.StrymonEditor.ViewModels
         {
             var preset = o as StrymonPreset;
             PBValue = currentBulkFetch;
-            if (preset != null) PBStatus = string.Format("Fetched : {0}({1})", preset.Pedal.Name, preset.SourceIndex);
-            else
+            if (preset == null)
             {
                 failedFetchCount++;
                 PBStatus = string.Format("Fetch Failed : {0}", currentBulkFetch);
+            }
+            else
+            {
+                PBStatus = string.Format("Fetched : {0}({1})", preset.Pedal.Name, preset.SourceIndex);
+                if (preset.SourceIndex == preset.Pedal.PresetCount - 1)
+                {
+                    Mediator.NotifyColleagues(ViewModelMessages.BulkLoadPedalComplete, null);
+                }
             }
             if (currentBulkFetch == PBMax)
             {
                 PBStatus = (failedFetchCount > 0) ? string.Format("Loaded ({0} failed)", failedFetchCount) : "Loaded";
                 ShowProgressBar = false;
-                Mediator.NotifyColleagues(ViewModelMessages.BulkLoadComplete, null);
+                //Mediator.NotifyColleagues(ViewModelMessages.BulkLoadComplete, null);
             }
         }
 

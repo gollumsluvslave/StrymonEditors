@@ -147,9 +147,9 @@ namespace RITS.StrymonEditor.ViewModels
         /// <param name="work"></param>
         public void DoWorkSync(Action work)
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            SetBusy();
             work();
-            Mouse.OverrideCursor = null;
+            Complete();
         }
 
         /// <inheritdoc/>
@@ -174,6 +174,11 @@ namespace RITS.StrymonEditor.ViewModels
         protected virtual void Complete()
         {
             Mouse.OverrideCursor = null;
+        }
+
+        protected virtual void SetBusy()
+        {
+            Mouse.OverrideCursor = Cursors.Wait;
         }
     }
 

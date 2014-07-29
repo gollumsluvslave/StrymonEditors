@@ -8,7 +8,7 @@
     <Window.Resources>
         <v:BooleanToVisibilityConverter x:Key="VisibilityOfBool"/>
     </Window.Resources>
-    <DockPanel>
+    <DockPanel LastChildFill="True">
         <v:DownloadView DataContext="{Binding ViewModel}" Visibility="{Binding IsDownloadMode, Converter={StaticResource VisibilityOfBool}}" Padding="5,5,5,5"/>
         <v:UploadView DataContext="{Binding ViewModel}" Visibility="{Binding IsUploadMode, Converter={StaticResource VisibilityOfBool}}" Padding="5,5,5,5"/>
     </DockPanel>

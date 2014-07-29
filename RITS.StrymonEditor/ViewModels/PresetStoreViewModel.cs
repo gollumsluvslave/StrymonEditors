@@ -20,6 +20,7 @@ namespace RITS.StrymonEditor.ViewModels
         public PresetStoreViewModel(bool fromMainWindow)
         {
             this.fromMainWindow =fromMainWindow;
+            IsDownloadMode = true;
             IsUploadMode = false;
         }
 
@@ -33,7 +34,9 @@ namespace RITS.StrymonEditor.ViewModels
         {
             this.fromMainWindow = false;
             uploadPreset = presetToUpload;
+            IsDownloadMode = false;
             IsUploadMode = true;
+
         }
         /// <summary>
         /// The mode of operation - either Upload / Download
@@ -46,15 +49,20 @@ namespace RITS.StrymonEditor.ViewModels
             { 
                 isUploadMode = value; 
                 OnPropertyChanged("IsUploadMode");
-                OnPropertyChanged("IsDownloadMode");
             }
         }
 
+        private bool isdownloadMode;
         public bool IsDownloadMode
         {
             get
             {
-                return !IsUploadMode;
+                return isdownloadMode;
+            }
+            set
+            {
+                isdownloadMode = value;
+                OnPropertyChanged("IsDownloadMode");
             }
         }
 
@@ -320,7 +328,7 @@ namespace RITS.StrymonEditor.ViewModels
         private void PerformUpload()
         {
             var id=OnlineService.UploadPreset(uploadPreset.ToXmlPreset(), CustomTags.ToList());
-            // TODO - what to do with the id? Anything?
+            MessageDialog.ShowInfo("Preset Uploaded successfully!","Preset Uploaded");
             Close();
         }
 
@@ -338,7 +346,8 @@ namespace RITS.StrymonEditor.ViewModels
                     downloadCommand = new RelayCommand(new Action(() =>
                     {
                         PerformDownload();
-                    }));
+                    }),
+                    new Func<bool>(PresetSelected));
                 }
                 return downloadCommand;
             }
@@ -356,6 +365,11 @@ namespace RITS.StrymonEditor.ViewModels
                 Mediator.NotifyColleagues(ViewModelMessages.ReceivedPresetFromPedal, StrymonPreset.FromXmlPreset(p));
             }
             Close();
+        }
+
+        private bool PresetSelected()
+        {
+            return SelectedPreset != null;
         }
     }
 }
