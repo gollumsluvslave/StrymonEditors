@@ -47,7 +47,7 @@ namespace RITS.StrymonEditor.ViewModels
         // Callback for BulkLoadComplete - to update menu
         private void BulkLoadCompleteCallback(object o)
         {
-            execute.RaiseCanExecuteChanged();
+            
         }
 
         #endregion

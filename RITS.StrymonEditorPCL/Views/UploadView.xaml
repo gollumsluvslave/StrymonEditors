@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="RITS.StrymonEditor.Views.UploadView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="162">
+    <Grid >
+        <StackPanel Orientation="Vertical" Width="260">
+
+            <Label  HorizontalAlignment="Center"  Content="Add Tags" FontStyle="Italic" FontWeight="Bold"/>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Tag" Width="60" HorizontalContentAlignment="Right"/>
+                <ComboBox x:Name="Tags" Height="23" Width="160" ItemsSource="{Binding AvailableTags, Mode=TwoWay}" Text="{Binding TagToAdd, Mode=TwoWay}" IsEditable="True"/>
+                <Button Content="Add" Canvas.Left="195" Canvas.Top="120" Height="20" Margin="5,0,0,0" Command="{Binding AddTagCommand}"/>
+            </StackPanel>
+            <ItemsControl  x:Name="CustomTags" ItemsSource="{Binding CustomTags, Mode=TwoWay}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding TagName}"  Width="60" HorizontalContentAlignment="Right"/>
+                            <ComboBox x:Name="Machine" Height="23" Width="160" ItemsSource="{Binding AvailableValues}" Text="{Binding Value, Mode=TwoWay}" IsEditable="True"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Upload" HorizontalAlignment="Right" Margin="0,10,10,00" Command="{Binding UploadCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

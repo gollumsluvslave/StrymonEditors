@@ -814,7 +814,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         private void BulkLoadComplete(object index)
         {
-            PedalBackup.RaiseCanExecuteChanged();
+            NativeHooks.Current.InvalidateRequerySuggested();
         }
 
         private void PushPresetRequested(object index)
@@ -1652,7 +1652,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    UploadWindow = NativeHooks.Current.CreatePresetStoreUploadDialog();
+                    UploadWindow = NativeHooks.Current.CreatePresetStoreUploadDialog(ActivePreset);
                     UploadWindow.ShowModal();
                 }));
             }
@@ -1668,7 +1668,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    DownloadWindow = NativeHooks.Current.CreatePresetStoreDownloadDialog();
+                    DownloadWindow = NativeHooks.Current.CreatePresetStoreDownloadDialog(false);
                     DownloadWindow.ShowModal();
                 }));
             }

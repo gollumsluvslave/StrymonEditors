@@ -17,7 +17,8 @@ namespace RITS.StrymonEditor.Commands
 
         readonly Action<T> _execute = null;
         readonly Predicate<T> _canExecute = null;
-
+        private bool _isEnabled;
+        private T parameter;
         #endregion // Fields
 
         #region Constructors
@@ -47,6 +48,25 @@ namespace RITS.StrymonEditor.Commands
 
         #endregion // Constructors
 
+        public bool IsEnabled
+        {
+            get
+            {
+                if (_canExecute == null) return true;
+                bool enabled = _canExecute(parameter);
+                if (enabled != _isEnabled)
+                {
+                    _isEnabled = enabled;
+                    if (CanExecuteChanged != null)
+                    {
+                        CanExecuteChanged(this, EventArgs.Empty);
+                    }
+                }
+                
+                return _isEnabled;
+            }
+        }
+
         #region ICommand Members
 
         /// <summary>
@@ -56,33 +76,18 @@ namespace RITS.StrymonEditor.Commands
         /// <returns></returns>
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null ? true : _canExecute((T)parameter);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler CanExecuteChanged
-        {
-            add
+            if (_canExecute == null) return true;
+            else
             {
-                NativeHooks.Current.AddRequerySuggestedHandler(_canExecute);
-            }
-            remove
-            {
-                NativeHooks.Current.RemoveRequerySuggestedHandler(_canExecute);
+                this.parameter = (T)parameter;
+                return IsEnabled;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void RaiseCanExecuteChanged()
-        {
-
-            NativeHooks.Current.InvalidateRequerySuggested();
-
-        }
+        public event EventHandler CanExecuteChanged;
 
         /// <summary>
         /// 
@@ -105,7 +110,7 @@ namespace RITS.StrymonEditor.Commands
 
         readonly Action _execute;
         readonly Func<bool> _canExecute;
-
+        private bool _isEnabled;
         #endregion // Fields
 
         #region Constructors
@@ -133,6 +138,24 @@ namespace RITS.StrymonEditor.Commands
             _canExecute = canExecute;
         }
 
+        public bool IsEnabled
+        {
+            get 
+            {
+                bool enabled = _canExecute();
+                if (enabled!=_isEnabled)
+                {
+                    _isEnabled = enabled;
+                    if (CanExecuteChanged != null)
+                    {
+                        CanExecuteChanged(this, EventArgs.Empty);
+                    }
+                }
+                
+                return _isEnabled;
+            }
+        }
+
         #endregion // Constructors
 
         #region ICommand Members
@@ -144,33 +167,15 @@ namespace RITS.StrymonEditor.Commands
         /// <returns></returns>
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null ? true : _canExecute();
+            if (_canExecute == null) return true;
+            else return IsEnabled;
         }
 
         /// <summary>
         /// Event Handler for CanExecuteChanged
         /// </summary>
-        public event EventHandler CanExecuteChanged
-        {
-            add
-            {
-                NativeHooks.Current.AddRequerySuggestedHandler(_canExecute);
-            }
-            remove
-            {
-                NativeHooks.Current.RemoveRequerySuggestedHandler(_canExecute);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void RaiseCanExecuteChanged()
-        {
-
-            NativeHooks.Current.InvalidateRequerySuggested();
-
-        }
+        public event EventHandler CanExecuteChanged;
+        
 
         /// <summary>
         /// 

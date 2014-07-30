@@ -53,9 +53,9 @@ namespace RITS.StrymonEditor
 
         public abstract IFileIOService CreateFileIOService();
 
-        public abstract IModalDialog CreatePresetStoreDownloadDialog();
-        
-        public abstract IModalDialog CreatePresetStoreUploadDialog();
+        public abstract IModalDialog CreatePresetStoreDownloadDialog(bool fromMainWindow);
+
+        public abstract IModalDialog CreatePresetStoreUploadDialog(StrymonPreset preset);
 
         public abstract IMessageDialog CreateMessageDialog();
 
@@ -73,16 +73,10 @@ namespace RITS.StrymonEditor
         public abstract void WorkComplete();
 
         public abstract void InvalidateRequerySuggested();
-        public abstract void AddRequerySuggestedHandler(Func<bool> canExecute);
-        public abstract void RemoveRequerySuggestedHandler(Func<bool> canExecute);
-        public abstract void AddRequerySuggestedHandler<T>(Predicate<T> canExecute);
-        public abstract void RemoveRequerySuggestedHandler<T>(Predicate<T> canExecute);
 
         
         public abstract string PedalImage(string pedalName);
 
-        public abstract string UrlEncode(string url);
-        public abstract string UrlDecode(string url);
 
         public virtual string VersionInfo { get; set; }
         public virtual bool BPMMode { get; set; }

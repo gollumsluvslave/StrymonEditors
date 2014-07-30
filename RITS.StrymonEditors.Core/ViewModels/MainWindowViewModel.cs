@@ -27,6 +27,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         public MainWindowViewModel(IStrymonMidiManager midiManager)
         {
+            
             using (ILogger logger = NativeHooks.Current.CreateLogger())
             {
                 logger.Debug("Setting midi manager...");
@@ -260,7 +261,8 @@ namespace RITS.StrymonEditor.ViewModels
             NativeHooks.Current.SetBusy();
             if (EditorWindow == null) 
             {
-                EditorWindow = NativeHooks.Current.CreatePedalEditorWindow(preset, midiManager);
+                var pew = NativeHooks.Current.CreatePedalEditorWindow(preset, midiManager);
+                EditorWindow = pew;
             }
             EditorWindow.ShowModal();
         }
@@ -319,7 +321,7 @@ namespace RITS.StrymonEditor.ViewModels
             {
                 return new RelayCommand(new Action(() =>
                 {
-                    DownloadWindow = NativeHooks.Current.CreatePresetStoreDownloadDialog();
+                    DownloadWindow = NativeHooks.Current.CreatePresetStoreDownloadDialog(true);
                     DownloadWindow.ShowModal();
                 }), new Func<bool>(BulkFetchDone));
             }

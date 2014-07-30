@@ -1,0 +1,173 @@
+﻿<UserControl x:Class="RITS.StrymonEditor.Views.EditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:v="clr-namespace:RITS.StrymonEditor.Views"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="492" d:DesignWidth="670" Height="712" Width="706" 
+             PreviewMouseLeftButtonDown="View_MouseDownHandler"
+             PreviewMouseMove="View_MouseMoveHandler"
+             PreviewDragOver="View_PreviewDragOver"
+             PreviewDrop="View_PreviewDrop" 
+             PreviewDragEnter="UserControl_PreviewDragEnter" 
+             PreviewDragLeave="UserControl_PreviewDragLeave">
+    <UserControl.Background>
+        <ImageBrush ImageSource="{Binding Image}">
+            </ImageBrush >
+    </UserControl.Background>
+    <UserControl.Resources>
+
+        <v:ParameterTemplateSelector x:Key="TemplateSelector">
+            </v:ParameterTemplateSelector>
+        <DataTemplate x:Key="OnOff">
+            <StackPanel Orientation="Horizontal" Background="Transparent">
+                <CheckBox x:Name="NameLabel" Margin="10,0,10,0" Width="120" Content="{Binding Name}"></CheckBox>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Range">
+            <StackPanel Orientation="Horizontal"  Background="Transparent" HorizontalAlignment="Left">
+                <Label Content="{Binding Name}" Width="250" HorizontalContentAlignment="Right"   Foreground="White" FontFamily="/Fonts/digital-7.ttf#digital-7" FontSize="24"/>
+                <StackPanel Orientation="Vertical">
+                <Slider x:Name="Slider"
+                Value="{Binding Value, Mode=TwoWay}" TickFrequency=".0001"
+                                                    IsSnapToTickEnabled="true"
+                                                    TickPlacement="none"
+                                                    LargeChange="2" SmallChange="1"                 
+                                                    Maximum="{Binding Definition.Range.MaxValue}"
+                                                    Minimum="{Binding Definition.Range.MinValue}"
+                                                    Margin="1" Width="350"
+                                                    ToolTip="{Binding Value}" FocusVisualStyle="{DynamicResource FocusStyle}">
+                    <Slider.LayoutTransform>
+                        <ScaleTransform ScaleY="0.5" CenterX="15" CenterY="15"/>
+                    </Slider.LayoutTransform>
+                </Slider>
+                    <TextBlock Height="20" Text="{Binding Label, Mode=TwoWay}" TextAlignment="Center" Foreground="#FF2DDB48" FontFamily="/Fonts/DIGITAL-7.TTF#Digital-7" FontSize="18"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="OptionList">
+            <StackPanel Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Left">
+                <Label Content="{Binding Name}" Width="250" HorizontalContentAlignment="Right"   Foreground="White" FontFamily="/Fonts/DIGITAL-7.TTF#Digital-7" FontSize="24"/>
+                <ComboBox Canvas.Left="12" Name="comboBox1" Width="350" ItemsSource="{Binding Definition.OptionList}" SelectedIndex="{Binding Value}" Background="#FF656565" FocusVisualStyle="{DynamicResource FocusStyle}" >
+                    <ComboBox.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="Black" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Silver" />
+                    </ComboBox.Resources>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" FontFamily="/Fonts/DIGITAL-7-Italic.TTF#Digital-7 Italic" Foreground="#FF2DDB48" FontSize="24" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </DataTemplate>
+        <v:BooleanToVisibilityConverter x:Key="VisibilityOfBool" IsReversed="True" />
+
+        <ItemsPanelTemplate x:Key="radialTemplate">
+            <v:RadialPanel />
+        </ItemsPanelTemplate>
+
+        <DataTemplate x:Key="MachineTemplate">
+            <Button Width="16.5" Height="16.5" Command="{Binding SelectType}" CommandParameter="{Binding Value}" Focusable="False">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger
+                        Binding="{Binding IsActive, Mode=TwoWay}"
+                        Value="false">
+                                <Setter Property="Button.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid>
+                                                <Ellipse Fill="DarkGray" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                            <DataTrigger
+                        Binding="{Binding Path=IsActive, Mode=TwoWay}"
+                        Value="true">
+                                <Setter Property="Button.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid>
+                                                <Ellipse Fill="YellowGreen" />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>                
+            </Button>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Canvas>
+        <ItemsControl Canvas.Top="101" Canvas.Left="68.2" Width="123" Height="126"
+                Name="itemsControl" ItemsSource="{Binding Machines, Mode=TwoWay}" ItemTemplate="{DynamicResource MachineTemplate}" ItemsPanel="{DynamicResource radialTemplate}" Focusable="False"/>
+        <v:EncoderControl x:Name="Encoder" DataContext="{Binding Encoder}" Data="{Binding Value, Mode=TwoWay}" Canvas.Top="{Binding Top}" Canvas.Left="{Binding Left}" ToolTip="{Binding Value}">
+        </v:EncoderControl>
+        <v:PotControl x:Name="MainPot1" DataContext="{Binding PotControls[0]}" Angle="{Binding Angle, Mode=TwoWay}" Canvas.Top="{Binding Top}" Canvas.Left="{Binding Left}" ToolTip="{Binding Value}">
+        </v:PotControl>
+        <v:PotControl x:Name="MainPot2" DataContext="{Binding PotControls[1]}" Angle="{Binding Angle, Mode=TwoWay}" Canvas.Top="{Binding Top}" Canvas.Left="{Binding Left}" ToolTip="{Binding Value}"/>
+        <v:PotControl x:Name="MainPot3" DataContext="{Binding PotControls[2]}" Angle="{Binding Angle, Mode=TwoWay}" Canvas.Top="{Binding Top}" Canvas.Left="{Binding Left}" ToolTip="{Binding Value}"/>
+        <v:PotControl x:Name="ParamPot1" DataContext="{Binding PotControls[3]}" Angle="{Binding Angle, Mode=TwoWay}" Canvas.Top="{Binding Top}" Canvas.Left="{Binding Left}" ToolTip="{Binding Value}" Visibility="{Binding Hide, Converter={StaticResource VisibilityOfBool}}"/>
+        <v:PotControl x:Name="ParamPot2" DataContext="{Binding PotControls[4]}" Angle="{Binding Angle, Mode=TwoWay}" Canvas.Top="{Binding Top}" Canvas.Left="{Binding Left}"  ToolTip="{Binding Value}" AllowDrop="True"/>
+        <v:PotControl x:Name="ParamPot3" DataContext="{Binding PotControls[5]}" Angle="{Binding Angle, Mode=TwoWay}" Canvas.Top="{Binding Top}" Canvas.Left="{Binding Left}"  ToolTip="{Binding Value}"  AllowDrop="True"/>
+        <v:PotControl x:Name="ParamPot4" DataContext="{Binding PotControls[6]}" Angle="{Binding Angle, Mode=TwoWay}" Canvas.Top="{Binding Top}" Canvas.Left="{Binding Left}"  ToolTip="{Binding Value}" Visibility="{Binding Hide, Converter={StaticResource VisibilityOfBool}}"/>
+        <TextBlock x:Name="LCD" Canvas.Left="20" Canvas.Top="15" Height="70" Text="{Binding LCDValue,Mode=TwoWay}" Width="220" FontFamily="/Fonts/DIGITAL-7.TTF#Digital-7" Foreground="#FF2DDB48" FontSize="28" Opacity="100" Background="#FF585353" TextAlignment="Right" Padding="0,20,4,0"  VerticalAlignment="Center" Focusable="False">
+            <TextBlock.ContextMenu>
+                <ContextMenu  ItemsSource="{Binding LCDMenu}" ItemContainerStyle="{StaticResource BoundMenu}"/>
+            </TextBlock.ContextMenu>
+        </TextBlock>
+        <TextBlock x:Name="EPSetMode" Canvas.Left="20" Canvas.Top="65" Height="20" Text="{Binding EPSetMode,Mode=TwoWay}" Width="220" FontFamily="Courier" Foreground="Red" FontSize="12" Opacity="100" TextAlignment="Left"  VerticalAlignment="Center" Focusable="False"></TextBlock>
+        <Ellipse Canvas.Left="65" Canvas.Top="295"  Name="RealTimeLED" Width="30" Height="30" Visibility="{Binding IsConnected, Converter={StaticResource VisibilityOfBool}}">
+            <Ellipse.Fill>
+            <RadialGradientBrush 
+          GradientOrigin="0.5,0.5" Center="0.5,0.5" 
+          RadiusX="0.5" RadiusY="0.5">
+                <GradientStop Color="White" Offset="0" />
+                <GradientStop Color="Red" Offset="0.10" />
+                <GradientStop Color="Firebrick" Offset="0.95" />
+                <GradientStop Color="Yellow" Offset="1" />
+            </RadialGradientBrush>
+</Ellipse.Fill>
+        </Ellipse>
+        <ComboBox x:Name="Machine" Canvas.Left="12" Canvas.Top="249" Height="23" Width="211" ItemsSource="{Binding Machines}" SelectedItem="{Binding ActiveMachine, Mode=TwoWay}" DisplayMemberPath="Name" FocusVisualStyle="{DynamicResource FocusStyle}"/>
+        <!--<Rectangle Canvas.Left="0" Canvas.Top="450" Height="460" Name="rectangle1" Stroke="Black" Fill="{Binding PedalColour}" Width="706"/>-->
+
+        <StackPanel Canvas.Top="450" Orientation="Horizontal" Background="{Binding PedalColour}"  Width="706" Height="320" MinHeight="260" HorizontalAlignment="Center">
+            <ScrollViewer>
+                <ItemsControl x:Name="HiddenParameters" ItemsSource="{Binding HiddenParameters, Mode=TwoWay}" ItemTemplateSelector="{StaticResource TemplateSelector}" Background="Transparent" BorderThickness="0" Width="706" Height="320" MinHeight="260" Focusable="False" KeyboardNavigation.TabNavigation="Continue">
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer x:Name="ScrollViewer" Padding="{TemplateBinding Padding}">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+        <StackPanel Canvas.Left="128" Canvas.Top="338" Width="190" Visibility="{Binding IsNotConnected, Converter={StaticResource VisibilityOfBool}}">
+            <v:PresetControl DataContext="{Binding FetchPreset}"  />
+        </StackPanel>
+        <StackPanel Canvas.Left="402" Canvas.Top="338" Width="190"  Visibility="{Binding IsNotConnected, Converter={StaticResource VisibilityOfBool}}">
+            <v:PresetControl DataContext="{Binding PushPreset}" />
+        </StackPanel>
+        <Slider Canvas.Left="640" Canvas.Top="470" Orientation="Vertical" Name="VirtualExpressionPedal" TickFrequency=".0001"
+                Visibility="{Binding IsNotConnected, Converter={StaticResource VisibilityOfBool}}"
+                                                    IsSnapToTickEnabled="true"
+                                                    TickPlacement="none"
+                                                    LargeChange="2" SmallChange="1"                 
+                                                    Maximum="127"
+                                                    Minimum="0"
+                                                    Margin="1" Height="150"
+                                                    Value="{Binding VirtualExpressionPedalValue, Mode=TwoWay}" FocusVisualStyle="{DynamicResource FocusStyle}"></Slider>
+    </Canvas>
+
+</UserControl>

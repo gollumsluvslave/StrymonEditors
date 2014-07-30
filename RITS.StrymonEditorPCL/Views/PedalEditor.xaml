@@ -1,0 +1,36 @@
+﻿<Window x:Class="RITS.StrymonEditor.Views.PedalEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:RITS.StrymonEditor.Views"
+        Title="{Binding PedalViewModel.Title, Mode=TwoWay}" Height="840" Width="726"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="Manual" WindowStyle="ThreeDBorderWindow" ResizeMode="CanMinimize" Closing="Window_Closing" Icon="/RITS.StrymonEditor;component/Views/Images/Strymon.ico" Left="{Binding StartupLeft, Mode=TwoWay}" Top="{Binding StartupTop, Mode=TwoWay}">
+    <Window.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.SaveCommand}" />
+        <KeyBinding Key="S" Modifiers="Shift" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.SaveXmlCommand}" />
+        <KeyBinding Key="S" Modifiers="Alt" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.SaveSyxCommand}" />
+        <KeyBinding Key="L" Modifiers="Shift" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoadXmlCommand}" />
+        <KeyBinding Key="L" Modifiers="Alt" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoadSyxCommand}" />
+        <KeyBinding Key="B" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.BPMModeCommand}" />
+        <KeyBinding Key="E" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.EPSetCommand}" />
+        <KeyBinding Key="H" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.PreviewEPSetHeelCommand}" />
+        <KeyBinding Key="T" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.PreviewEPSetToeCommand}" />
+        <KeyBinding Key="R" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.RenameCommand}" />
+        <KeyBinding Key="D" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.DirectFineEntryCommand}" />
+        <KeyBinding Key="X" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.CloseCommand}" />
+        <KeyBinding Key="F1" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoopRecord}" />
+        <KeyBinding Key="F2" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoopStop}" />
+        <KeyBinding Key="F3" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoopPlay}" />
+        <KeyBinding Key="F4" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoopUndo}" />
+        <KeyBinding Key="F5" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoopRedo}" />
+        <KeyBinding Key="F6" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoopReverse}" />
+        <KeyBinding Key="F7" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoopFullHalf}" />
+        <KeyBinding Key="F8" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.LoopPrePost}" />
+        <KeyBinding Key="I" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.ToggleInfinite}" />
+        <KeyBinding Key="F" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.FetchCurrent}" />
+        <KeyBinding Key="P" Modifiers="Control" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.PedalViewModel.SendToEdit}" />
+    </Window.InputBindings>
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top" Height="20"  ItemsSource="{Binding PedalViewModel.EditorMenu}" IsMainMenu="True" ItemContainerStyle="{StaticResource BoundMenu}"/>
+        <v:EditorView x:Name="EditorView" DataContext="{Binding PedalViewModel, Mode=TwoWay}" DockPanel.Dock="Top" VerticalAlignment="Top"/>
+    </DockPanel>
+</Window>

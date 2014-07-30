@@ -8,6 +8,7 @@ using System.IO;
 using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
+using RITS.StrymonEditor.Serialization;
 namespace RITS.StrymonEditor
 {
     /// <summary>
@@ -128,16 +129,37 @@ namespace RITS.StrymonEditor
         /// </summary>
         public static void Init()
         {
-                SupportedPedals = new List<StrymonPedal>();
-                var resourceFiles = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
-                var bigSky = resourceFiles.Where(x => x.Contains("BigSky"));
-                var mobius = resourceFiles.Where(x => x.Contains("Mobius"));
-                var timeline = resourceFiles.Where(x => x.Contains("Timeline"));
-                foreach (string s in bigSky)
-                {
-                    var bigSky = new StrymonPedal(
-                }            
+            LoadSupportedPedals();
+            
         }
+
+        private static void LoadSupportedPedals()
+        {
+            var pedals = new List<StrymonPedal>();
+            var resourceFiles = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+            var pedalFiles = resourceFiles.Where(x => !x.Contains("Machines"));
+            var machineFiles = resourceFiles.Where(x => x.Contains("Machines")).ToList();
+            foreach (var p in pedalFiles)
+            {
+                StrymonPedal pedal = null;
+                using (XmlStreamSerializer<StrymonPedal> xs = new XmlStreamSerializer<StrymonPedal>())
+                {
+                    pedal = xs.DeserializeStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(p));
+                }
+                foreach(var m in machineFiles.Where(x=>x.Contains(string.Format(".{0}.Machines",pedal.Name))))
+                {
+                    StrymonMachine machine = null;
+                    using (XmlStreamSerializer<StrymonMachine> xs = new XmlStreamSerializer<StrymonMachine>())
+                    {
+                        machine = xs.DeserializeStream(Assembly.GetExecutingAssembly().GetManifestResourceStream(m));
+                    }
+                    pedal.Machines.Add(machine);
+                }
+                pedals.Add(pedal);
+            }
+            SupportedPedals = pedals;
+        }
+
 
         #region IEnumerable<T> Extenions
 
