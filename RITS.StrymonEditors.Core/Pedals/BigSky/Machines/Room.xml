@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Reverse-->
+<StrymonMachine Name="Room" Value="7">
+  <Pots>
+    <Pot Id="1">
+      <RangeOverride>
+        <Range MinValue="200" MaxValue="20000"/>
+        <IncrementMap>
+          <Increment Value="2(12),11" End="235" />
+          <Increment Value="4(12),11" End="294"  />
+          <Increment Value="5(12),11" End="365" />
+          <Increment Value="4(12),11" End="483"  />
+          <Increment Value="12,14" End="509"  />
+          <Increment Value="3(16),15" End="1013"  />
+          <Increment Value="2(20),10" End="1060"  />
+          <Increment Value="20,10" End="1120"  />
+          <Increment Value="2(20),10" End="1170"  />
+          <Increment Value="20,10" End="1230"  />
+          <Increment Value="2(20),10" End="1280"  />
+          <Increment Value="3(20),30" End="1370"  />
+          <Increment Value="2(20),30" End="1510"  />
+          <Increment Value="20,30" End="1610"  />
+          <Increment Value="8(70),80" End="2250"  />
+          <Increment Value="3(70),90" End="2550"  />
+          <Increment Value="120,110" End="2780"  />
+          <Increment Value="4(120),110" End="3370"  />
+          <Increment Value="120" End="3970"  />
+          <Increment Value="910" End="4880"  />
+          <Increment Value="1260" End="9920"  />
+          <Increment Value="1280" End="11200"  />
+          <Increment Value="1200,1300" End="13700"  />
+          <Increment Value="1300,1200" End="18700"  />
+          <Increment Value="13"/>
+        </IncrementMap>
+      </RangeOverride>
+    </Pot>
+  </Pots>
+  <MachineParameters>
+    <ParameterDef Name="Lo End" ControlChangeNo="61">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+    <ParameterDef Name="Size" ControlChangeNo="59">
+      <OptionList>
+        <Option Name="Studio" Value="0" />
+        <Option Name="Club" Value="1" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Diffusion" ControlChangeNo="58">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

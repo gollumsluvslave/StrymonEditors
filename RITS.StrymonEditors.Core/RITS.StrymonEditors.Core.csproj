@@ -35,6 +35,45 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <EmbeddedResource Include="Pedals\BigSky\BigSky.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Bloom.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Chorale.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Cloud.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Hall.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Magneto.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\NonLinear.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Plate.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Reflections.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Room.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Shimmer.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Spring.xml" />
+    <EmbeddedResource Include="Pedals\BigSky\Machines\Swell.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\AutoSwell.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Chorus.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Destroyer.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Filter.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Flanger.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Formant.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\PatternTrem.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Phaser.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Quadrature.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Rotary.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\Vibe.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Machines\VintageTrem.xml" />
+    <EmbeddedResource Include="Pedals\Mobius\Mobius.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\dBucket.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Digital.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\dTape.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Dual.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Duck.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Filter.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Ice.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\LoFi.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Pattern.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Reverse.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Swell.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Machines\Trem.xml" />
+    <EmbeddedResource Include="Pedals\Timeline\Timeline.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoUpdate\IAutoUpdater.cs" />

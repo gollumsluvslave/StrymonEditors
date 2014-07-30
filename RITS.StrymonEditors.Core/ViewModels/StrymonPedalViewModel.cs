@@ -548,9 +548,7 @@ namespace RITS.StrymonEditor.ViewModels
 
         private void PresetRefreshComplete()
         {
-            // Hack to change display to time
             if (!presetFromPedal)midiManager.PushToEdit(ActivePreset);
-            //if (!presetFromPedal) midiManager.SynchParameter(Encoder.LinkedParameter);
             midiManager.DisableControlChangeSends = false;
             midiManager.UpdateDisplay();
             IsDirty = false;
@@ -639,7 +637,7 @@ namespace RITS.StrymonEditor.ViewModels
             editorMenu.Add(optionsMenu);
 
             // Tools Menu
-            var toolsMenu = new MenuItemViewModel { MenuText = "Tools", Children = ToolsMenu }; // TODO
+            var toolsMenu = new MenuItemViewModel { MenuText = "Tools", Children = ToolsMenu }; 
             editorMenu.Add(toolsMenu);
 
         }
@@ -757,9 +755,6 @@ namespace RITS.StrymonEditor.ViewModels
         // Helper that forces a full refresh of the view
         private void RefreshView()
         {
-            // TODO - what about previus values? cache and reload??
-            // Reseting parameters, need to refresh pot assignments!
-            //CachePreviousParameters();
             midiManager.DisableControlChangeSends = true;
             _encoder = null;
             _hiddenParameters = null;
@@ -781,13 +776,10 @@ namespace RITS.StrymonEditor.ViewModels
             if (ActiveMachine._machine.Pots.Any(x => x.RangeOverrides.Any(r => r.TriggerParameter == param.Name)))
             {
                 // Trigger parameter - refresh view to handle range overrides
-                // TODO don't need to reload the whole lot, just reapply overrides...
-                //RefreshView();
                 LoadNormalPot(ActivePreset.ControlParameters.First(), PotControls.First(x => x.IsCoarseControlPot));
             }
             // Avoid double sends
             if (!Globals.FineCoarseSynchroniser.synchInProgress) midiManager.SynchParameter(param);
-            //MidiDevices.SendControlChange(1, param.Definition.ControlChangeNo, param.Value);
 
         }
 

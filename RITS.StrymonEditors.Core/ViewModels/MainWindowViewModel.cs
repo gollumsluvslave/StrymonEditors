@@ -258,7 +258,10 @@ namespace RITS.StrymonEditor.ViewModels
         private void OpenEditor(StrymonPreset preset)
         {
             NativeHooks.Current.SetBusy();
-            //if (EditorWindow is PedalEditorWindow || EditorWindow == null) { EditorWindow = new PedalEditorWindow(preset, midiManager); }
+            if (EditorWindow == null) 
+            {
+                EditorWindow = NativeHooks.Current.CreatePedalEditorWindow(preset, midiManager);
+            }
             EditorWindow.ShowModal();
         }
 

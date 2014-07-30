@@ -66,13 +66,11 @@ namespace RITS.StrymonEditor.Commands
         {
             add
             {
-                //if (_canExecute != null)
-                //    CommandManager.RequerySuggested += value;
+                NativeHooks.Current.AddRequerySuggestedHandler(_canExecute);
             }
             remove
             {
-                //if (_canExecute != null)
-                //    CommandManager.RequerySuggested -= value;
+                NativeHooks.Current.RemoveRequerySuggestedHandler(_canExecute);
             }
         }
 
@@ -82,7 +80,7 @@ namespace RITS.StrymonEditor.Commands
         public void RaiseCanExecuteChanged()
         {
 
-            //CommandManager.InvalidateRequerySuggested();
+            NativeHooks.Current.InvalidateRequerySuggested();
 
         }
 
@@ -156,13 +154,11 @@ namespace RITS.StrymonEditor.Commands
         {
             add
             {
-                //if (_canExecute != null)
-                    //CommandManager.RequerySuggested += value;
+                NativeHooks.Current.AddRequerySuggestedHandler(_canExecute);
             }
             remove
             {
-                //if (_canExecute != null)
-                    //CommandManager.RequerySuggested -= value;
+                NativeHooks.Current.RemoveRequerySuggestedHandler(_canExecute);
             }
         }
 
@@ -172,7 +168,7 @@ namespace RITS.StrymonEditor.Commands
         public void RaiseCanExecuteChanged()
         {
 
-            //CommandManager.InvalidateRequerySuggested();
+            NativeHooks.Current.InvalidateRequerySuggested();
 
         }
 

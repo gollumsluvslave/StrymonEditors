@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Reverse-->
+<StrymonMachine Name="Chorus" Value="7">
+  <Pots>
+    <Pot Id="1">
+      <RangeOverride>
+        <Range MinValue="100" MaxValue="10000"/>
+        <CoarseRange MinValue="450" MaxValue="9160"/>
+        <IncrementMap>
+          <Increment Value="0,80" End="530"/>
+          <Increment Value="80" End="530"/>
+          <Increment Value="20,10" End="560"/>
+          <Increment Value="2(20),10" End="660"/>
+          <Increment Value="3(20),10" End="730"/>
+          <Increment Value="20,10" End="850"/>
+          <Increment Value="2(20),10" End="900"/>
+          <Increment Value="3(20),10" End="970"/>
+          <Increment Value="20" End="1170"/>
+          <Increment Value="30,2(20)" End="1170"/>
+          <Increment Value="30,20" End="1390"/>
+          <Increment Value="3(30),20" End="1500"/>
+          <Increment Value="30" End="1650"/>
+          <Increment Value="40,2(30)" End="1850"/>
+          <Increment Value="50" End="2000"/>
+          <Increment Value="2(60),50" End="2170"/>
+          <Increment Value="60,70" End="2300"/>
+          <Increment Value="2(60),70" End="2490"/>
+          <Increment Value="70" End="2630"/>
+          <Increment Value="90" End="2990"/>
+          <Increment Value="100,110" End="3410"/>
+          <Increment Value="110" End="3520"/>
+          <Increment Value="120" End="3760"/>
+          <Increment Value="130" End="3890"/>
+         <Increment Value="120" End="4010"/>
+          <Increment Value="130,120" End="4260"/>
+          <Increment Value="130" End="4520"/>
+          <Increment Value="140" End="4800"/>
+          <Increment Value="150" End="5250"/>
+          <Increment Value="160" End="5410"/>
+          <Increment Value="170" End="5580"/>
+          <Increment Value="180" End="5750"/>
+          <Increment Value="150" End="5900"/>
+          <Increment Value="110" End="6120"/>
+          <Increment Value="120" End="6480"/>
+          <Increment Value="120" End="6480"/>
+          <Increment Value="130,120" End="6730"/>
+          <Increment Value="130" End="6860"/>
+          <Increment Value="140,130" End="7130"/>
+          <Increment Value="140" End="7410"/>
+          <Increment Value="140" End="7410"/>
+          <Increment Value="120,130" End="7910"/>
+          <Increment Value="2(130),140" End="8310"/>
+          <Increment Value="130,2(140)" End="8720"/>
+          <Increment Value="150,140" End="9010"/>
+          <Increment Value="150"/>
+        </IncrementMap>
+      </RangeOverride>
+    </Pot>
+  </Pots>
+  <MachineParameters>
+    <ParameterDef Name="Mode" ControlChangeNo="28">
+      <OptionList>
+        <Option Name="dBucket" Value="0" />
+        <Option Name="Multi" Value="1" />
+        <Option Name="Vibrato" Value="2" />
+        <Option Name="Detune" Value="3" />
+        <Option Name="Digital" Value="4" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Mix" ControlChangeNo="29">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+    <ParameterDef Name="Tone" ControlChangeNo="30">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

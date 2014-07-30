@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Reverse-->
+<StrymonMachine Name="Flanger" Value="8">
+  <Pots>
+    <Pot Id="1">
+      <RangeOverride>
+        <Range MinValue="100" MaxValue="10000"/>
+        <IncrementMap>
+          <Increment Value="10" End="120"/>
+          <Increment Value="20,10" End="150"/>
+          <Increment Value="20" End="210"/>
+          <Increment Value="30" End="330"/>
+          <Increment Value="40" End="410"/>
+          <Increment Value="30" End="470"/>
+          <Increment Value="40,30" End="540"/>
+          <Increment Value="40,4(50)" End="780"/>
+          <Increment Value="60" End="900"/>
+          <Increment Value="70" End="970"/>
+          <Increment Value="30" End="1000"/>
+          <Increment Value="20,10" End="1060"/>
+          <Increment Value="2(20),10" End="1110"/>
+          <Increment Value="20,10" End="1140"/>
+          <Increment Value="3(20),10" End="1210"/>
+          <Increment Value="5(20),10" End="1320"/>
+          <Increment Value="20" End="1420"/>
+          <Increment Value="30,20" End="1470"/>
+          <Increment Value="3(30),20" End="1580"/>
+          <Increment Value="30" End="1730"/>
+          <Increment Value="40,2(30)" End="1930"/>
+          <Increment Value="2(40),30" End="2040"/>
+          <Increment Value="40" End="2360"/>
+          <Increment Value="50,2(40)" End="2490"/>
+          <Increment Value="2(50),40" End="2630"/>
+          <Increment Value="6(50),40" End="2970"/>
+          <Increment Value="40,50" End="3240"/>
+          <Increment Value="50,40" End="3330"/>
+          <Increment Value="50" End="3430"/>
+          <Increment Value="60" End="3550"/>
+          <Increment Value="70,60" End="3680"/>
+          <Increment Value="70" End="4030"/>
+          <Increment Value="80,70" End="4180"/>
+          <Increment Value="80" End="4340"/>
+          <Increment Value="220" End="4560"/>
+          <Increment Value="310" End="4870"/>
+          <Increment Value="330" End="5200"/>
+          <Increment Value="350" End="5550"/>
+          <Increment Value="380" End="5930"/>
+          <Increment Value="400" End="6330"/>
+          <Increment Value="430" End="6760"/>
+          <Increment Value="450" End="7210"/>
+          <Increment Value="490" End="7700"/>
+          <Increment Value="520" End="8220"/>
+          <Increment Value="550" End="8770"/>
+          <Increment Value="590" End="9360"/>
+          <Increment Value="640"/>
+        </IncrementMap>
+      </RangeOverride>
+    </Pot>
+  </Pots>
+  <MachineParameters>
+  <ParameterDef Name="Mode" ControlChangeNo="24">
+    <OptionList>
+      <Option Name="Silver" Value="0" />
+      <Option Name="Grey" Value="1" />
+      <Option Name="Black+" Value="2" />
+      <Option Name="Black-" Value="3" />
+      <Option Name="Zero+" Value="4" />
+      <Option Name="Zero-" Value="5" />
+    </OptionList>
+  </ParameterDef>
+    <ParameterDef Name="Regen" ControlChangeNo="25">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+    <ParameterDef Name="Manual" ControlChangeNo="26">
+      <Range MinValue="0" MaxValue="17"/>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

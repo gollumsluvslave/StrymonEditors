@@ -68,19 +68,18 @@ namespace RITS.StrymonEditor.Models
         /// <summary>
         /// Return the correct MIDI Channel number based on the users settings
         /// </summary>
-        /// TODO - Properties
         public int MidiChannel 
         {
             get
             {
                 switch (Name)
                 {
-                    //case Timeline_Name:
-                    //    return Properties.Settings.Default.TimelineMidiChannel;
-                    //case Mobius_Name:
-                    //    return Properties.Settings.Default.MobiusMidiChannel;
-                    //case BigSky_Name:
-                    //    return Properties.Settings.Default.BigSkyMidiChannel;
+                    case Timeline_Name:
+                        return NativeHooks.Current.TimelineMIDIChannel;
+                    case Mobius_Name:
+                        return NativeHooks.Current.MobiusMIDIChannel;
+                    case BigSky_Name:
+                        return NativeHooks.Current.BigsSkyMIDIChannel;
                     default:
                         throw new ArgumentOutOfRangeException(string.Format("Unsupported pedal : {0}", Name));
                 }

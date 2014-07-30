@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -86,8 +87,8 @@ namespace RITS.StrymonEditor
         // TODO - Properties / application settings
         public static bool IsBPMModeActive 
         {
-            get { return false; }//Properties.Settings.Default.BPMMode; }
-            set { }//Properties.Settings.Default.BPMMode = value; }
+            get { return NativeHooks.Current.BPMMode; }
+            set { NativeHooks.Current.BPMMode = value; }
         }
 
         /// <summary>
@@ -128,34 +129,14 @@ namespace RITS.StrymonEditor
         public static void Init()
         {
                 SupportedPedals = new List<StrymonPedal>();
-                // TODO - replace with embedded resources
-                //foreach (string pedalFolder in Directory.GetDirectories("Pedals"))
-                //{
-                //    StrymonPedal current = null;
-                //    string pedalName = Path.GetFileNameWithoutExtension(pedalFolder);
-                //    string pedalDefPath = Path.Combine(pedalFolder, pedalName + ".xml");
-                //    if (File.Exists(pedalDefPath))
-                //    {
-                //        using (XmlSerializer<StrymonPedal> xs = new XmlSerializer<StrymonPedal>())
-                //        {
-                //            current = xs.DeserializeFile(pedalDefPath);
-                //        }
-                //        string machineFolder = Path.Combine(pedalFolder, "Machines");
-                //        foreach (var machinePath in Directory.GetFiles(machineFolder, "*.xml"))
-                //        {
-                //            logger.Debug(string.Format("Deserializing: {0}", machinePath));
-                //            using (XmlSerializer<StrymonMachine> xs = new XmlSerializer<StrymonMachine>())
-                //            {
-                //                var machine = xs.DeserializeFile(machinePath);
-                //                logger.Debug(string.Format("Adding Machine: {0}", machine.Name));
-                //                current.Machines.Add(machine);
-                //            }
-
-                //        }
-                //        SupportedPedals.Add(current);
-                //    }
-                //}
-            
+                var resourceFiles = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+                var bigSky = resourceFiles.Where(x => x.Contains("BigSky"));
+                var mobius = resourceFiles.Where(x => x.Contains("Mobius"));
+                var timeline = resourceFiles.Where(x => x.Contains("Timeline"));
+                foreach (string s in bigSky)
+                {
+                    var bigSky = new StrymonPedal(
+                }            
         }
 
         #region IEnumerable<T> Extenions

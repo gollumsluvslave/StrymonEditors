@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StrymonMachine Name="Chorale" Value="2">
+  <MachineParameters>
+    <ParameterDef Name="Vowel" ControlChangeNo="33">
+      <OptionList>
+        <Option Name="AAHHOO" Value="0" />
+        <Option Name="AAHH" Value="1" />
+        <Option Name="AAHHOH" Value="2" />
+        <Option Name="OH" Value="3" />
+        <Option Name="OOOHOH" Value="4" />
+        <Option Name="OOOO" Value="5" />
+        <Option Name="Random" Value="6" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Resonance" ControlChangeNo="34">
+      <OptionList>
+        <Option Name="Mild" Value="0" />
+        <Option Name="Medium" Value="1" />
+        <Option Name="High" Value="2" />
+      </OptionList>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

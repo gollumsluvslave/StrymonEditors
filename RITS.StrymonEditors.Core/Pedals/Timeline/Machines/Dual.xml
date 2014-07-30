@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Dual-->
+<StrymonMachine Name="Dual" Value="10">
+  <MachineParameters>
+    <ParameterDef Name="Time2" ControlChangeNo="32">
+      <OptionList>
+        <Option Name="1/8" Value="0" />
+        <Option Name="1/7" Value="1" />
+        <Option Name="1/6" Value="2" />
+        <Option Name="1/5" Value="3" />
+        <Option Name="1/4" Value="4" />
+        <Option Name="1/3" Value="5" />
+        <Option Name="2/5" Value="6" />
+        <Option Name="1/2" Value="7" />
+        <Option Name="2/3" Value="8" />
+        <Option Name="3/4" Value="9" />
+        <Option Name="4/5" Value="10" />
+        <Option Name="5/6" Value="11" />
+        <Option Name="7/8" Value="12" />
+        <Option Name="1/1" Value="13" />
+        <Option Name="5/4" Value="14" />
+        <Option Name="4/3" Value="15" />
+        <Option Name="3/2" Value="16" />
+        <Option Name="5/3" Value="17" />
+        <Option Name="2/1" Value="18" />
+        <Option Name="5/2" Value="19" />
+        <Option Name="3/1" Value="20" />
+        <Option Name="7/2" Value="21" />
+        <Option Name="4/1" Value="22" />
+        <Option Name="5/1" Value="23" />
+        <Option Name="6/1" Value="24" />
+        <Option Name="7/1" Value="25" />
+        <Option Name="8/1" Value="26" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Rpt2" ControlChangeNo="34">
+      <Range MinValue="0" MaxValue="18"/>
+    </ParameterDef>
+    <ParameterDef Name="Mix2" ControlChangeNo="33">
+      <Range MinValue="0" MaxValue="18"/>
+    </ParameterDef>
+    <ParameterDef Name="HiPass"/>
+    <ParameterDef Name="Config" ControlChangeNo="36">
+      <OptionList>
+        <Option Name="Series" Value="0" />
+        <Option Name="Para" Value="1" />
+      </OptionList>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

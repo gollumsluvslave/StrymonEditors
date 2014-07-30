@@ -302,10 +302,7 @@ namespace RITS.StrymonEditor.Models
                 set
                 {
                     int fineValue = value;
-                    if (fineValue == 0)
-                    {
-                        TwoByteFineValue = (fineValue == 0) ? 100 : 1000000 / fineValue; // Hack to solve Divede by Zero error
-                    }
+                    TwoByteFineValue = (fineValue == 0) ? 100 : 1000000 / fineValue; // Hack to solve Divede by Zero error
                     
                 }
             }

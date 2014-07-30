@@ -355,7 +355,6 @@ namespace RITS.StrymonEditor.ViewModels
         private void PerformDownload()
         {
             var p = OnlineService.DownloadPreset(SelectedPreset.PresetId);
-            // TODO : Need to determine if it is opend via editor or main window!!
             if (this.fromMainWindow)
             {
                 Mediator.NotifyColleagues(ViewModelMessages.ReceivedPresetFromOnlineMainWindow, StrymonPreset.FromXmlPreset(p));

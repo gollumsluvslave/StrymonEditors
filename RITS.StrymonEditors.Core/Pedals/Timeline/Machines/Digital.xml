@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Digital-->
+<StrymonMachine Name="Digital" Value="9">
+  <!-- inline parameter - not shared with any other machines-->
+  <MachineParameters>
+    <ParameterDef Name="Smear"/>
+    <ParameterDef Name="HiPass"/>
+    <ParameterDef Name="RptDyn" ControlChangeNo="56">
+      <OptionList>
+        <Option Name="Off" Value="0"/>
+        <Option Name="On" Value="1"/>
+      </OptionList>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

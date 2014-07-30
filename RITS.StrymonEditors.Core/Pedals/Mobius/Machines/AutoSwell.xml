@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StrymonMachine Name="AutoSwell" Value="4">
+  <Pots>
+    <Pot Id="1">
+      <RangeOverride>
+        <Range MinValue="100" MaxValue="10000"/>
+        <CoarseRange MinValue="450" MaxValue="9160"/>
+        <IncrementMap>
+          <Increment Value="0,80" End="530"/>
+          <Increment Value="80" End="530"/>
+          <Increment Value="20,10" End="560"/>
+          <Increment Value="2(20),10" End="660"/>
+          <Increment Value="3(20),10" End="730"/>
+          <Increment Value="20,10" End="850"/>
+          <Increment Value="2(20),10" End="900"/>
+          <Increment Value="3(20),10" End="970"/>
+          <Increment Value="20" End="1170"/>
+          <Increment Value="30,2(20)" End="1170"/>
+          <Increment Value="30,20" End="1390"/>
+          <Increment Value="3(30),20" End="1500"/>
+          <Increment Value="30" End="1650"/>
+          <Increment Value="40,2(30)" End="1850"/>
+          <Increment Value="50" End="2000"/>
+          <Increment Value="2(60),50" End="2170"/>
+          <Increment Value="60,70" End="2300"/>
+          <Increment Value="2(60),70" End="2490"/>
+          <Increment Value="70" End="2630"/>
+          <Increment Value="90" End="2990"/>
+          <Increment Value="100,110" End="3410"/>
+          <Increment Value="110" End="3520"/>
+          <Increment Value="120" End="3760"/>
+          <Increment Value="130" End="3890"/>
+          <Increment Value="120" End="4010"/>
+          <Increment Value="130,120" End="4260"/>
+          <Increment Value="130" End="4520"/>
+          <Increment Value="140" End="4800"/>
+          <Increment Value="150" End="5250"/>
+          <Increment Value="160" End="5410"/>
+          <Increment Value="170" End="5580"/>
+          <Increment Value="180" End="5750"/>
+          <Increment Value="150" End="5900"/>
+          <Increment Value="110" End="6120"/>
+          <Increment Value="120" End="6480"/>
+          <Increment Value="120" End="6480"/>
+          <Increment Value="130,120" End="6730"/>
+          <Increment Value="130" End="6860"/>
+          <Increment Value="140,130" End="7130"/>
+          <Increment Value="140" End="7410"/>
+          <Increment Value="140" End="7410"/>
+          <Increment Value="120,130" End="7910"/>
+          <Increment Value="2(130),140" End="8310"/>
+          <Increment Value="130,2(140)" End="8720"/>
+          <Increment Value="150,140" End="9010"/>
+          <Increment Value="150"/>
+        </IncrementMap>
+      </RangeOverride>
+    </Pot>
+  </Pots>
+  <MachineParameters>
+    <ParameterDef Name="Rise" ControlChangeNo="57">
+      <OptionList>
+        <Option Name="0.08" Value="0" />
+        <Option Name="0.10" Value="1" />
+        <Option Name="0.12" Value="2" />
+        <Option Name="0.14" Value="3" />
+        <Option Name="0.17" Value="4" />
+        <Option Name="0.20" Value="5" />
+        <Option Name="0.25" Value="6" />
+        <Option Name="0.30" Value="7" />
+        <Option Name="0.35" Value="8" />
+        <Option Name="0.40" Value="9" />
+        <Option Name="0.50" Value="10" />
+        <Option Name="0.60" Value="11" />
+        <Option Name="0.70" Value="12" />
+        <Option Name="0.80" Value="13" />
+        <Option Name="0.90" Value="14" />
+        <Option Name="1.00" Value="15" />
+        <Option Name="1.20" Value="16" />
+        <Option Name="1.40" Value="17" />
+        <Option Name="1.70" Value="18" />
+        <Option Name="2.00" Value="19" />
+        <Option Name="2.50" Value="20" />
+        <Option Name="3.00" Value="21" />
+        <Option Name="4.00" Value="22" />
+      </OptionList>
+    </ParameterDef>
+    <ParameterDef Name="Shape" ControlChangeNo="58">
+      <OptionList>
+        <Option Name="Exponential" Value="0" />
+        <Option Name="Quadratic" Value="1" />
+        <Option Name="Ramp" Value="2" />
+        <Option Name="Logarithmic" Value="3" />
+      </OptionList>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>

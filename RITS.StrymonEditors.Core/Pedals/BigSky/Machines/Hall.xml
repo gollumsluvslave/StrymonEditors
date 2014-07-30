@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Reverse-->
+<StrymonMachine Name="Hall" Value="8">
+  <MachineParameters>
+    <ParameterDef Name="Lo End" ControlChangeNo="39">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+    <ParameterDef Name="Mid" ControlChangeNo="42">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+    <ParameterDef Name="Size" ControlChangeNo="40">
+      <OptionList>
+        <Option Name="Concert" Value="0" />
+        <Option Name="Arena" Value="1" />
+      </OptionList>
+    </ParameterDef>
+  </MachineParameters>
+
+</StrymonMachine>

@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StrymonMachine Name="Cloud" Value="1">
+  <Pots>
+    <Pot Id="1">
+      <RangeOverride>
+        <Range MinValue="1000" MaxValue="50000"/>
+        <IncrementMap>
+          <Increment Value="80" End="1320" />
+          <Increment Value="70" End="1390"  />
+          <Increment Value="80" End="1950" />
+          <Increment Value="70" End="2020"  />
+          <Increment Value="80" End="2580"  />
+          <Increment Value="70" End="2650"  />
+          <Increment Value="80" End="2970"  />
+          <Increment Value="60" End="3030"  />
+          <Increment Value="50,40" End="3120"  />
+          <Increment Value="50" End="3270"  />
+          <Increment Value="40" End="3310"  />
+          <Increment Value="50" End="3410"  />
+          <Increment Value="40" End="3450"  />
+          <Increment Value="50" End="3600"  />
+          <Increment Value="40" End="3640"  />
+          <Increment Value="50" End="3740"  />
+          <Increment Value="40" End="3780"  />
+          <Increment Value="50" End="3930"  />
+          <Increment Value="40" End="3970"  />
+          <Increment Value="50" End="4120"  />
+          <Increment Value="40,50" End="4210"  />
+          <Increment Value="70,60" End="4340"  />
+          <Increment Value="60,70" End="4470"  />
+          <Increment Value="60" End="4650"  />
+          <Increment Value="70,60" End="4780"  />
+          <Increment Value="60,70" End="5040"  />
+          <Increment Value="80" End="5280"  />
+          <Increment Value="70,80" End="5430"  />
+          <Increment Value="80" End="5910"  />
+          <Increment Value="70" End="5980"  />
+          <Increment Value="80" End="6540"  />
+          <Increment Value="70" End="6610"  />
+          <Increment Value="80" End="6930"  />
+          <Increment Value="90" End="7020"  />
+          <Increment Value="240" End="7500"  />
+          <Increment Value="230" End="7730"  />
+          <Increment Value="240" End="8210"  />
+          <Increment Value="230,240" End="9150"  />
+          <Increment Value="240,230" End="9620"  />
+          <Increment Value="240" End="9860"  />
+          <Increment Value="440" End="10300"  />
+          <Increment Value="800" End="14300"  />
+          <Increment Value="700" End="15000"  />
+          <Increment Value="800" End="19800"  />
+          <Increment Value="1900" End="21700"  />
+          <Increment Value="2300,2400" End="31100"  />
+          <Increment Value="2400,2300" End="35800"  />
+          <Increment Value="2400" End="40600"  />
+          <Increment Value="2300,2400"/>
+        </IncrementMap>
+      </RangeOverride>
+    </Pot>
+  </Pots>
+  <MachineParameters>
+    <ParameterDef Name="Lo End" ControlChangeNo="38">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+    <ParameterDef Name="Diffusion" ControlChangeNo="37">
+      <Range MinValue="0" MaxValue="20"/>
+    </ParameterDef>
+  </MachineParameters>
+</StrymonMachine>
