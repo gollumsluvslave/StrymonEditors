@@ -574,7 +574,7 @@ namespace RITS.StrymonEditor.MIDI
         {
             SendSysEx(new SysExCommand("IdentifyRequest", 
                                             IdentifyRequest, 
-                                            1000, 
+                                            2000, 
                                             ReceiveIdentifyResponse, 
                                             IdentityProcessComplete));
         }

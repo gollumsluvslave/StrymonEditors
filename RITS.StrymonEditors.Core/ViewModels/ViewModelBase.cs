@@ -118,6 +118,12 @@ namespace RITS.StrymonEditor.ViewModels
             DeRegisterFromMediator();
         }
 
+
+        public void DoWork(Action<object> work, object arg, Action onComplete)
+        {
+            NativeHooks.Current.DoWork(work,arg, onComplete);
+        }
+
     }
 
 

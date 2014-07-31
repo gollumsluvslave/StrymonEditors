@@ -25,26 +25,8 @@ namespace RITS.StrymonEditor
                 return;
             }
             
-            BuildNativeHooks();
         }
 
-        public void BuildNativeHooks()
-        {
-            
-            NativeHooks.Current.BigsSkyMIDIChannel = RITS.StrymonEditor.Properties.Settings.Default.BigSkyMidiChannel;
-            NativeHooks.Current.MobiusMIDIChannel = RITS.StrymonEditor.Properties.Settings.Default.MobiusMidiChannel;
-            NativeHooks.Current.TimelineMIDIChannel = RITS.StrymonEditor.Properties.Settings.Default.TimelineMidiChannel;
-            NativeHooks.Current.BulkFetchDelay = RITS.StrymonEditor.Properties.Settings.Default.BulkFetchDelay;
-            NativeHooks.Current.MIDIInDevice = RITS.StrymonEditor.Properties.Settings.Default.MidiInDevice;
-            NativeHooks.Current.MIDIOutDevice = RITS.StrymonEditor.Properties.Settings.Default.MidiOutDevice;
-            NativeHooks.Current.PushChunkDelay = RITS.StrymonEditor.Properties.Settings.Default.PushChunkDelay;
-            NativeHooks.Current.PushChunkSize = RITS.StrymonEditor.Properties.Settings.Default.PushChunkSize;
-            NativeHooks.Current.SyncMode = RITS.StrymonEditor.Properties.Settings.Default.SyncMode;
-            NativeHooks.Current.DisableBulkFetch = RITS.StrymonEditor.Properties.Settings.Default.DisableBulkFetch;
-
-            NativeHooks.Current.VersionInfo = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            
-        }
 
         void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {

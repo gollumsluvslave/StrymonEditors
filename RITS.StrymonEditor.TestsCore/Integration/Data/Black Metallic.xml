@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<StrymonXmlPreset xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="BLACK METALLIC" Pedal="2" Machine="7">
+  <EPSet>
+    <HeelToeSetting PotId="1" HeelValue="0" ToeValue="0" />
+    <HeelToeSetting PotId="2" HeelValue="0" ToeValue="0" />
+    <HeelToeSetting PotId="3" HeelValue="0" ToeValue="0" />
+    <HeelToeSetting PotId="5" HeelValue="0" ToeValue="0" />
+    <HeelToeSetting PotId="6" HeelValue="0" ToeValue="0" />
+  </EPSet>
+  <Parameters>
+    <Parameter Name="Speed" Value="42" FineValue="1250" />
+    <Parameter Name="Depth" Value="42" FineValue="0" />
+    <Parameter Name="Level" Value="42" FineValue="0" />
+    <Parameter Name="Mode" Value="0" FineValue="0" />
+    <Parameter Name="Mix" Value="0" FineValue="0" />
+    <Parameter Name="Tone" Value="0" FineValue="0" />
+    <Parameter Name="TapDivision" Value="0" FineValue="0" />
+    <Parameter Name="PrePost" Value="0" FineValue="0" />
+    <Parameter Name="EP" Value="0" FineValue="0" />
+  </Parameters>
+</StrymonXmlPreset>

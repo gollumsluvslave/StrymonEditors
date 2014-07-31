@@ -1278,7 +1278,8 @@ namespace RITS.StrymonEditor.ViewModels
         {
             get 
             {
-                return NativeHooks.Current.CreateDirectEntryDialog(ActivePreset.FineValue);
+                if (directEntryDialog == null) return NativeHooks.Current.CreateDirectEntryDialog(ActivePreset.FineValue);
+                return directEntryDialog;
             }
             set { directEntryDialog = value; }
         }
@@ -1291,7 +1292,8 @@ namespace RITS.StrymonEditor.ViewModels
         {
             get
             {
-                return NativeHooks.Current.CreatePresetRenameDialog(ActivePreset.Name);
+                if (renameDialog == null) return NativeHooks.Current.CreatePresetRenameDialog(ActivePreset.Name);
+                return renameDialog;
             }
             set { renameDialog = value; }
         }
@@ -1304,10 +1306,7 @@ namespace RITS.StrymonEditor.ViewModels
         {
             get
             {
-                if (progressDialog == null)
-                {
-                    //progressDialog = new ModalProgressBar(ModalProgressVM) ; // TODO new Window Native hook?
-                }
+                if (progressDialog == null)  progressDialog = NativeHooks.Current.CreateProgressBarDialog(ModalProgressVM);
                 return progressDialog;
             }
             set

@@ -120,7 +120,8 @@ namespace RITS.StrymonEditor.Models
             public StrymonSysExMessage(StrymonPedal pedal)
             {
                 var resourceName = string.Format("RITS.StrymonEditor.Base_{0}.syx",pedal.Name);
-                using (Stream resFilestream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                var asm = Assembly.GetExecutingAssembly();
+                using (Stream resFilestream = asm.GetManifestResourceStream(resourceName))
                 {
                     if (resFilestream == null) return;
                     byte[] ba = new byte[resFilestream.Length];

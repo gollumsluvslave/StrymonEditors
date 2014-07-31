@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Text;
@@ -11,6 +12,7 @@ using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.IO;
 using RITS.StrymonEditor.MIDI;
 using RITS.StrymonEditor.Logging;
+using RITS.StrymonEditor.ViewModels;
 
 namespace RITS.StrymonEditor
 {
@@ -81,6 +83,11 @@ namespace RITS.StrymonEditor
             return (IModalDialog)new Views.PedalEditorWindow(preset, midiManager);
         }
 
+        public override IModalDialog CreateProgressBarDialog(ModalProgressDialogViewModel progressVM)
+        {
+            return (IModalDialog)new Views.ModalProgressBar(progressVM);
+        }
+
         public override void Delay(int delay)
         {
             Thread.Sleep(delay);
@@ -118,6 +125,152 @@ namespace RITS.StrymonEditor
             get
             {
                 return MidiDevices.GetOutputDevices().ToList();
+            }
+        }
+
+
+
+
+        public override void DoWork(Action<object> work, object arg, Action onComplete)
+        {
+            if (!Thread.CurrentThread.IsBackground)
+            {
+                var worker = new BackgroundWorker();
+                worker.DoWork += (sender, e) => work(arg);
+                worker.RunWorkerCompleted += (sender, e) => onComplete();
+                worker.RunWorkerAsync();
+            }
+            else
+            {
+                work(arg);
+            }
+
+        }
+
+        public override int TimelineMIDIChannel 
+        { 
+            get
+            { 
+                return Properties.Settings.Default.TimelineMidiChannel;
+            }
+            set
+            {
+                Properties.Settings.Default.TimelineMidiChannel=value;
+            }
+        }
+        public override int BigsSkyMIDIChannel 
+        { 
+            get
+            { 
+                return Properties.Settings.Default.BigSkyMidiChannel;
+            }
+            set
+            {
+                Properties.Settings.Default.BigSkyMidiChannel=value;
+            }
+        }
+        public override int MobiusMIDIChannel 
+        { 
+            get
+            { 
+                return Properties.Settings.Default.MobiusMidiChannel;
+            }
+            set
+            {
+                Properties.Settings.Default.MobiusMidiChannel=value;
+            }
+        }
+        
+        public override string VersionInfo 
+        { 
+            get { return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();}
+        }
+        public override bool BPMMode
+        {
+            get
+            {
+                return Properties.Settings.Default.BPMMode;
+            }
+            set
+            {
+                Properties.Settings.Default.BPMMode = value;
+            }
+        }
+        public override string SyncMode
+        {
+            get
+            {
+                return Properties.Settings.Default.SyncMode;
+            }
+            set
+            {
+                Properties.Settings.Default.SyncMode = value;
+            }
+        }
+        public override bool DisableBulkFetch
+        {
+            get
+            {
+                return Properties.Settings.Default.DisableBulkFetch;
+            }
+            set
+            {
+                Properties.Settings.Default.DisableBulkFetch = value;
+            }
+        }
+        public override int PushChunkSize
+        {
+            get
+            {
+                return Properties.Settings.Default.PushChunkSize;
+            }
+            set
+            {
+                Properties.Settings.Default.PushChunkSize = value;
+            }
+        }
+        public override int PushChunkDelay
+        {
+            get
+            {
+                return Properties.Settings.Default.PushChunkDelay;
+            }
+            set
+            {
+                Properties.Settings.Default.PushChunkDelay = value;
+            }
+        }
+        public override int BulkFetchDelay
+        {
+            get
+            {
+                return Properties.Settings.Default.BulkFetchDelay;
+            }
+            set
+            {
+                Properties.Settings.Default.BulkFetchDelay = value;
+            }
+        }
+        public override string MIDIInDevice
+        {
+            get
+            {
+                return Properties.Settings.Default.MidiInDevice;
+            }
+            set
+            {
+                Properties.Settings.Default.MidiInDevice = value;
+            }
+        }
+        public override string MIDIOutDevice
+        {
+            get
+            {
+                return Properties.Settings.Default.MidiOutDevice;
+            }
+            set
+            {
+                Properties.Settings.Default.MidiOutDevice = value;
             }
         }
 

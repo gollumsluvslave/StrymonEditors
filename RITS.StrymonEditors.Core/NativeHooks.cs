@@ -5,6 +5,7 @@ using System.Text;
 
 using RITS.StrymonEditor.AutoUpdate;
 using RITS.StrymonEditor.Models;
+using RITS.StrymonEditor.ViewModels;
 using RITS.StrymonEditor.IO;
 using RITS.StrymonEditor.MIDI;
 using RITS.StrymonEditor.Logging;
@@ -63,6 +64,8 @@ namespace RITS.StrymonEditor
 
         public abstract IModalDialog CreatePresetRenameDialog(string name);
 
+        public abstract IModalDialog CreateProgressBarDialog(ModalProgressDialogViewModel progressVM);
+
         public abstract IAutoUpdater CreateAutoUpdater();
 
         public abstract IModalDialog CreatePedalEditorWindow(StrymonPreset preset, IStrymonMidiManager midiManager);
@@ -78,21 +81,25 @@ namespace RITS.StrymonEditor
         public abstract string PedalImage(string pedalName);
 
 
-        public virtual string VersionInfo { get; set; }
-        public virtual bool BPMMode { get; set; }
-        public virtual string SyncMode { get; set; }
-        public virtual bool DisableBulkFetch { get; set; }
-        public virtual int PushChunkSize { get; set; }
-        public virtual int PushChunkDelay { get; set; }
-        public virtual int BulkFetchDelay { get; set; }
-        public virtual string MIDIInDevice { get; set; }
-        public virtual string MIDIOutDevice { get; set; }
+        public abstract void DoWork(Action<object> work, object arg, Action onComplete);
+
+
 
         public abstract IList<string> MIDIInDevices { get; }
         public abstract IList<string> MIDIOutDevices { get; }
 
-        public virtual int TimelineMIDIChannel { get; set; }
-        public virtual int BigsSkyMIDIChannel { get; set; }
-        public virtual int MobiusMIDIChannel { get; set; }
+        public abstract int TimelineMIDIChannel { get; set; }
+        public abstract int BigsSkyMIDIChannel { get; set; }
+        public abstract int MobiusMIDIChannel { get; set; }
+        public abstract bool BPMMode { get; set; }
+        public abstract string SyncMode { get; set; }
+        public abstract bool DisableBulkFetch { get; set; }
+        public abstract int PushChunkSize { get; set; }
+        public abstract int PushChunkDelay { get; set; }
+        public abstract int BulkFetchDelay { get; set; }
+        public abstract string MIDIInDevice { get; set; }
+        public abstract string MIDIOutDevice { get; set; }
+
+        public abstract string VersionInfo { get;}
     }
 }

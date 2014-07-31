@@ -137,7 +137,7 @@ namespace RITS.StrymonEditor
         {
             var pedals = new List<StrymonPedal>();
             var resourceFiles = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
-            var pedalFiles = resourceFiles.Where(x => !x.Contains("Machines"));
+            var pedalFiles = resourceFiles.Where(x => !x.Contains("Machines") && !x.Contains("Base_"));
             var machineFiles = resourceFiles.Where(x => x.Contains("Machines")).ToList();
             foreach (var p in pedalFiles)
             {

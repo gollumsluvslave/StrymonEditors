@@ -247,9 +247,6 @@
     </None>
     <Resource Include="Fonts\digital-7-italic.ttf" />
     <Resource Include="Fonts\digital-7.ttf" />
-    <EmbeddedResource Include="Base_Timeline.syx" />
-    <EmbeddedResource Include="Base_BigSky.syx" />
-    <EmbeddedResource Include="Base_Mobius.syx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

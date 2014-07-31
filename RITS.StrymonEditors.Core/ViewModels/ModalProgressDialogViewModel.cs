@@ -77,16 +77,16 @@ namespace RITS.StrymonEditor.ViewModels
         /// </summary>
         public void Start()
         {
-            //DoWork(work,this);
+            DoWork(work,this,Complete);
         }
 
-        /// <summary>
-        /// Completes the operation, displaying a message to the user and closing the dialog
-        /// </summary>
-        //protected override void Complete()
-        //{
-        //    MessageDialog.ShowInfo("Restore completed succesfully!", "Restore Backup");
-        //    Close();
-        //}
+         //<summary>
+         //Completes the operation, displaying a message to the user and closing the dialog
+         //</summary>
+        private void Complete()
+        {
+            MessageDialog.ShowInfo("Restore completed succesfully!", "Restore Backup");
+            Close();
+        }
     }
 }
