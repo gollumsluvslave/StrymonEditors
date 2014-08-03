@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using RITS.StrymonEditor.MIDI;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
 using RITS.StrymonEditor.Messaging;

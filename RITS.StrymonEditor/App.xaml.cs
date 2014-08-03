@@ -14,7 +14,7 @@ namespace RITS.StrymonEditor
     /// </summary>
     public partial class App : Application
     {
-
+        private NativeHooks _hooks = new WPFNativeHooks();
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Process thisProc = Process.GetCurrentProcess();
@@ -24,8 +24,9 @@ namespace RITS.StrymonEditor
                 Application.Current.Shutdown();
                 return;
             }
-
+            
         }
+
 
         void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
@@ -35,6 +36,8 @@ namespace RITS.StrymonEditor
             }
             e.Handled = true;
         }
+
+
 
     }
 }

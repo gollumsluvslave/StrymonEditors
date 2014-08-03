@@ -48,24 +48,24 @@ namespace RITS.StrymonEditor.Commands
 
         #endregion // Constructors
 
-        public bool IsEnabled
-        {
-            get
-            {
-                if (_canExecute == null) return true;
-                bool enabled = _canExecute(parameter);
-                if (enabled != _isEnabled)
-                {
-                    _isEnabled = enabled;
-                    if (CanExecuteChanged != null)
-                    {
-                        CanExecuteChanged(this, EventArgs.Empty);
-                    }
-                }
+        //public bool IsEnabled
+        //{
+        //    get
+        //    {
+        //        if (_canExecute == null) return true;
+        //        bool enabled = _canExecute(parameter);
+        //        if (enabled != _isEnabled)
+        //        {
+        //            _isEnabled = enabled;
+        //            if (CanExecuteChanged != null)
+        //            {
+        //                CanExecuteChanged(this, EventArgs.Empty);
+        //            }
+        //        }
                 
-                return _isEnabled;
-            }
-        }
+        //        return _isEnabled;
+        //    }
+        //}
 
         #region ICommand Members
 
@@ -80,15 +80,26 @@ namespace RITS.StrymonEditor.Commands
             else
             {
                 this.parameter = (T)parameter;
-                return IsEnabled;
+                return _canExecute(this.parameter);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler CanExecuteChanged;
-
+        public event EventHandler CanExecuteChanged
+        {
+            add
+            {
+                if (_canExecute != null)
+                    NativeHooks.Current.AddCanExecuteRequerySuggested(value);
+            }
+            remove
+            {
+                if (_canExecute != null)
+                    NativeHooks.Current.RemoveCanExecuteRequerySuggested(value);
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -138,23 +149,27 @@ namespace RITS.StrymonEditor.Commands
             _canExecute = canExecute;
         }
 
-        public bool IsEnabled
-        {
-            get 
-            {
-                bool enabled = _canExecute();
-                if (enabled!=_isEnabled)
-                {
-                    _isEnabled = enabled;
-                    if (CanExecuteChanged != null)
-                    {
-                        CanExecuteChanged(this, EventArgs.Empty);
-                    }
-                }
+        //public bool IsEnabled
+        //{
+        //    get 
+        //    {
+        //        bool enabled = _canExecute();
+        //        if (enabled!=_isEnabled)
+        //        {
+        //            _isEnabled = enabled;
+        //            if (CanExecuteChanged != null)
+        //            {
+        //                CanExecuteChanged(this, EventArgs.Empty);
+        //            }
+        //        }
                 
-                return _isEnabled;
-            }
-        }
+        //        return _isEnabled;
+        //    }
+        //    set
+        //    {
+        //        _isEnabled = value;
+        //    }
+        //}
 
         #endregion // Constructors
 
@@ -168,13 +183,26 @@ namespace RITS.StrymonEditor.Commands
         public bool CanExecute(object parameter)
         {
             if (_canExecute == null) return true;
-            else return IsEnabled;
+            else return _canExecute();
         }
 
         /// <summary>
         /// Event Handler for CanExecuteChanged
         /// </summary>
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add
+            {
+                if (_canExecute != null)
+                    NativeHooks.Current.AddCanExecuteRequerySuggested(value);
+            }
+            remove
+            {
+                if (_canExecute != null)
+                    NativeHooks.Current.RemoveCanExecuteRequerySuggested(value);
+            }
+        }
+
         
 
         /// <summary>

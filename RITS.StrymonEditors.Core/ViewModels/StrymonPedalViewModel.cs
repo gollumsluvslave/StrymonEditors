@@ -47,7 +47,6 @@ namespace RITS.StrymonEditor.ViewModels
             using (ILogger logger = NativeHooks.Current.CreateLogger())
             {
                 logger.Debug(string.Format("Creating ViewModel for Preset: {0}", preset.Name));
-                SetSyncMode();
                 this.ActivePreset = preset;
             }
             // Preserve original state
@@ -338,6 +337,7 @@ namespace RITS.StrymonEditor.ViewModels
                 }
                 preset = value;
                 ActivePedal = preset.Pedal;
+                SetSyncMode();
                 if (preset.Name == null) preset.Name = "NEW";
                 // Rather than doing a ton of CC messages if the preset was not sourced from the pedal, then send to edit buffer?
                 Globals.PotValueMap = preset.PotValueMap;

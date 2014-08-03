@@ -10,6 +10,7 @@ namespace RITS.StrymonEditor.Tests
     /// <typeparam name="T"></typeparam>
     public class TestContext<T> where T : class
     {
+        private NativeHooks _hooks = new WPFNativeHooks();
         private MockRepository _repository;
         private readonly object lockObject = new object();
         private T _sut;

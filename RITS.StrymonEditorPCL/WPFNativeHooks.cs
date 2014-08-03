@@ -102,6 +102,16 @@ namespace RITS.StrymonEditor
             Mouse.OverrideCursor = null;
         }
 
+        public override void AddCanExecuteRequerySuggested(EventHandler canExecuteChanged)
+        {
+            CommandManager.RequerySuggested += canExecuteChanged;
+        }
+
+        public override void RemoveCanExecuteRequerySuggested(EventHandler canExecuteChanged)
+        {
+            CommandManager.RequerySuggested -= canExecuteChanged;
+        }
+
         public override void InvalidateRequerySuggested()
         {
             System.Windows.Input.CommandManager.InvalidateRequerySuggested();

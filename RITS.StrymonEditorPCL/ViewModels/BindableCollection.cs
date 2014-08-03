@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Windows;
 using System.Windows.Threading;
 using System.Threading;
 
@@ -21,7 +22,7 @@ namespace RITS.StrymonEditor.ViewModels
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public BindableCollection()
         {
-            dispatcher = Dispatcher.CurrentDispatcher;
+            dispatcher = Application.Current.Dispatcher;
         }
 
         /// <summary>

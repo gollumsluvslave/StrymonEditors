@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Text;
 using System.Threading.Tasks;
+using RITS.StrymonEditor.MIDI;
 using RITS.StrymonEditor.Views;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;

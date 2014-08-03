@@ -77,6 +77,9 @@ namespace RITS.StrymonEditor
 
         public abstract void InvalidateRequerySuggested();
 
+
+        public abstract void AddCanExecuteRequerySuggested(EventHandler canExecuteChanged);
+        public abstract void RemoveCanExecuteRequerySuggested(EventHandler canExecuteChanged);
         
         public abstract string PedalImage(string pedalName);
 

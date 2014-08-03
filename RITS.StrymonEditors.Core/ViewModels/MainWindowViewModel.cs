@@ -259,11 +259,8 @@ namespace RITS.StrymonEditor.ViewModels
         private void OpenEditor(StrymonPreset preset)
         {
             NativeHooks.Current.SetBusy();
-            if (EditorWindow == null) 
-            {
-                var pew = NativeHooks.Current.CreatePedalEditorWindow(preset, midiManager);
-                EditorWindow = pew;
-            }
+            var pew = NativeHooks.Current.CreatePedalEditorWindow(preset, midiManager);
+            EditorWindow = pew;
             EditorWindow.ShowModal();
         }
 
@@ -426,6 +423,7 @@ namespace RITS.StrymonEditor.ViewModels
             foreach(var p in midiManager.ConnectedPedals)
             {
                 BulkFetch(p);
+                
             }
 
         }
@@ -441,6 +439,7 @@ namespace RITS.StrymonEditor.ViewModels
                 midiManager.BulkPedal = p;
                 midiManager.FetchByIndex(i);
             }
+            NativeHooks.Current.Delay(1000);
             midiManager.BulkPedal = null;
         }
 

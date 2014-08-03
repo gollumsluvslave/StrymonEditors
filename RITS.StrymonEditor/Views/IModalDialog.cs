@@ -3,21 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RITS.StrymonEditor.MIDI;
+using RITS.StrymonEditor.IO;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
 
 namespace RITS.StrymonEditor.Views
 {
-    /// <summary>
-    /// Very simple interface to allow mocks for the various 'input' dialogs based on the <see cref="Dialog"/> view
-    /// </summary>
-    public interface IModalDialog
-    {
-        /// <summary>
-        /// Shows the dialog modally
-        /// </summary>
-        void ShowModal();
-    }
+    
 
     /// <summary>
     /// Implementation of <see cref="IModalDialog"/> for DirectEntry operations

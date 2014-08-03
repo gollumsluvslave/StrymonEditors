@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Midi;
+using RITS.StrymonEditor.MIDI;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;
 using RITS.StrymonEditor.Messaging;

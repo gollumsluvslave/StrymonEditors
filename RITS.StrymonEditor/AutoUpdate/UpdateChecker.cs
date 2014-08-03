@@ -16,7 +16,7 @@ namespace RITS.StrymonEditor.AutoUpdate
     /// <summary>
     /// Provides functionality to determine whether or not there is an update available to the application
     /// </summary>
-    public class UpdateChecker
+    public class UpdateChecker: IAutoUpdater
     {
         // private vars
         private VersionConfig _currentVersionConfig;

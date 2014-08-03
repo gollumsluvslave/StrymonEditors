@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using RITS.StrymonEditor.MIDI;
 using RITS.StrymonEditor.Messaging;
 using RITS.StrymonEditor.Models;
 using RITS.StrymonEditor.ViewModels;

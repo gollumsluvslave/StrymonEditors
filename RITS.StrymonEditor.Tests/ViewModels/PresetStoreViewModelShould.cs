@@ -20,7 +20,8 @@ namespace RITS.StrymonEditor.Tests
         {
             // Arrange
             var onlineMock = Container.GetMock<IOnlinePresetService>();
-            onlineMock.Setup(x=>x.GetAvailableTagNames()).Returns(new List<string>{"Song"});
+            Container.Register<bool>(false);
+            onlineMock.Setup(x => x.GetAvailableTagNames()).Returns(new List<string> { "Song" });
             Sut.OnlineService = onlineMock.Object;
             // Assert
             Assert.IsTrue(Sut.IsDownloadMode);
@@ -46,8 +47,12 @@ namespace RITS.StrymonEditor.Tests
         public void CorrectlyDownload()
         {
             // Arrange
+            var xmlPreset =  TestHelper.TestTimelinePreset.ToXmlPreset();
             var onlineMock = Container.GetMock<IOnlinePresetService>();
+            onlineMock.Setup(x => x.DownloadPreset(It.IsAny<int>())).Returns(xmlPreset);
+            Container.Register<bool>(false);
             Sut.OnlineService = onlineMock.Object;
+            Sut.Close = new Action(() => { });
             Sut.SelectedPreset=new PresetMetadata();
             // Act
             Sut.DownloadCommand.Execute(null);
@@ -60,6 +65,7 @@ namespace RITS.StrymonEditor.Tests
         {
             // Arrange
             var onlineMock = Container.GetMock<IOnlinePresetService>();
+            Container.Register<bool>(false);
             Sut.OnlineService = onlineMock.Object;
             onlineMock.Setup(x => x.Search(It.IsAny<PresetSearch>())).Returns(new List<PresetMetadata>());
             // Act
@@ -74,7 +80,9 @@ namespace RITS.StrymonEditor.Tests
             // Arrange
             Container.Register(TestHelper.TestTimelinePreset);// Force the container to use different constructor
             var onlineMock = Container.GetMock<IOnlinePresetService>();
-            Sut.OnlineService = onlineMock.Object;           
+            Sut.MessageDialog = Container.GetMock<IMessageDialog>().Object;
+            Sut.OnlineService = onlineMock.Object;
+            Sut.Close = new Action(() => { });
             // Act
             Sut.UploadCommand.Execute(null);
             // Assert
@@ -86,6 +94,7 @@ namespace RITS.StrymonEditor.Tests
         {
             // Arrange
             var onlineMock = Container.GetMock<IOnlinePresetService>();
+            Container.Register<bool>(false);
             onlineMock.Setup(x => x.GetAvailableTagNames()).Returns(new List<string> { "Song" });
             onlineMock.Setup(x => x.GetExistingValuesForTag("Song")).Returns(new List<string> { "Song 1", "Song 2" });
             Sut.OnlineService = onlineMock.Object;

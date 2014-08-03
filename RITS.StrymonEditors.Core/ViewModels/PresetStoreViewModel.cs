@@ -190,8 +190,9 @@ namespace RITS.StrymonEditor.ViewModels
             get { return selectedPreset; }
             set 
             { 
-                selectedPreset = value; 
-                OnPropertyChanged("SelectedPreset"); 
+                selectedPreset = value;
+                NativeHooks.Current.InvalidateRequerySuggested();
+                OnPropertyChanged("SelectedPreset");
             }
         }
 

@@ -205,9 +205,13 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RITS.StrymonEditor.Models\RITS.StrymonEditor.Models.csproj">
+    <ProjectReference Include="..\RITS.StrymonEditor.DBModels\RITS.StrymonEditor.Models.csproj">
       <Project>{bacd8d43-a47d-470d-925e-3f476e9e02d0}</Project>
       <Name>RITS.StrymonEditor.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RITS.StrymonEditors.Core\RITS.StrymonEditors.Core.csproj">
+      <Project>{b39fb3a9-6cce-49ee-96ff-5c30454ac6c4}</Project>
+      <Name>RITS.StrymonEditors.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

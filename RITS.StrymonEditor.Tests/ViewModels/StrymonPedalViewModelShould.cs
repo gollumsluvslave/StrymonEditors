@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using RITS.StrymonEditor.MIDI;
 using RITS.StrymonEditor.Views;
 using RITS.StrymonEditor.IO;
 using RITS.StrymonEditor.Messaging;

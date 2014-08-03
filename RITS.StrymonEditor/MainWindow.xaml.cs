@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using RITS.StrymonEditor.AutoUpdate;
+using RITS.StrymonEditor.MIDI;
 using RITS.StrymonEditor.Logging;
 using RITS.StrymonEditor.Views;
 using RITS.StrymonEditor.ViewModels;

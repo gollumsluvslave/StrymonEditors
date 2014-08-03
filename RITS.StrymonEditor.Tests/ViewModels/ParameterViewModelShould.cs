@@ -8,6 +8,7 @@ namespace RITS.StrymonEditor.Tests
 
     public class TestBase
     {
+        private NativeHooks _hooks = new WPFNativeHooks();
         public virtual void Setup()
         {
             Globals.Init();

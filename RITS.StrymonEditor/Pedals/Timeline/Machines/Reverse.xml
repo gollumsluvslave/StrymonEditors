@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- Reverse-->
-<StrymonMachine Name="Reverse" Value="0">
-  <MachineParameters>
-    <ParameterDef Name="Smear"/>
-    <ParameterDef Name="HiPass"/>
-  </MachineParameters>
-</StrymonMachine>
