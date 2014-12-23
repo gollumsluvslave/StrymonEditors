@@ -20,9 +20,9 @@ namespace RITS.StrymonEditor.ViewModels
     /// </summary>
     public class StrymonPedalViewModel : ViewModelBase, IDisposable
     {
+        private object lockObject = new object();
+        private bool waitingForPreset;
         private IStrymonMidiManager midiManager;
-        private bool presetFromPedal;
-
         /// <summary>
         /// Default .ctor
         /// </summary>
@@ -30,28 +30,26 @@ namespace RITS.StrymonEditor.ViewModels
         /// <param name="midiManager"></param>
         public StrymonPedalViewModel(StrymonPreset preset, IStrymonMidiManager midiManager)
         {
-            this.midiManager = midiManager;
-            if (preset == null)
-            {
-                if (midiManager.IsConnected)
-                {                    
-                    midiManager.FetchCurrent();
-                    ActivePedal = midiManager.ContextPedal;                    
-                    return;
-                }
-                preset = new StrymonPreset(midiManager.ContextPedal,true);
-            }
-            
-            midiManager.ContextPedal=preset.Pedal;
-
             using (ILogger logger = NativeHooks.Current.CreateLogger())
             {
+                this.midiManager = midiManager;
+                if (preset == null)
+                {
+                    if (midiManager.IsConnected)
+                    {
+                        ActivePedal = midiManager.ContextPedal;
+                        midiManager.FetchCurrent();
+                        waitingForPreset = true;
+                        return;
+                    }
+                    preset = new StrymonPreset(midiManager.ContextPedal, true);
+                }
+                midiManager.ContextPedal = preset.Pedal;
                 logger.Debug(string.Format("Creating ViewModel for Preset: {0}", preset.Name));
                 this.ActivePreset = preset;
+                // Preserve original state
+                originalState = preset.ToXmlPreset();
             }
-            // Preserve original state
-            originalState = preset.ToXmlPreset();
-
         }
 
 
@@ -62,7 +60,8 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.Register(ViewModelMessages.MachineSelected, MachineChanged);
             Mediator.Register(ViewModelMessages.ParameterChanged, HandleParameterChanged);
             Mediator.Register(ViewModelMessages.LCDUpdate, LCDUpdate);
-            Mediator.Register(ViewModelMessages.ReceivedPresetFromPedal, PresetReceived);
+            Mediator.Register(ViewModelMessages.ReceivedPresetFromDownload, PresetReceivedFromDownload);
+            Mediator.Register(ViewModelMessages.ReceivedPresetFromPedal, PresetReceivedFromPedal);
             Mediator.Register(ViewModelMessages.ReceivedCC, ReceiveCCChange);
             Mediator.Register(ViewModelMessages.FetchPresetRequested, FetchPresetRequested);
             Mediator.Register(ViewModelMessages.PushPresetRequested, PushPresetRequested);
@@ -78,7 +77,8 @@ namespace RITS.StrymonEditor.ViewModels
             Mediator.UnRegister(ViewModelMessages.MachineSelected, MachineChanged);
             Mediator.UnRegister(ViewModelMessages.ParameterChanged, HandleParameterChanged);
             Mediator.UnRegister(ViewModelMessages.LCDUpdate, LCDUpdate);
-            Mediator.UnRegister(ViewModelMessages.ReceivedPresetFromPedal, PresetReceived);
+            Mediator.UnRegister(ViewModelMessages.ReceivedPresetFromDownload, PresetReceivedFromDownload);
+            Mediator.UnRegister(ViewModelMessages.ReceivedPresetFromPedal, PresetReceivedFromPedal);
             Mediator.UnRegister(ViewModelMessages.ReceivedCC, ReceiveCCChange);
             Mediator.UnRegister(ViewModelMessages.FetchPresetRequested, FetchPresetRequested);
             Mediator.UnRegister(ViewModelMessages.PushPresetRequested, PushPresetRequested);
@@ -335,6 +335,7 @@ namespace RITS.StrymonEditor.ViewModels
                         return;
                     }
                 }
+                waitingForPreset = false;
                 preset = value;
                 ActivePedal = preset.Pedal;
                 SetSyncMode();
@@ -419,15 +420,19 @@ namespace RITS.StrymonEditor.ViewModels
         {
             get
             {
-                if (_machines == null)
+                lock (lockObject)
                 {
-                    _machines = NativeHooks.Current.CreateList<StrymonMachineViewModel>();
-                    foreach (var m in ActivePedal.Machines.OrderBy(p => p.Value))
+                    if (_machines == null)
                     {
-                        _machines.Add(new StrymonMachineViewModel(m));
+                        _machines = NativeHooks.Current.CreateList<StrymonMachineViewModel>();
+                        foreach (var m in ActivePedal.Machines.OrderBy(p => p.Value))
+                        {
+                            _machines.Add(new StrymonMachineViewModel(m));
+                        }
                     }
                 }
                 return _machines;
+                
             }
             set
             {
@@ -525,34 +530,35 @@ namespace RITS.StrymonEditor.ViewModels
         // 4 - Handles fine/coarse specific controls, including overrides
         private void LoadPotControls()
         {
+
+            if (waitingForPreset) return;
             using (ILogger logger = NativeHooks.Current.CreateLogger())
             {
-                Globals.IsPedalViewLoading = true;
-                _potControls = new List<PotViewModel>();
-                foreach (var pot in ActivePedal.Pots.Where(x => x.Id != 0).OrderBy(x => x.Id))
-                {
-                    LoadPotControl(pot);
-                }
-                //Only need to do this when not come from Pedal
-                if (!presetFromPedal)
-                {
-                    foreach (var hp in HiddenParameters)
+                //lock (lockObject)
+                //{
+                    Globals.IsPedalViewLoading = true;
+                    _potControls = new List<PotViewModel>();
+                    foreach (var pot in ActivePedal.Pots.Where(x => x.Id != 0).OrderBy(x => x.Id))
                     {
-                        midiManager.SynchParameter(hp._parameter);
+                        LoadPotControl(pot);
                     }
-                }
-                logger.Debug(string.Format("{0} Pot Controls Created.", _potControls.Count));
-                PresetRefreshComplete();
+                    ////Only need to do this when not come from Pedal
+                    //foreach (var hp in HiddenParameters)
+                    //{
+                    //    midiManager.SynchParameter(hp._parameter);
+                    //}
+                    logger.Debug(string.Format("{0} Pot Controls Created.", _potControls.Count));
+                    PresetRefreshComplete();
+                //}
+                
             }
         }
 
         private void PresetRefreshComplete()
         {
-            if (!presetFromPedal)midiManager.PushToEdit(ActivePreset);
             midiManager.DisableControlChangeSends = false;
             midiManager.UpdateDisplay();
             IsDirty = false;
-            presetFromPedal = false;
             Globals.IsPedalViewLoading = false;
             NativeHooks.Current.WorkComplete();
         }
@@ -808,7 +814,6 @@ namespace RITS.StrymonEditor.ViewModels
                     return;
                 }
             }
-            presetFromPedal = true;
             midiManager.FetchByIndex((int)index);
         }
 
@@ -860,7 +865,20 @@ namespace RITS.StrymonEditor.ViewModels
             ActiveMachine = m as StrymonMachineViewModel;
         }
 
-        private void PresetReceived(object p)
+        private void PresetReceivedFromDownload(object p)
+        {
+            var preset = p as StrymonPreset;
+            SynchPresetToPedal(preset);
+        }
+
+        private void SynchPresetToPedal(StrymonPreset preset)
+        {
+            midiManager.PushToEdit(preset);
+            midiManager.DisableControlChangeSends = true;
+            ActivePreset = preset;
+        }
+
+        private void PresetReceivedFromPedal(object p)
         {
             var preset = p as StrymonPreset;
             midiManager.DisableControlChangeSends=true;
@@ -961,7 +979,7 @@ namespace RITS.StrymonEditor.ViewModels
                     var presetToLoad = FileIOService.LoadXmlPreset();
                     if (presetToLoad != null)
                     {
-                        ActivePreset = presetToLoad;
+                        SynchPresetToPedal(presetToLoad);
                     }
                 }));
             }
@@ -985,10 +1003,7 @@ namespace RITS.StrymonEditor.ViewModels
                     }
 
                     var presetToLoad = FileIOService.LoadSyxPreset();
-                    if (presetToLoad != null)
-                    {
-                        ActivePreset = presetToLoad;
-                    }
+                    SynchPresetToPedal(presetToLoad);
                 }));
             }
         }
@@ -1505,7 +1520,6 @@ namespace RITS.StrymonEditor.ViewModels
                         }
                     }
                     NativeHooks.Current.SetBusy();
-                    presetFromPedal = true;
                     midiManager.FetchCurrent();
                 }));
             }

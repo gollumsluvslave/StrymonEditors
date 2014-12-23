@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <VersionConfig>
-  <Version>0.2.1.1</Version>
+  <Version>1.0.0.0</Version>
   <UpdateCheckTarget>https://dl.dropboxusercontent.com/s/tqup10aa4zvjkeh/EditorLatestVersion.xml?dl=1</UpdateCheckTarget>
   <UpdateZipTarget></UpdateZipTarget>
 </VersionConfig>

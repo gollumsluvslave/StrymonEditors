@@ -112,4 +112,19 @@ namespace RITS.StrymonEditor.Views
         }
 
     }
+
+    public class MIDISetupDialog : IModalDialog
+    {
+        private MidiSetup window;
+        public MIDISetupDialog(IStrymonMidiManager midiManager)
+        {
+            window = new MidiSetup(midiManager);
+        }
+
+        public void ShowModal()
+        {
+            window.ShowDialog();
+        }
+
+    }
 }

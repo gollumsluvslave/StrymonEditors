@@ -424,7 +424,8 @@ namespace RITS.StrymonEditor.MIDI
                     if (data.Reverse().Skip(1).First() != 69)
                     {
                         logger.Debug("Push NACK received - device rejected write.");
-                        ThreadPool.QueueUserWorkItem(QueuePushPresetFailed, null);
+                        // TODO NACK is not correct, successful writes are being rejected
+                        //ThreadPool.QueueUserWorkItem(QueuePushPresetFailed, null);
                     }
                     else
                     {

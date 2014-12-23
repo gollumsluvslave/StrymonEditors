@@ -232,8 +232,8 @@ namespace RITS.StrymonEditor.ViewModels
                 MenuText = "Midi",
                 Command = new RelayCommand(new Action(() =>
                 {
-                    //var v = new MidiSetup(midiManager);
-                    //v.ShowDialog();
+                    var v = NativeHooks.Current.CreateMIDISetupDialog(midiManager);
+                    v.ShowModal();
                 }))
             };
             editorMenu.Add(midiMenu);
@@ -390,6 +390,7 @@ namespace RITS.StrymonEditor.ViewModels
         {
             Mediator.Register(ViewModelMessages.PedalConnected, PedalConnected);
             Mediator.Register(ViewModelMessages.BulkPresetRead, BulkPresetRead);
+            Mediator.Register(ViewModelMessages.MIDIReset, MIDIReset);
             Mediator.Register(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
             Mediator.Register(ViewModelMessages.ReceivedPresetFromOnlineMainWindow, PedalDownloaded);
         }
@@ -399,6 +400,7 @@ namespace RITS.StrymonEditor.ViewModels
         {
             Mediator.UnRegister(ViewModelMessages.PedalConnected, PedalConnected);
             Mediator.UnRegister(ViewModelMessages.BulkPresetRead, BulkPresetRead);
+            Mediator.UnRegister(ViewModelMessages.MIDIReset, MIDIReset);
             Mediator.UnRegister(ViewModelMessages.MIDIConnectionComplete, MIDIConnectionComplete);
             Mediator.UnRegister(ViewModelMessages.ReceivedPresetFromOnlineMainWindow, PedalDownloaded);
         }
@@ -411,14 +413,25 @@ namespace RITS.StrymonEditor.ViewModels
             var preset = o as StrymonPreset;
             OpenEditor(preset);
         }
+        private void MIDIReset(object o)
+        {
+            this.midiManager = o as IStrymonMidiManager;
+            connectedPedalCount = 0;
+            ConnectedPedal1 = null;
+            ConnectedPedal2 = null;
+            ConnectedPedal3 = null;
+            StatusText = "Ready. No Pedals Connected.";
+            OnPropertyChanged("MIDIImage");
+        }
         // Handle the MIDIConnection complete notification
         private void MIDIConnectionComplete(object o)
         {
             // Kick of preset load
             if (NativeHooks.Current.DisableBulkFetch) return;
+            if (midiManager.ConnectedPedals.Count == 0) return;
             PBMax = midiManager.ConnectedPedals.Sum(x => x.PresetCount);
             ShowProgressBar = true;
-
+            PBValue = 0;
             //if (midiManager.ConnectedPedals.Count > 0)
             foreach(var p in midiManager.ConnectedPedals)
             {

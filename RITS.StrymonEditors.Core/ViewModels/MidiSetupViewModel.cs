@@ -286,7 +286,10 @@ namespace RITS.StrymonEditor.ViewModels
         {
             if (midiInitRequired)
             {
+                midiManager.Dispose();
+                midiManager = NativeHooks.Current.CreateMIDIManager();
                 midiManager.InitMidi();
+                Mediator.NotifyColleagues(Messaging.ViewModelMessages.MIDIReset, midiManager);
             }
             closeAction();
         }

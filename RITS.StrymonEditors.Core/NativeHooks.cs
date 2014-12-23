@@ -67,6 +67,7 @@ namespace RITS.StrymonEditor
         public abstract IModalDialog CreateProgressBarDialog(ModalProgressDialogViewModel progressVM);
 
         public abstract IAutoUpdater CreateAutoUpdater();
+        public abstract IModalDialog CreateMIDISetupDialog(IStrymonMidiManager midiManager);
 
         public abstract IModalDialog CreatePedalEditorWindow(StrymonPreset preset, IStrymonMidiManager midiManager);
 
@@ -85,7 +86,6 @@ namespace RITS.StrymonEditor
 
 
         public abstract void DoWork(Action<object> work, object arg, Action onComplete);
-
 
 
         public abstract IList<string> MIDIInDevices { get; }
